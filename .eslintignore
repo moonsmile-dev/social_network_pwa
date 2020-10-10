@@ -1,3 +1,1 @@
-src/app.generated.ts
-src/serviceWorker.ts
-src/**/__tests__/**
+**/*.scss
