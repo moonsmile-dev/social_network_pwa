@@ -1640,10 +1640,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@next/bundle-analyzer@^9.4.4":
-  version "9.5.3"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-9.5.3.tgz#8e10c80eda02a03c6716037699fc3d29c75c5fe4"
-  integrity sha512-/kxp8HFHtcA3pWKgPdnQFSUIkZytbbn7IQ70h9v6hApEhGy2na7WofRpAqkjK1o8jxQYTLqDxFFda6A9SClq2A==
+"@next/bundle-analyzer@^9.5.5":
+  version "9.5.5"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-9.5.5.tgz#9cb5f67e8d3012ccfb87c10f20715fb7f918dd66"
+  integrity sha512-HDYa5oFtBlZXG/N1wsheOaj2XeOFEi0HzwPiyIP82TxjoDoB6HKDYRIV3JHIUCeGFjkA66jSh8r1EAHNOuU51A==
   dependencies:
     webpack-bundle-analyzer "3.6.1"
 
@@ -7954,6 +7954,13 @@ i18next-http-middleware@>=1.0.2:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/i18next-http-middleware/-/i18next-http-middleware-3.0.5.tgz#cd4ad6ffeeb0e2032b7b8976bbf942da51db748b"
   integrity sha512-w3MjeGKSZCCeFivjEuKTNeWye/OXWxrwAUYAuUgzr04pWFmBAs0ZsqKffyYurOGenkdfkdAaJEPpsnqqDCaUyg==
+
+i18next-xhr-backend@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-3.2.2.tgz#769124441461b085291f539d91864e3691199178"
+  integrity sha512-OtRf2Vo3IqAxsttQbpjYnmMML12IMB5e0fc5B7qKJFLScitYaXa1OhMX0n0X/3vrfFlpHL9Ro/H+ps4Ej2j7QQ==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
 
 i18next@^19.0.3:
   version "19.7.0"

@@ -104,6 +104,7 @@ typings/
 # next.js build output
 .next
 out
+public/static
 
 # nuxt.js build output
 .nuxt
