@@ -4,6 +4,7 @@ const withSass = require("@zeit/next-sass");
 const withBundleAnalyzer = require("@next/bundle-analyzer");
 const withPWA = require("next-pwa");
 const runtimeCaching = require("next-pwa/cache");
+const withImages = require('next-images');
 
 const nextConfig = {
     analyzeServer: ["server", "both"].includes(process.env.BUNDLE_ANALYZE),
@@ -25,14 +26,14 @@ if (process.env === "production") {
         [
             [withCSS],
             [withSass],
-            [withBundleAnalyzer],
+            [withBundleAnalyzer],[withImages],
             [withPWA, { pwa: { dest: "public/static", runtimeCaching } }],
         ],
         nextConfig
     );
 } else {
     module.exports = withPlugins(
-        [[withCSS], [withSass], [withBundleAnalyzer]],
+        [[withCSS], [withSass], [withBundleAnalyzer],[withImages]],
         nextConfig
     );
 }

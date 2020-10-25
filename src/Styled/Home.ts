@@ -3,13 +3,12 @@ import styled from "styled-components";
 // #endregion Global Imports
 
 export const Container = styled.div`
-    background-color: ${({ theme }) => theme.colors.primary};
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-    justify-content: flex-start;
-    align-items: center;
-    min-height: 100vh;
+    background-color: white;
+    display: block;
+    flex-flow: row;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
 `;
 
 export const Top = styled.div`
@@ -86,4 +85,13 @@ export const TopText = styled.div`
     font-family: Arial, Helvetica, sans-serif;
     color: #ffffff;
     margin-bottom: 10px;
+`;
+
+export const Circle = styled.div`
+    width: ${({ r }) => r * 2}px;
+    height: ${(props) => props.r * 2}px;
+    -webkit-border-radius: ${(props) => props.r}px;
+    -moz-border-radius: ${(props) => props.r}px;
+    border-radius: ${(props) => props.r}px;
+    background: ${(props) => props.color};
 `;
