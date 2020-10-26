@@ -1,3 +1,9 @@
+interface IFlexInput {
+    name: string,
+    iconUrl: string,
+    iconExpand: string | undefined,
+    placeHolder: string | undefined,
+}
 
 function FlexInput(props: IFlexInput) {
     const headerDetailStyle = {

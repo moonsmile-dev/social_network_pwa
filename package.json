@@ -19,6 +19,7 @@
     "build-storybook": "build-storybook -s ./public/static  -c .storybook -o .storybookout"
   },
   "dependencies": {
+    "@ant-design/icons": "4.0.0",
     "@babel/plugin-proposal-logical-assignment-operators": "^7.12.1",
     "@babel/plugin-proposal-private-methods": "^7.12.1",
     "@babel/plugin-transform-react-pure-annotations": "^7.12.1",
@@ -26,7 +27,7 @@
     "@next/bundle-analyzer": "^9.5.5",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
-    "antd": "^4.7.2",
+    "antd": "^4.7.3",
     "autoprefixer": "^9.6.1",
     "bootstrap": "^4.4.1",
     "cross-env": "^5.2.1",
