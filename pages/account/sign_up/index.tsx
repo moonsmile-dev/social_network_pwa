@@ -11,6 +11,7 @@ import fbIcon from "@Assets/images/facebook.png";
 import FlexInput from "@Components/Basic/FlexButton";
 import { btnCntStyle, CntTxt } from "@Styled/Base";
 import Link from "next/link";
+import { NextPage } from "next";
 
 const headerInfoDivStyle = {
     margin: "30px 0px 0px 40px",
