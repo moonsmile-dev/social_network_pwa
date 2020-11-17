@@ -1,6 +1,62 @@
 import avatarIcon from "@Assets/images/profile.jpeg";
+import Gallery from 'react-photo-gallery';
 
-export const UserPost = (props: {}) => {
+// const IMAGES =
+//     [{
+//         src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
+//         thumbnail: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
+//         thumbnailWidth: 320,
+//         thumbnailHeight: 174,
+//         isSelected: false,
+//         caption: "After Rain (Jeshu John - designerspics.com)"
+//     },
+//     {
+//         src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
+//         thumbnail: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_n.jpg",
+//         thumbnailWidth: 320,
+//         thumbnailHeight: 212,
+//         tags: [{ value: "Ocean", title: "Ocean" }, { value: "People", title: "People" }],
+//         caption: "Boats (Jeshu John - designerspics.com)"
+//     },
+
+//     {
+//         src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
+//         thumbnail: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_n.jpg",
+//         thumbnailWidth: 320,
+//         thumbnailHeight: 212
+//     }]
+
+const PHOTOS = [
+    {
+        src: "https://source.unsplash.com/2ShvY8Lf6l0/800x599",
+        width: 1,
+        height: 1,
+    },
+    {
+        src: "https://source.unsplash.com/Dm-qxdynoEc/800x799",
+        width: 1,
+        height: 1,
+    },
+    {
+        src: "https://source.unsplash.com/qDkso9nvCg0/600x799",
+        width: 1,
+        height: 1,
+    },
+    {
+        src: "https://source.unsplash.com/qDkso9nvCg0/600x799",
+        width: 1,
+        height: 1,
+    }
+];
+
+interface IUserPostProp {
+    isDetail: boolean;
+    avatar: string;
+    cnt: string;
+};
+
+
+export const UserPost = (props: IUserPostProp) => {
     const boundContainer = {
         left: "0%",
         position: "absolute",
@@ -32,6 +88,8 @@ export const UserPost = (props: {}) => {
             </div>
             <div className="main_post" style={{ margin: "0px 10px" }}>
                 <p>{props.cnt ? props.cnt : "We are facing a serious business dilemma, with Facebook taking away a good chunk of traffic to news and content sites, and ad blockers eating into what’s left of it while slashing ad revenues."}</p>
+                <Gallery photos={PHOTOS} targetRowHeight="5" />
+
             </div>
             <div className="footer_post" style={{ height: "40px", position: "relative" }}>
                 <div style={boundContainer}>
@@ -50,7 +108,7 @@ export const UserPost = (props: {}) => {
                     <p style={{ margin: "0px", lineHeight: "30px", color: "#9597A1" }}>20 likes</p>
                 </div>
 
-                <div style={{ right: "0%", position: "absolute", top: "50%", transform: "translate(0%, -50%)", display: "flex" }}>
+                <div style={{ right: "0%", position: "absolute", top: "50%", transform: "translate(0%, -50%)", display: "flex" }} onClick={() => {alert("Turn on comment")}}>
                     <p style={{ margin: "0px", marginRight: "5px", color: "#9597A1" }}>{props.num_comments ? props.num_comments : 10} comments</p>
                     <p style={{ margin: "0px", color: "#9597A1" }}>{props.num_shared ? props.num_shared : 2} shared</p>
                 </div>

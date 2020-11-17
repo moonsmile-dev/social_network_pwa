@@ -5,6 +5,8 @@ export * from "@Interfaces/Pages/Error";
 export * from "@Interfaces/Pages/Account/SignUp";
 export * from "@Interfaces/Pages/Account/SignIn";
 export * from "@Interfaces/Pages/MainInApp/Root";
+export * from "@Interfaces/Pages/Post/PostItem";
+export * from "@Interfaces/Pages/Account/Profile";
 // #endregion Page Interfaces
 
 // #region Redux Interfaces
