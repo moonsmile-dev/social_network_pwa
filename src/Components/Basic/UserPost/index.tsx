@@ -29,23 +29,23 @@ import Gallery from 'react-photo-gallery';
 const PHOTOS = [
     {
         src: "https://source.unsplash.com/2ShvY8Lf6l0/800x599",
-        width: 1,
-        height: 1,
+        width: 4,
+        height: 2,
     },
     {
         src: "https://source.unsplash.com/Dm-qxdynoEc/800x799",
-        width: 1,
+        width: 4,
         height: 1,
     },
     {
         src: "https://source.unsplash.com/qDkso9nvCg0/600x799",
-        width: 1,
-        height: 1,
+        width: 2,
+        height: 2,
     },
     {
         src: "https://source.unsplash.com/qDkso9nvCg0/600x799",
-        width: 1,
-        height: 1,
+        width: 2,
+        height: 4,
     }
 ];
 
@@ -88,7 +88,7 @@ export const UserPost = (props: IUserPostProp) => {
             </div>
             <div className="main_post" style={{ margin: "0px 10px" }}>
                 <p>{props.cnt ? props.cnt : "We are facing a serious business dilemma, with Facebook taking away a good chunk of traffic to news and content sites, and ad blockers eating into what’s left of it while slashing ad revenues."}</p>
-                <Gallery photos={PHOTOS} targetRowHeight="5" />
+                <Gallery photos={PHOTOS} />
 
             </div>
             <div className="footer_post" style={{ height: "40px", position: "relative" }}>
@@ -108,7 +108,7 @@ export const UserPost = (props: IUserPostProp) => {
                     <p style={{ margin: "0px", lineHeight: "30px", color: "#9597A1" }}>20 likes</p>
                 </div>
 
-                <div style={{ right: "0%", position: "absolute", top: "50%", transform: "translate(0%, -50%)", display: "flex" }} onClick={() => {alert("Turn on comment")}}>
+                <div style={{ right: "0%", position: "absolute", top: "50%", transform: "translate(0%, -50%)", display: "flex" }} onClick={() => { alert("Turn on comment") }}>
                     <p style={{ margin: "0px", marginRight: "5px", color: "#9597A1" }}>{props.num_comments ? props.num_comments : 10} comments</p>
                     <p style={{ margin: "0px", color: "#9597A1" }}>{props.num_shared ? props.num_shared : 2} shared</p>
                 </div>
