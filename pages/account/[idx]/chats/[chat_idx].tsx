@@ -80,7 +80,7 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                 position: "absolute",
                 top: "0%",
                 left: "0%", right: "0%",
-                backgroundColor: "#727272"
+                backgroundColor: "#ca00ff"
             }}>
                 <div style={{ display: "flex" }}>
                     <div style={{ height: "35px", width: "35px", margin: "10px" }}>
