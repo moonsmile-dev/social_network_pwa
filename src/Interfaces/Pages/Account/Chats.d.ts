@@ -1,8 +1,6 @@
-// #region Global Imports
 import { WithTranslation } from "next-i18next";
-// #endregion Global Imports
 
-declare namespace IAccountProfile {
+declare namespace IAccountChat {
     export interface IProps extends WithTranslation { }
 
     export interface InitialProps {
@@ -18,4 +16,4 @@ declare namespace IAccountProfile {
     }
 }
 
-export { IAccountProfile };
+export { IAccountChat };

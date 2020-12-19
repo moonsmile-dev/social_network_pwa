@@ -7,6 +7,7 @@ export * from "@Interfaces/Pages/Account/SignIn";
 export * from "@Interfaces/Pages/MainInApp/Root";
 export * from "@Interfaces/Pages/Post/PostItem";
 export * from "@Interfaces/Pages/Account/Profile";
+export * from "@Interfaces/Pages/Account/Chats";
 // #endregion Page Interfaces
 
 // #region Redux Interfaces
