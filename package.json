@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.0.0",
+    "@apollo/client": "^3.3.6",
     "@babel/plugin-proposal-logical-assignment-operators": "^7.12.1",
     "@babel/plugin-proposal-private-methods": "^7.12.1",
     "@babel/plugin-transform-react-pure-annotations": "^7.12.1",

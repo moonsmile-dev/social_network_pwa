@@ -1,6 +1,5 @@
 import { IAcountSignUp } from "@Interfaces";
 import { withTranslation } from "@Server/i18n";
-import { Col, Row } from "antd";
 import React from "react";
 import emailIcon from "@Assets/images/email.png";
 import usernameIcon from "@Assets/images/username_icon.png";
@@ -39,101 +38,95 @@ const AccountSignUp: NextPage<
 > = ({ }) => {
     return (
         <div>
-            <Row>
-                <Col span={24}>
-                    <div style={headerInfoDivStyle}>
-                        <p style={headerStyle}>Getting started</p>
-                        <p style={headerDetailStyle}>
-                            create an account to continue
+            <div style={headerInfoDivStyle}>
+                <p style={headerStyle}>Getting started</p>
+                <p style={headerDetailStyle}>
+                    create an account to continue
+                        </p>
+            </div>
+            <div>
+                <form style={{ margin: "50px 15px" }}>
+                    <FlexInput
+                        name="Email"
+                        placeHolder="Input your email"
+                        iconUrl={emailIcon}
+                    />
+                    <FlexInput
+                        name="Username"
+                        placeHolder="Input your username"
+                        iconUrl={usernameIcon}
+                        iconExpand={usernameExpandIcon}
+                    />
+                    <FlexInput
+                        name="Password"
+                        placeHolder="Input your password"
+                        iconUrl={passwordIcon}
+                        iconExpand={passwordExpandIcon}
+                    />
+                    <div style={{ display: "flex" }}>
+                        <input
+                            type="checkbox"
+                            style={{
+                                width: "20px",
+                                height: "20px",
+                                marginRight: "5px",
+                            }}
+                        />
+                        <p style={{ lineHeight: "20px" }}>
+                            By checking box, you agreed our{" "}
+                            <span style={{ fontWeight: "bold" }}>
+                                terms and conditions
+                                </span>
                         </p>
                     </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={24}>
-                    <form style={{ margin: "50px 15px" }}>
-                        <FlexInput
-                            name="Email"
-                            placeHolder="Input your email"
-                            iconUrl={emailIcon}
-                        />
-                        <FlexInput
-                            name="Username"
-                            placeHolder="Input your username"
-                            iconUrl={usernameIcon}
-                            iconExpand={usernameExpandIcon}
-                        />
-                        <FlexInput
-                            name="Password"
-                            placeHolder="Input your password"
-                            iconUrl={passwordIcon}
-                            iconExpand={passwordExpandIcon}
-                        />
-                        <div style={{ display: "flex" }}>
-                            <input
-                                type="checkbox"
-                                style={{
-                                    width: "20px",
-                                    height: "20px",
-                                    marginRight: "5px",
-                                }}
-                            />
-                            <p style={{ lineHeight: "20px" }}>
-                                By checking box, you agreed our{" "}
-                                <span style={{ fontWeight: "bold" }}>
-                                    terms and conditions
-                                </span>
-                            </p>
-                        </div>
-                        <div style={{ textAlign: "center", marginTop: "35px" }}>
-                            <button style={{ ...btnCntStyle, margin: "10px" }}>
-                                <CntTxt style={{ fontWeight: "300" }}>
-                                    Sign Up
+                    <div style={{ textAlign: "center", marginTop: "35px" }}>
+                        <button style={{ ...btnCntStyle, margin: "10px" }}>
+                            <CntTxt style={{ fontWeight: "300" }}>
+                                Sign Up
                                 </CntTxt>
-                            </button>
-                            <p style={{ color: "#A3A3A3" }}>
-                                Already have an account?{" "}
-                                <Link href="/account/sign_in">
-                                    <a>
-                                        <span
-                                            style={{
-                                                fontWeight: "bold",
-                                                color: "black",
-                                            }}
-                                        >
-                                            Sign In
-                                        </span>
-                                    </a>
-                                </Link>
-                            </p>
-                        </div>
-                    </form>
-                    <div style={{ textAlign: "center" }}>
-                        <button style={fbBtnStyle}>
-                            <div
-                                style={{
-                                    textAlign: "center",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <img
-                                    style={{
-                                        width: "27px",
-                                        height: "27px",
-                                        marginRight: "10px",
-                                    }}
-                                    src={fbIcon}
-                                />
-                                <p style={{ color: "white", margin: "0px" }}>
-                                    Connect with Facebook
-                                </p>
-                            </div>
                         </button>
+                        <p style={{ color: "#A3A3A3" }}>
+                            Already have an account?{" "}
+                            <Link href="/account/sign_in">
+                                <a>
+                                    <span
+                                        style={{
+                                            fontWeight: "bold",
+                                            color: "black",
+                                        }}
+                                    >
+                                        Sign In
+                                        </span>
+                                </a>
+                            </Link>
+                        </p>
                     </div>
-                </Col>
-            </Row>
+                </form>
+                <div style={{ textAlign: "center" }}>
+                    <button style={fbBtnStyle}>
+                        <div
+                            style={{
+                                textAlign: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <img
+                                style={{
+                                    width: "27px",
+                                    height: "27px",
+                                    marginRight: "10px",
+                                }}
+                                src={fbIcon}
+                            />
+                            <p style={{ color: "white", margin: "0px" }}>
+                                Connect with Facebook
+                                </p>
+                        </div>
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

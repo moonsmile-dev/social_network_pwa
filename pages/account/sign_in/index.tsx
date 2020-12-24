@@ -3,7 +3,6 @@ import { withTranslation } from "@Server/i18n";
 import UsernameIcon from "@Assets/images/username_icon.png";
 import { NextPage } from "next";
 import React from "react";
-import "antd/dist/antd.css";
 import FlexInput from "@Components/Basic/FlexButton";
 import PasswordIcon from "@Assets/images/key.png";
 import PasswordExpandIcon from "@Assets/images/eye.png";

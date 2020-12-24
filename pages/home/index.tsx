@@ -1,7 +1,6 @@
 // #region Global Imports
 import * as React from "react";
 import { NextPage } from "next";
-import { useSelector, useDispatch } from "react-redux";
 // #endregion Global Imports
 
 // #region Local Imports
@@ -20,7 +19,6 @@ import {
     InfoGetStarted,
     Circle,
 } from "@Styled/Home";
-import { IStore } from "@Redux/IStore";
 import { HomeActions } from "@Actions";
 import { Heading, LocaleButton } from "@Components";
 
@@ -28,8 +26,7 @@ import LogoImage from "@Assets/images/dating_logo.jpg";
 // #endregion Local Imports
 
 // #region Interface Imports
-import { IHomePage, ReduxNextPageContext } from "@Interfaces";
-import { Row, Col } from "antd";
+import { IHomePage } from "@Interfaces";
 import { btnCntStyle, CntTxt } from "@Styled/Base";
 import Link from "next/link";
 // #endregion Interface Imports
@@ -101,30 +98,39 @@ const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = ({
     t,
     i18n,
 }) => {
-    const home = useSelector((state: IStore) => state.home);
-    const dispatch = useDispatch();
-
-    const renderLocaleButtons = (activeLanguage: string) =>
-        ["en", "es", "tr"].map(lang => (
-            <LocaleButton
-                key={lang}
-                lang={lang}
-                isActive={activeLanguage === lang}
-                onClick={() => i18n.changeLanguage(lang)}
-            />
-        ));
+    // const renderLocaleButtons = (activeLanguage: string) =>
+    //     ["en", "es", "tr"].map(lang => (
+    //         <LocaleButton
+    //             key={lang}
+    //             lang={lang}
+    //             isActive={activeLanguage === lang}
+    //             onClick={() => i18n.changeLanguage(lang)}
+    //         />
+    //     ));
 
     return (
         <Container>
-            <Row style={logoRawStyle}>
-                <Col span={24}>
+            <div style={logoRawStyle}>
+                <div span={24}>
                     <img src={LogoImage} style={logoImageStyle} />
-                    <Circle style={bigCircleStyle} r="137" color="#713FFF" />
-                    <Circle style={smallCircleStyle} r="75" color="#9C9FFF" />
-                </Col>
-            </Row>
-            <Row style={cntStyle}>
-                <Col span={24}>
+                    <div style={{
+                        ...bigCircleStyle,
+                        width: "274px",
+                        height: "274px",
+                        borderRadius: "137px",
+                        background: "#713FFF"
+                    }} />
+                    <div style={{
+                        ...smallCircleStyle,
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "75px",
+                        background: "#9C9FFF"
+                    }} />
+                </div>
+            </div>
+            <div style={cntStyle}>
+                <div>
                     <div style={barStyle}>
                         <div style={barItemStyle} />
                         <div style={barItemStyle} />
@@ -146,21 +152,10 @@ const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = ({
                             </button>
                         </Link >
                     </div>
-                </Col>
-            </Row>
+                </div>
+            </div>
         </Container >
     );
-};
-
-Home.getInitialProps = async (
-    ctx: ReduxNextPageContext
-): Promise<IHomePage.InitialProps> => {
-    await ctx.store.dispatch(
-        HomeActions.GetApod({
-            params: { hd: true },
-        })
-    );
-    return { namespacesRequired: ["common"] };
 };
 
 const Extended = withTranslation("common")(Home);
