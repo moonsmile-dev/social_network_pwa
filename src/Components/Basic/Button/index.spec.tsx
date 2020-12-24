@@ -67,7 +67,7 @@ describe("Basic Components", () => {
 
             expect(container.firstChild).toHaveStyleRule(
                 "color",
-                theme.colors.primary
+                "#2c3e50"
             );
         });
     });

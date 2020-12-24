@@ -1,7 +1,7 @@
 // #region Global Imports
 import * as React from "react";
 import App, { AppInitialProps, AppContext } from "next/app";
-import { ThemeProvider } from "styled-components";
+import { ChakraProvider } from "@chakra-ui/react";
 import Head from "next/head";
 // #endregion Global Imports
 
@@ -20,7 +20,7 @@ function WebApp(props: any) {
 
     return (
         <ApolloProvider client={apolloClient}>
-            <ThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
                 <Head>
                     <meta charSet="utf-8" />
                     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -49,7 +49,7 @@ function WebApp(props: any) {
                     <meta name="theme-color" content="#317EFB" />
                 </Head>
                 <Component {...pageProps} />
-            </ThemeProvider>
+            </ChakraProvider>
         </ApolloProvider>
     );
 
