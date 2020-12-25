@@ -28,6 +28,7 @@
     "@chakra-ui/react": "^1.0.4",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
+    "@hookstate/core": "^3.0.2",
     "@next/bundle-analyzer": "^9.5.5",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
