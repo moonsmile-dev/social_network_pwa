@@ -21,6 +21,7 @@ import {
 } from "@Styled/Home";
 import { HomeActions } from "@Actions";
 import { Heading, LocaleButton } from "@Components";
+import { useQuery } from "@apollo/client";
 
 import LogoImage from "@Assets/images/dating_logo.jpg";
 // #endregion Local Imports
@@ -29,6 +30,8 @@ import LogoImage from "@Assets/images/dating_logo.jpg";
 import { IHomePage } from "@Interfaces";
 import { btnCntStyle, CntTxt } from "@Styled/Base";
 import Link from "next/link";
+import { helloQuery } from "@Libs/Queries/helloQuery";
+import { initializeApollo } from "@Libs/apolloClient";
 // #endregion Interface Imports
 
 const logoRawStyle = {
@@ -94,10 +97,7 @@ const barItemStyle = {
     margin: "2px",
 };
 
-const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = ({
-    t,
-    i18n,
-}) => {
+const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = (props: any) => {
     // const renderLocaleButtons = (activeLanguage: string) =>
     //     ["en", "es", "tr"].map(lang => (
     //         <LocaleButton
@@ -107,6 +107,17 @@ const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = ({
     //             onClick={() => i18n.changeLanguage(lang)}
     //         />
     //     ));
+
+    const { loading, error, data } = useQuery(helloQuery);
+    if (error) {
+        return <div>Error loading players.</div>;
+    }
+    if (loading) {
+        return <div>Loading</div>;
+    }
+
+    console.log(`Fetched data: ${JSON.stringify(data)}`)
+
 
     return (
         <Container>
@@ -157,6 +168,25 @@ const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = ({
         </Container >
     );
 };
+
+export async function getStaticProps() {
+    const apolloClient = initializeApollo();
+
+    const data = await apolloClient.query({
+        query: helloQuery,
+    });
+
+    console.log(`Data is gotten on reload page: ${JSON.stringify(data)}`)
+
+
+    return {
+        props: {
+            initialApolloState: apolloClient.cache.extract(),
+        },
+        revalidate: 1,
+    };
+}
+
 
 const Extended = withTranslation("common")(Home);
 

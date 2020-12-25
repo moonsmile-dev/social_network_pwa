@@ -1,0 +1,1 @@
+import { helloQuery } from "./helloQuery";

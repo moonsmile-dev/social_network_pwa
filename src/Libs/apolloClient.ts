@@ -12,7 +12,7 @@ function createApolloClient() {
     return new ApolloClient({
         ssrMode: typeof window === "undefined", // set to true for SSR
         link: new HttpLink({
-            uri: "YOUR-SLASH-ENDPOINT",
+            uri: "http://127.0.0.1:8000/graphql",
         }),
         cache: new InMemoryCache(),
     });
