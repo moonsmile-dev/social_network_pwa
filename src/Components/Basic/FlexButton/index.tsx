@@ -3,6 +3,9 @@ interface IFlexInput {
     iconUrl: string,
     iconExpand: string | undefined,
     placeHolder: string | undefined,
+    hideContent: boolean | null,
+
+    onChange: () => any,
 }
 
 function FlexInput(props: IFlexInput) {
@@ -40,7 +43,7 @@ function FlexInput(props: IFlexInput) {
                         </div>
                     )}
                     <div style={{ flex: "1" }}>
-                        <input placeholder={props.placeHolder} style={InputStyle} />
+                        <input placeholder={props.placeHolder} style={InputStyle} onChange={props.onChange} type={props.hideContent ? "password" : "text"} />
                     </div>
                     {props.iconExpand && (
                         <div>
