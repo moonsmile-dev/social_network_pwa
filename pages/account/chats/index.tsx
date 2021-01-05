@@ -1,13 +1,10 @@
 import { NextPage } from "next";
 import { withTranslation } from "@Server/i18n";
 import { IAccountChat } from "@Interfaces";
-import homeIcon from "@Assets/images/home.png";
-import chatIcon from "@Assets/images/conversation.png";
-import datingIcon from "@Assets/images/dating_icon.png";
-import profileIcon from "@Assets/images/profile-user.png";
 import searchIcon from "@Assets/images/search-icon.png";
 import avatarIcon from "@Assets/images/profile.jpeg";
 import { StoryHome } from "@Components/Basic";
+import NavFooter, { NavPageType } from "@Components/NavFooter";
 
 const absoluteCenter = {
     top: "50%",
@@ -165,20 +162,7 @@ const AccountChat: NextPage<IAccountChat.IProps, IAccountChat.InitialProps> = (p
                     <MessagePreviewComponent />
                 </div>
             </div>
-            <div style={styles.footer}>
-                <div style={styles.iconContainer}>
-                    <img style={{ ...styles.icon }} src={homeIcon} alt="K" />
-                </div>
-                <div style={styles.iconContainer}>
-                    <img style={{ ...styles.icon, opacity: "100%" }} src={chatIcon} alt="K" />
-                </div>
-                <div style={styles.iconContainer}>
-                    <img style={styles.icon} src={datingIcon} alt="K" />
-                </div>
-                <div style={styles.iconContainer}>
-                    <img style={styles.icon} src={profileIcon} alt="K" />
-                </div>
-            </div>
+            <NavFooter type={NavPageType.CHAT} />
         </div>
     )
 }

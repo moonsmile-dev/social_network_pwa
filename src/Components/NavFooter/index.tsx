@@ -2,6 +2,14 @@ import homeIcon from "@Assets/images/home.png";
 import chatIcon from "@Assets/images/conversation.png";
 import datingIcon from "@Assets/images/dating_icon.png";
 import profileIcon from "@Assets/images/profile-user.png";
+import {
+    CHAT_PAGE_ROUTE,
+    DATING_PAGE_ROUTE,
+    HOME_PAGE_ROUTE,
+    PROFILE_PAGE_ROUTE,
+} from "src/Routes/contants";
+import { useRouter } from "next/router";
+import { FormatString } from "src/Commons/Strings/utils";
 
 export enum NavPageType {
     HOME = 0,
@@ -60,28 +68,57 @@ interface INavFooterProp {
 const NavFooter = (props: INavFooterProp) => {
     const { type } = props;
 
+    const accountId: string = localStorage.getItem("account_id");
+
+    const router = useRouter();
     const homeStyle = convertStyle(NavPageType.HOME, type);
     const datingStyle = convertStyle(NavPageType.DATING, type);
     const chatStyle = convertStyle(NavPageType.CHAT, type);
     const personalStyle = convertStyle(NavPageType.PERSONAL, type);
 
+    const handleClickRoutePage = (nextType: number) => {
+        if (nextType == type) {
+            return;
+        }
+        let routeUrl: string = ""
+        switch (nextType) {
+            case NavPageType.HOME:
+                routeUrl = HOME_PAGE_ROUTE;
+                break;
+            case NavPageType.CHAT:
+                routeUrl = CHAT_PAGE_ROUTE;
+                break;
+            case NavPageType.DATING:
+                routeUrl = DATING_PAGE_ROUTE;
+                break;
+            case NavPageType.PERSONAL:
+                routeUrl = FormatString(PROFILE_PAGE_ROUTE, accountId)
+                break;
+            default:
+                break;
+        }
+
+        if (routeUrl) {
+            router.push(routeUrl);
+        }
+    }
+
     return (
         // eslint-disable-next-line react/react-in-jsx-scope
         <div style={styles.footer}>
-            <div style={styles.iconContainer}>
-                <img
-                    style={homeStyle}
-                    src={homeIcon}
-                    alt="K"
-                />
+            <div style={styles.iconContainer} onClick={() => handleClickRoutePage(NavPageType.HOME)}>
+                <img style={homeStyle} src={homeIcon} alt="K" />
             </div>
-            <div style={styles.iconContainer}>
+            <div
+                style={styles.iconContainer}
+                onClick={() => handleClickRoutePage(NavPageType.CHAT)}
+            >
                 <img style={chatStyle} src={chatIcon} alt="K" />
             </div>
-            <div style={styles.iconContainer}>
+            <div style={styles.iconContainer} onClick={() => handleClickRoutePage(NavPageType.DATING)}>
                 <img style={datingStyle} src={datingIcon} alt="K" />
             </div>
-            <div style={styles.iconContainer}>
+            <div style={styles.iconContainer} onClick={() => handleClickRoutePage(NavPageType.PERSONAL)}>
                 <img style={personalStyle} src={profileIcon} alt="K" />
             </div>
         </div>

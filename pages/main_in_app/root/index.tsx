@@ -2,13 +2,10 @@ import { NextPage } from "next";
 import { IMainInAppRoot } from "@Interfaces"
 import { withTranslation } from "@Server/i18n";
 
-import homeIcon from "@Assets/images/home.png";
-import datingIcon from "@Assets/images/dating_icon.png";
-import chatIcon from "@Assets/images/conversation.png";
-import profileIcon from "@Assets/images/profile-user.png";
 import avatarIcon from "@Assets/images/profile.jpeg";
 import notifyIcon from "@Assets/images/alarm.png";
 import { StoryHome, FollowerHome, UserPost } from "@Components/Basic";
+import NavFooter, { NavPageType } from "@Components/NavFooter";
 
 const absoluteCenter = {
     top: "50%",
@@ -19,7 +16,7 @@ const absoluteCenter = {
 
 const styles = {
     container: {
-        backgroundColor: "yellow",
+        // backgroundColor: "yellow",
         height: "100vh",
         position: "relative",
     },
@@ -35,7 +32,7 @@ const styles = {
         zIndex: "2"
     },
     main: {
-        backgroundColor: "#9597A1",
+        // backgroundColor: "#9597A1",
         height: "100%",
         paddingTop: "59px",
         paddingBottom: "94px",
@@ -159,20 +156,7 @@ const MainInAppRoot: NextPage<
                 <UserPost />
                 <UserPost />
             </div>
-            <div style={styles.footer}>
-                <div style={styles.iconContainer}>
-                    <img style={{ ...styles.icon, opacity: "100%" }} src={homeIcon} alt="K" />
-                </div>
-                <div style={styles.iconContainer}>
-                    <img style={styles.icon} src={chatIcon} alt="K" />
-                </div>
-                <div style={styles.iconContainer}>
-                    <img style={styles.icon} src={datingIcon} alt="K" />
-                </div>
-                <div style={styles.iconContainer}>
-                    <img style={styles.icon} src={profileIcon} alt="K" />
-                </div>
-            </div>
+            <NavFooter type={NavPageType.HOME} />
         </div >
     );
 };
