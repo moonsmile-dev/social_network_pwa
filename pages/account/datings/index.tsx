@@ -8,6 +8,7 @@ import smartChatIcon from "@Assets/images/speech-bubble.png";
 import datingTraditionIcon from "@Assets/images/handshake.png";
 import genderManIcon from "@Assets/images/gender_man.png";
 import genderWomanIcon from "@Assets/images/gender_woman.png";
+import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
 
 const styles = {
     container: {
@@ -131,7 +132,7 @@ const UserDating = (props: IUserDatingProps) => {
 
 const AccountDatings: NextPage<any, any> = (props: any) => {
     return (
-        <div>
+        <AuthenticatePageRequired>
             <div className="Header" style={styles.header}>
                 <div style={styles.avatarHeader}>
                     <img style={styles.profileIcon} src={avatarIcon} alt="X" />
@@ -161,7 +162,7 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
                 </div>
             </div>
             <NavFooter className="Footer" type={NavPageType.DATING} />
-        </div>
+        </AuthenticatePageRequired>
     )
 }
 

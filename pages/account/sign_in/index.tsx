@@ -12,6 +12,7 @@ import { useMutation } from "@apollo/client";
 import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
 import { NextRouter, useRouter } from "next/router";
 import { HOME_PAGE_ROUTE } from "src/Routes/contants";
+import { saveAuthInfo } from "src/Commons/Auths/utils";
 
 const headerInfoDivStyle = {
     margin: "30px 0px 0px 40px",
@@ -63,10 +64,7 @@ const AccountSignIn: NextPage<
                 refreshToken,
             } = data.loginAccount;
 
-            localStorage.setItem("account_id", accountId);
-            localStorage.setItem("auth_token", authToken);
-            localStorage.setItem("refresh_token", refreshToken);
-
+            saveAuthInfo(accountId, authToken, refreshToken);
             await router.push(HOME_PAGE_ROUTE);
 
         } catch (error) {

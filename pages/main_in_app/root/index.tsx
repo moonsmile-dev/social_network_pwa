@@ -6,6 +6,7 @@ import avatarIcon from "@Assets/images/profile.jpeg";
 import notifyIcon from "@Assets/images/alarm.png";
 import { StoryHome, FollowerHome, UserPost } from "@Components/Basic";
 import NavFooter, { NavPageType } from "@Components/NavFooter";
+import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
 
 const absoluteCenter = {
     top: "50%",
@@ -109,55 +110,57 @@ const MainInAppRoot: NextPage<
 > = ({ }) => {
     // eslint-disable-next-line react/react-in-jsx-scope
     return (
-        <div style={styles.container}>
-            <div style={styles.header}>
-                <div style={styles.avatarHeader}>
-                    <img style={styles.profileIcon} src={avatarIcon} alt="X" />
+        <AuthenticatePageRequired>
+            <div style={styles.container}>
+                <div style={styles.header}>
+                    <div style={styles.avatarHeader}>
+                        <img style={styles.profileIcon} src={avatarIcon} alt="X" />
+                    </div>
+                    <div style={styles.txtHeader}>
+                        <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Good Morning</p>
+                    </div>
+                    <div style={styles.notifyHeader}>
+                        <img style={styles.notifyIcon} src={notifyIcon} />
+                    </div>
                 </div>
-                <div style={styles.txtHeader}>
-                    <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Good Morning</p>
-                </div>
-                <div style={styles.notifyHeader}>
-                    <img style={styles.notifyIcon} src={notifyIcon} />
-                </div>
-            </div>
-            <div style={styles.main}>
-                <div style={{
-                    display: "flex",
-                    overflowX: "auto",
-                    overflowY: "hidden",
-                    whiteSpace: "nowrap",
-                }}>
-                    <StoryHome name="Tuan" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                    <StoryHome name="Quang" />
-                </div>
+                <div style={styles.main}>
+                    <div style={{
+                        display: "flex",
+                        overflowX: "auto",
+                        overflowY: "hidden",
+                        whiteSpace: "nowrap",
+                    }}>
+                        <StoryHome name="Tuan" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                        <StoryHome name="Quang" />
+                    </div>
 
-                <div style={{
-                    display: "block",
-                    overflowX: "auto",
-                    overflowY: "hidden",
-                    whiteSpace: "nowrap",
-                    backgroundColor: "white",
-                }}>
-                    <FollowerHome />
-                    <FollowerHome />
-                    <FollowerHome />
-                    <FollowerHome />
+                    <div style={{
+                        display: "block",
+                        overflowX: "auto",
+                        overflowY: "hidden",
+                        whiteSpace: "nowrap",
+                        backgroundColor: "white",
+                    }}>
+                        <FollowerHome />
+                        <FollowerHome />
+                        <FollowerHome />
+                        <FollowerHome />
+                    </div>
+                    <UserPost />
+                    <UserPost />
+                    <UserPost />
                 </div>
-                <UserPost />
-                <UserPost />
-                <UserPost />
-            </div>
-            <NavFooter type={NavPageType.HOME} />
-        </div >
+                <NavFooter type={NavPageType.HOME} />
+            </div >
+        </AuthenticatePageRequired>
     );
 };
 

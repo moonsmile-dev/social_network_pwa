@@ -68,7 +68,11 @@ interface INavFooterProp {
 const NavFooter = (props: INavFooterProp) => {
     const { type } = props;
 
-    const accountId: string = localStorage.getItem("account_id");
+    let accountId: string | null = "";
+    if (typeof window !== "undefined") {
+        accountId = localStorage.getItem("account_id");
+    }
+
 
     const router = useRouter();
     const homeStyle = convertStyle(NavPageType.HOME, type);
@@ -77,10 +81,10 @@ const NavFooter = (props: INavFooterProp) => {
     const personalStyle = convertStyle(NavPageType.PERSONAL, type);
 
     const handleClickRoutePage = (nextType: number) => {
-        if (nextType == type) {
+        if (nextType === type) {
             return;
         }
-        let routeUrl: string = ""
+        let routeUrl: string = "";
         switch (nextType) {
             case NavPageType.HOME:
                 routeUrl = HOME_PAGE_ROUTE;

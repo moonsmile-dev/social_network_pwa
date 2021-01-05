@@ -5,6 +5,7 @@ import searchIcon from "@Assets/images/search-icon.png";
 import avatarIcon from "@Assets/images/profile.jpeg";
 import { StoryHome } from "@Components/Basic";
 import NavFooter, { NavPageType } from "@Components/NavFooter";
+import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
 
 const absoluteCenter = {
     top: "50%",
@@ -128,42 +129,43 @@ const AccountChat: NextPage<IAccountChat.IProps, IAccountChat.InitialProps> = (p
     }
 
     return (
-        // eslint-disable-next-line react/react-in-jsx-scope
-        <div style={{ height: "100vh", position: "relative" }}>
-            <div className="search_bar" style={searchBarStyle}>
-                <div style={{ display: "block" }}>
-                    <img style={{ display: "inline", height: "30px", width: "30px", marginLeft: "10px", marginRight: "10px" }} alt="K" src={searchIcon} />
-                    <input style={{ display: "inline", backgroundColor: "inherit", width: "80%", border: "none", outline: "none", color: "#747474" }} placeholder="Search conversation" />
-                </div>
-                <div className="moments" style={{ border: "2px solid white", marginTop: "5px", marginBottom: "10px" }}>
-                    <div style={{ marginLeft: "15px" }}>
-                        <div >
-                            <p style={{ marginBottom: "0px" }}>Moments</p>
-                        </div>
-                        <div style={{}}>
-                            <UserStoriesSliding />
+        <AuthenticatePageRequired>
+            <div style={{ height: "100vh", position: "relative" }}>
+                <div className="search_bar" style={searchBarStyle}>
+                    <div style={{ display: "block" }}>
+                        <img style={{ display: "inline", height: "30px", width: "30px", marginLeft: "10px", marginRight: "10px" }} alt="K" src={searchIcon} />
+                        <input style={{ display: "inline", backgroundColor: "inherit", width: "80%", border: "none", outline: "none", color: "#747474" }} placeholder="Search conversation" />
+                    </div>
+                    <div className="moments" style={{ border: "2px solid white", marginTop: "5px", marginBottom: "10px" }}>
+                        <div style={{ marginLeft: "15px" }}>
+                            <div >
+                                <p style={{ marginBottom: "0px" }}>Moments</p>
+                            </div>
+                            <div style={{}}>
+                                <UserStoriesSliding />
+                            </div>
                         </div>
                     </div>
+                    <div
+                        className="messages"
+                        style={{ backgroundColor: "inherit", overflowY: "auto" }}
+                    >
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                        <MessagePreviewComponent />
+                    </div>
                 </div>
-                <div
-                    className="messages"
-                    style={{ backgroundColor: "inherit", overflowY: "auto" }}
-                >
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                    <MessagePreviewComponent />
-                </div>
+                <NavFooter type={NavPageType.CHAT} />
             </div>
-            <NavFooter type={NavPageType.CHAT} />
-        </div>
+        </AuthenticatePageRequired>
     )
 }
 

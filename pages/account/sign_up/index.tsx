@@ -17,6 +17,7 @@ import { SIGN_UP_ACCOUNT_MUTATION } from "@Libs/Mutations/signUpAccountMutation"
 import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
 import { useRouter } from "next/router";
 import { HOME_PAGE_ROUTE } from "src/Routes/contants";
+import { saveAuthInfo } from "src/Commons/Auths/utils";
 
 const headerInfoDivStyle = {
     margin: "30px 0px 0px 40px",
@@ -53,7 +54,7 @@ const AccountSignUp: NextPage<
 
     const handleSignUpAccount = async () => {
         try {
-            const { data } = await signUpAction({
+            await signUpAction({
                 variables: {
                     username: username.value,
                     email: email.value,
@@ -61,15 +62,16 @@ const AccountSignUp: NextPage<
                 },
             });
 
-            const { loginData } = await signInAction({
+            const { data } = await signInAction({
                 variables: {
                     username: username.value,
                     password: password.value,
                 },
             });
+            const { accountId, authToken, refreshToken } = data.loginAccount;
+            saveAuthInfo(accountId, authToken, refreshToken);
 
             router.push(HOME_PAGE_ROUTE)
-
         } catch (error) {
             console.log(error.message)
         }
