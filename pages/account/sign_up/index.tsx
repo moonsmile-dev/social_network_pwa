@@ -11,6 +11,12 @@ import FlexInput from "@Components/Basic/FlexButton";
 import { btnCntStyle, CntTxt } from "@Styled/Base";
 import Link from "next/link";
 import { NextPage } from "next";
+import { State, useState } from "@hookstate/core";
+import { useMutation } from "@apollo/client";
+import { SIGN_UP_ACCOUNT_MUTATION } from "@Libs/Mutations/signUpAccountMutation";
+import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
+import { useRouter } from "next/router";
+import { HOME_PAGE_ROUTE } from "src/Routes/contants";
 
 const headerInfoDivStyle = {
     margin: "30px 0px 0px 40px",
@@ -36,6 +42,40 @@ const AccountSignUp: NextPage<
     IAcountSignUp.InitialProps
 // eslint-disable-next-line no-empty-pattern
 > = ({ }) => {
+    const email = useState("");
+    const username = useState("");
+    const password = useState("");
+
+    const [signUpAction] = useMutation(SIGN_UP_ACCOUNT_MUTATION);
+    const [signInAction] = useMutation(LOGIN_ACCOUNT_MUTATION)
+    const router = useRouter();
+
+
+    const handleSignUpAccount = async () => {
+        try {
+            const { data } = await signUpAction({
+                variables: {
+                    username: username.value,
+                    email: email.value,
+                    password: password.value,
+                },
+            });
+
+            const { loginData } = await signInAction({
+                variables: {
+                    username: username.value,
+                    password: password.value,
+                },
+            });
+
+            router.push(HOME_PAGE_ROUTE)
+
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+
+
     return (
         <div>
             <div style={headerInfoDivStyle}>
@@ -45,16 +85,18 @@ const AccountSignUp: NextPage<
                         </p>
             </div>
             <div>
-                <form style={{ margin: "50px 15px" }}>
+                <div style={{ margin: "50px 15px" }}>
                     <FlexInput
                         name="Email"
                         placeHolder="Input your email"
                         iconUrl={emailIcon}
+                        onChange={(event) => email.set(event.target.value)}
                     />
                     <FlexInput
                         name="Username"
                         placeHolder="Input your username"
                         iconUrl={usernameIcon}
+                        onChange={(event) => username.set(event.target.value)}
                         iconExpand={usernameExpandIcon}
                     />
                     <FlexInput
@@ -62,6 +104,8 @@ const AccountSignUp: NextPage<
                         placeHolder="Input your password"
                         iconUrl={passwordIcon}
                         iconExpand={passwordExpandIcon}
+                        onChange={(event) => { password.set(event.target.value) }}
+                        hideContent={true}
                     />
                     <div style={{ display: "flex" }}>
                         <input
@@ -80,7 +124,7 @@ const AccountSignUp: NextPage<
                         </p>
                     </div>
                     <div style={{ textAlign: "center", marginTop: "35px" }}>
-                        <button style={{ ...btnCntStyle, margin: "10px" }}>
+                        <button style={{ ...btnCntStyle, margin: "10px" }} onClick={() => { handleSignUpAccount() }}>
                             <CntTxt style={{ fontWeight: "300" }}>
                                 Sign Up
                                 </CntTxt>
@@ -101,7 +145,7 @@ const AccountSignUp: NextPage<
                             </Link>
                         </p>
                     </div>
-                </form>
+                </div>
                 <div style={{ textAlign: "center" }}>
                     <button style={fbBtnStyle}>
                         <div

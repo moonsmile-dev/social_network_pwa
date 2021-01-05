@@ -11,6 +11,7 @@ import { useState } from "@hookstate/core";
 import { useMutation } from "@apollo/client";
 import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
 import { NextRouter, useRouter } from "next/router";
+import { HOME_PAGE_ROUTE } from "src/Routes/contants";
 
 const headerInfoDivStyle = {
     margin: "30px 0px 0px 40px",
@@ -39,7 +40,9 @@ const AccountSignIn: NextPage<
 > = (props: any) => {
     const username = useState("");
     const password = useState("");
-    const [loginAccount, { data, error, loading }] = useMutation(LOGIN_ACCOUNT_MUTATION);
+    const [loginAccount, { data, error, loading }] = useMutation(
+        LOGIN_ACCOUNT_MUTATION
+    );
     const router = useRouter();
 
     useEffect(() => {
@@ -64,7 +67,7 @@ const AccountSignIn: NextPage<
             localStorage.setItem("auth_token", authToken);
             localStorage.setItem("refresh_token", refreshToken);
 
-            await router.push("/main_in_app/root");
+            await router.push(HOME_PAGE_ROUTE);
 
         } catch (error) {
             console.log(error.message)
