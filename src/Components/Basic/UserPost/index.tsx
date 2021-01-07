@@ -1,5 +1,8 @@
 import avatarIcon from "@Assets/images/profile.jpeg";
+import { useRouter } from "next/router";
 import Gallery from 'react-photo-gallery';
+import { FormatString } from "src/Commons/Strings/utils";
+import { PROFILE_PAGE_ROUTE } from "src/Routes/contants";
 
 // const IMAGES =
 //     [{
@@ -49,6 +52,23 @@ const PHOTOS = [
     }
 ];
 
+const boundContainer = {
+    left: "0%",
+    position: "absolute",
+    top: "50%",
+    transform: "translate(0%, -50%)",
+    paddingLeft: "10px",
+    display: "flex",
+}
+const iconTicketStyle = {
+    width: "32px",
+    height: "32px",
+    borderRadius: "50%",
+    overflow: "hidden",
+    marginLeft: "-10px",
+    border: "solid 2px white",
+};
+
 interface IUserPostProp {
     isDetail: boolean;
     avatar: string;
@@ -57,26 +77,16 @@ interface IUserPostProp {
 
 
 export const UserPost = (props: IUserPostProp) => {
-    const boundContainer = {
-        left: "0%",
-        position: "absolute",
-        top: "50%",
-        transform: "translate(0%, -50%)",
-        paddingLeft: "10px",
-        display: "flex",
+    const router = useRouter();
+    const handleRouteToParnerProfile = async () => {
+        await router.push(FormatString(PROFILE_PAGE_ROUTE, 1))
     }
-    const iconTicketStyle = {
-        width: "32px",
-        height: "32px",
-        borderRadius: "50%",
-        overflow: "hidden",
-        marginLeft: "-10px",
-        border: "solid 2px white",
-    };
+
+
     return (
         <div style={{ backgroundColor: "white", padding: "10px", margin: "1px" }}>
             <div className="header_post" style={{ height: "60px", position: "relative" }}>
-                <div style={boundContainer}>
+                <div style={boundContainer} onClick={() => { handleRouteToParnerProfile() }}>
                     <div style={{ width: "54px", height: "54px", borderRadius: "50%", overflow: "hidden" }}>
                         <img style={{ height: "100%", width: "100%" }} alt="X" src={props.avatar ? props.avatar : avatarIcon} />
                     </div>

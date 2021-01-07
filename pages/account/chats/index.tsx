@@ -6,6 +6,9 @@ import avatarIcon from "@Assets/images/profile.jpeg";
 import { StoryHome } from "@Components/Basic";
 import NavFooter, { NavPageType } from "@Components/NavFooter";
 import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
+import { useRouter } from "next/router";
+import { ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE } from "src/Routes/contants";
+import { FormatString } from "src/Commons/Strings/utils";
 
 const absoluteCenter = {
     top: "50%",
@@ -67,6 +70,19 @@ const UserStoriesSliding = (props: any) => {
     )
 }
 
+const avatarContainerStyle = {
+    height: "50px",
+    width: "50px",
+    borderRadius: "50%",
+    backgroundColor: "white",
+    overflow: "hidden"
+}
+const timeCounterStyle = {
+    position: "absolute",
+    right: "10px",
+    backgroundColor: "white",
+}
+
 interface IMessagePreviewProps {
     numNewMsgs: number;
     latestMsgTime: string;
@@ -76,20 +92,13 @@ interface IMessagePreviewProps {
 }
 
 const MessagePreviewComponent = (props: IMessagePreviewProps) => {
-    const avatarContainerStyle = {
-        height: "50px",
-        width: "50px",
-        borderRadius: "50%",
-        backgroundColor: "white",
-        overflow: "hidden"
+    const router = useRouter();
+    const handleRouteToRoomMessage = async () => {
+        await router.push(FormatString(ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, 1));
     }
-    const timeCounterStyle = {
-        position: "absolute",
-        right: "10px",
-        backgroundColor: "white",
-    }
+
     return (
-        <div style={{ backgroundColor: "inherit", position: "relative", padding: "12px 15px", display: "flex" }}>
+        <div style={{ backgroundColor: "inherit", position: "relative", padding: "12px 15px", display: "flex" }} onClick={() => {handleRouteToRoomMessage()}} >
             <div className="avatar_user" style={avatarContainerStyle}>
                 <img alt="XXX" height="100%" width="100%" src={props.avatar ? props.avatar : avatarIcon} />
             </div>

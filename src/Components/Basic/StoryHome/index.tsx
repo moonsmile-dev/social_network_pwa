@@ -1,14 +1,23 @@
 import storyIcon from "@Assets/images/profile.jpeg";
+import { useRouter } from "next/router";
+import { FormatString } from "src/Commons/Strings/utils";
+import { ACCOUNT_STORY_PAGE_ROUTE } from "src/Routes/contants";
 
+const container = {
+    width: "70px",
+    height: "90px",
+    backgroundColor: "white",
+    paddingTop: "5px",
+}
 export const StoryHome = (props: {}) => {
-    const container = {
-        width: "70px",
-        height: "90px",
-        backgroundColor: "white",
-        paddingTop: "5px",
+    const router = useRouter();
+
+
+    const handleRouteToUserStoryView = async () => {
+        await router.push(FormatString(ACCOUNT_STORY_PAGE_ROUTE, 1))
     }
     return (
-        <div style={container}>
+        <div style={container} onClick={() => { handleRouteToUserStoryView() }}>
             <div style={{ height: "70%", display: "flex", justifyContent: "center" }}>
                 <div
                     style={{
