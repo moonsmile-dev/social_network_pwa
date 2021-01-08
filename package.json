@@ -25,6 +25,7 @@
     "@babel/plugin-proposal-private-methods": "^7.12.1",
     "@babel/plugin-transform-react-pure-annotations": "^7.12.1",
     "@babel/plugin-transform-unicode-escapes": "^7.12.1",
+    "@chakra-ui/icons": "^1.0.2",
     "@chakra-ui/react": "^1.0.4",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
