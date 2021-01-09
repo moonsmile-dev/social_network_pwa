@@ -10,7 +10,7 @@ import genderManIcon from "@Assets/images/gender_man.png";
 import genderWomanIcon from "@Assets/images/gender_woman.png";
 import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
 import { useRouter } from "next/router";
-import { DATING_RECS_PAGE_ROUTE } from "src/Routes/contants";
+import { DATING_RECS_PAGE_ROUTE, DATING_SMART_WAITING_PAGE_ROUTE } from "src/Routes/contants";
 
 const styles = {
     container: {
@@ -140,6 +140,9 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
 
     const handleRouteToMatchRecs = async () => {
         await router.push(DATING_RECS_PAGE_ROUTE);
+    };
+    const handleRouteToMatchSmartWaiting = async () => {
+        await router.push(DATING_SMART_WAITING_PAGE_ROUTE)
     }
 
     return (
@@ -158,7 +161,7 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
             <div className="Main" style={styles.main}>
                 <div className="Dating Selection" style={{ width: "100%", border: "1px solid white" }}>
                     <div style={{ display: "flex", margin: "0px 15px" }}>
-                        <OptionDating bg="#7000FF" iconSrc={smartChatIcon} name="Smart Chat" dTxt="120 onlines" />
+                        <OptionDating bg="#7000FF" iconSrc={smartChatIcon} name="Smart Chat" dTxt="120 onlines" onClick={() => handleRouteToMatchSmartWaiting()} />
                         <OptionDating bg="#FF0000" iconSrc={datingTraditionIcon} name="Matching" dTxt="20 updated daily" onClick={() => handleRouteToMatchRecs()} />
                     </div>
                 </div>
