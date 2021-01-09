@@ -9,6 +9,8 @@ import datingTraditionIcon from "@Assets/images/handshake.png";
 import genderManIcon from "@Assets/images/gender_man.png";
 import genderWomanIcon from "@Assets/images/gender_woman.png";
 import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
+import { useRouter } from "next/router";
+import { DATING_RECS_PAGE_ROUTE } from "src/Routes/contants";
 
 const styles = {
     container: {
@@ -73,11 +75,14 @@ interface IOptionDatingProp {
     icon: string;
     name: string;
     dTxt: string;
+
+    onClick: () => any;
 }
 
 const OptionDating = (props: IOptionDatingProp) => {
     return (
-        <Box w="100%" h="148px" borderRadius="10px" margin="10px" {...props} justifyContent="center" justifyItems="center" display="flex">
+        <Box w="100%" h="148px" borderRadius="10px" margin="10px" {...props} justifyContent="center" justifyItems="center" display="flex"
+            onClick={props.onClick}>
             <div style={{ textAlign: "center" }}>
                 <div style={{ width: "100%", display: "flex", justifyItems: "center", justifyContent: "center", padding: "7px" }}>
                     <Image src={props.iconSrc} h="70px" w="70px" />
@@ -131,6 +136,12 @@ const UserDating = (props: IUserDatingProps) => {
 }
 
 const AccountDatings: NextPage<any, any> = (props: any) => {
+    const router = useRouter();
+
+    const handleRouteToMatchRecs = async () => {
+        await router.push(DATING_RECS_PAGE_ROUTE);
+    }
+
     return (
         <AuthenticatePageRequired>
             <div className="Header" style={styles.header}>
@@ -148,16 +159,18 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
                 <div className="Dating Selection" style={{ width: "100%", border: "1px solid white" }}>
                     <div style={{ display: "flex", margin: "0px 15px" }}>
                         <OptionDating bg="#7000FF" iconSrc={smartChatIcon} name="Smart Chat" dTxt="120 onlines" />
-                        <OptionDating bg="#FF0000" iconSrc={datingTraditionIcon} name="Matching" dTxt="20 updated daily" />
+                        <OptionDating bg="#FF0000" iconSrc={datingTraditionIcon} name="Matching" dTxt="20 updated daily" onClick={() => handleRouteToMatchRecs()} />
                     </div>
                 </div>
                 <div className="User dating section">
                     {[...Array(10)].map((x, i) =>
-                        <UserDating avtSrc={avatarIcon}
+                        <UserDating
+                            avtSrc={avatarIcon}
                             name="Nguyen Minh Tuan"
                             preTxt="Toi muon ngam binh minh vao buoi toi.... abc =))"
                             age="21"
-                            gender={Gender.MALE} />
+                            gender={Gender.MALE}
+                        />
                     )}
                 </div>
             </div>
