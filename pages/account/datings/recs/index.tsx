@@ -19,6 +19,9 @@ import demoImg from "@Assets/images/abcde.png";
 import heartDatingIcon from "@Assets/images/heart-dating.png";
 import closeDatingIcon from "@Assets/images/dating_close.png";
 import starDatingIcon from "@Assets/images/dating_star.png";
+import { useRouter } from "next/router";
+import { FormatString } from "src/Commons/Strings/utils";
+import { DATING_RECS_DETAIL_PAGE_ROUTE } from "src/Routes/contants";
 
 const styles = {
     container: {
@@ -47,6 +50,12 @@ const styles = {
 };
 
 const AccountDatingReacs: NextPage<any, any> = () => {
+    const router = useRouter();
+
+    const handleRouteToMatchRecsDetail = async () => {
+        await router.push(FormatString(DATING_RECS_DETAIL_PAGE_ROUTE, 0))
+    }
+
     return (
         <div style={styles.container}>
             <div className="Header" style={styles.header}>
@@ -162,7 +171,12 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                         w="30px"
                         h="30px"
                     >
-                        <InfoIcon h="100%" w="100%" color="white" />
+                        <InfoIcon
+                            h="100%"
+                            w="100%"
+                            color="white"
+                            onClick={() => handleRouteToMatchRecsDetail()}
+                        />
                     </Box>
                 </Box>
                 <Box height="10%" width="100%">

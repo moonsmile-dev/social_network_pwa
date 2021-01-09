@@ -6,3 +6,4 @@ export const PROFILE_PAGE_ROUTE = "/account/{0}/profile";
 export const ACCOUNT_STORY_PAGE_ROUTE = "/account/{0}/story";
 export const ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE = "/account/chats/{0}";
 export const DATING_RECS_PAGE_ROUTE = "/account/datings/recs";
+export const DATING_RECS_DETAIL_PAGE_ROUTE = "/account/datings/recs/{0}/detail"
