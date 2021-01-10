@@ -3,8 +3,18 @@ import { OTPInput } from "@Components/Basic/Input/OTPInput";
 import { withTranslation } from "@Server/i18n";
 import { PageContainer } from "@Styled/Root"
 import { NextPage } from "next"
+import { useRouter } from "next/router";
+import { ACCOUNT_RESET_PASSWORD_PAGE_ROUTE } from "src/Routes/contants";
 
 const AccountPasswordForgotConfirm: NextPage<any, any> = () => {
+    const router = useRouter();
+
+    const handleRouteToResetPage = async () => {
+        await router.push(ACCOUNT_RESET_PASSWORD_PAGE_ROUTE);
+    }
+
+
+
     return (
         <PageContainer>
             <Container className="header_info" padding="50px 30px">
@@ -25,7 +35,9 @@ const AccountPasswordForgotConfirm: NextPage<any, any> = () => {
                         h="50px"
                         borderRadius="full"
                         bg="#8542F2"
-                        borderColor="#B280D0">
+                        borderColor="#B280D0"
+
+                        onClick={() => handleRouteToResetPage()}>
                         <Text fontWeight="bold" color="white">Continue</Text>
                     </Button>
                 </Center>
