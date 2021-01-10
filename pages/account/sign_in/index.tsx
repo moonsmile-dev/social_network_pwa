@@ -11,7 +11,7 @@ import { useState } from "@hookstate/core";
 import { useMutation } from "@apollo/client";
 import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
 import { NextRouter, useRouter } from "next/router";
-import { ACCOUNT_PASSWORD_RESET_PAGE_ROUTE, HOME_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_FORGOT_PASSWORD_PAGE_ROUTE, HOME_PAGE_ROUTE } from "src/Routes/contants";
 import { saveAuthInfo } from "src/Commons/Auths/utils";
 import AuthenticatePageNotRequired from "@Components/Auths/AuthenticatePageNotRequired";
 
@@ -75,7 +75,7 @@ const AccountSignIn: NextPage<
     };
 
     const handleRouteResetPasswordPage = async () => {
-        await router.push(ACCOUNT_PASSWORD_RESET_PAGE_ROUTE);
+        await router.push(ACCOUNT_FORGOT_PASSWORD_PAGE_ROUTE);
     }
 
     return (

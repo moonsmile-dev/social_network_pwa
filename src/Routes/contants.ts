@@ -10,4 +10,4 @@ export const DATING_RECS_DETAIL_PAGE_ROUTE = "/account/datings/recs/{0}/detail";
 export const DATING_SMART_WAITING_PAGE_ROUTE = "/account/datings/smart/waiting";
 export const DATING_SMART_CHAT_PAGE_ROUTE = "/account/datings/smart/{0}/chat";
 export const ACCOUNT_CONFIRM_OTP_PAGE_ROUTE = "/account/{0}/register_confirm";
-export const ACCOUNT_PASSWORD_RESET_PAGE_ROUTE = "/account/passwords/reset";
+export const ACCOUNT_FORGOT_PASSWORD_PAGE_ROUTE = "/account/passwords/forgot";
