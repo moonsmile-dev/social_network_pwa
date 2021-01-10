@@ -16,7 +16,7 @@ import { useMutation } from "@apollo/client";
 import { SIGN_UP_ACCOUNT_MUTATION } from "@Libs/Mutations/signUpAccountMutation";
 import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
 import { useRouter } from "next/router";
-import { HOME_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_CONFIRM_OTP_PAGE_ROUTE, HOME_PAGE_ROUTE } from "src/Routes/contants";
 import { saveAuthInfo } from "src/Commons/Auths/utils";
 import AuthenticatePageNotRequired from "@Components/Auths/AuthenticatePageNotRequired";
 
@@ -72,12 +72,11 @@ const AccountSignUp: NextPage<
             const { accountId, authToken, refreshToken } = data.loginAccount;
             saveAuthInfo(accountId, authToken, refreshToken);
 
-            router.push(HOME_PAGE_ROUTE)
+            router.push(ACCOUNT_CONFIRM_OTP_PAGE_ROUTE)
         } catch (error) {
             console.log(error.message)
         }
     };
-
 
     return (
         <AuthenticatePageNotRequired>
