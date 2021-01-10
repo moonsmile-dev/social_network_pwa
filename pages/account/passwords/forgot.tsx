@@ -3,8 +3,16 @@ import { FlexPhoneInput } from "@Components/Basic/Input/FlexPhoneInput";
 import { withTranslation } from "@Server/i18n";
 import { PageContainer } from "@Styled/Root"
 import { NextPage } from "next"
+import { useRouter } from "next/router";
+import { ACCOUNT_FORGOT_PASSWORD_CONFIRM_PAGE_ROUTE } from "src/Routes/contants";
 
 const AccountPasswordReset: NextPage<any, any> = () => {
+    const router = useRouter();
+
+    const handleRouteToConfirmPage = async () => {
+        await router.push(ACCOUNT_FORGOT_PASSWORD_CONFIRM_PAGE_ROUTE);
+    }
+
     return (
         <PageContainer>
             <Container className="main_info" marginTop="100px" padding="25px">
@@ -22,6 +30,8 @@ const AccountPasswordReset: NextPage<any, any> = () => {
                         borderRadius="full"
                         bg="#8542F2"
                         border="solid #B280D0 1px"
+
+                        onClick={() => handleRouteToConfirmPage()}
                     >
                         <Text color="white" fontWeight="bold">Continue</Text>
                     </Button>
