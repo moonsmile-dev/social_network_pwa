@@ -13,6 +13,7 @@ import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
 import { NextRouter, useRouter } from "next/router";
 import { HOME_PAGE_ROUTE } from "src/Routes/contants";
 import { saveAuthInfo } from "src/Commons/Auths/utils";
+import AuthenticatePageNotRequired from "@Components/Auths/AuthenticatePageNotRequired";
 
 const headerInfoDivStyle = {
     margin: "30px 0px 0px 40px",
@@ -74,7 +75,7 @@ const AccountSignIn: NextPage<
     };
 
     return (
-        <div>
+        <AuthenticatePageNotRequired>
             <div style={headerInfoDivStyle}>
                 <p style={headerStyle}>Let's Sign You In</p>
                 <p style={headerDetailStyle}>
@@ -107,7 +108,7 @@ const AccountSignIn: NextPage<
                     </p>
                 </div>
             </div>
-        </div>
+        </AuthenticatePageNotRequired>
     );
 };
 

@@ -11,6 +11,9 @@ import monsterThreeIcon from "@Assets/images/monster_3.png";
 import monsterFourIcon from "@Assets/images/monster_4.png";
 import monsterFiveIcon from "@Assets/images/monster_5.png";
 import { useRouter } from "next/router";
+import { FormatString } from "src/Commons/Strings/utils";
+import { DATING_SMART_CHAT_PAGE_ROUTE } from "src/Routes/contants";
+import { useEffect } from "react";
 
 const styles = {
     container: {
@@ -26,6 +29,17 @@ const styles = {
 
 const AccountDatingSmartWaiting: NextPage<any, any> = () => {
     const router = useRouter();
+    const handleRouteToChatRoom = async () => {
+        await router.push(FormatString(DATING_SMART_CHAT_PAGE_ROUTE, 1))
+    }
+
+    // TODO handle logic to get match user on smart chat system. 
+
+    useEffect(() => {
+        setTimeout(async () => {
+            await handleRouteToChatRoom();
+        }, 1000);
+    }, [])
     return (
         <Container bg="#B56AFF" h="100vh" position="relative">
             <Box
