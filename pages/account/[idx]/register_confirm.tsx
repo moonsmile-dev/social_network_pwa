@@ -7,7 +7,6 @@ import { PageContainer } from "@Styled/Root";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import "react-phone-input-2/lib/style.css";
 import { HOME_PAGE_ROUTE } from "src/Routes/contants";
 
 const AccountIdxRegisterConfirm: NextPage<any, any> = () => {
@@ -23,7 +22,7 @@ const AccountIdxRegisterConfirm: NextPage<any, any> = () => {
             </Container>
             <Container className="main_info" marginTop="30px">
                 <Box className="phone_info_area" padding="0px 10px">
-                    <FlexPhoneInput />
+                    <FlexPhoneInput isButtonVisible={true} />
                 </Box>
                 <Container className="otp_area" padding="50px 0px" >
                     <OTPInput headerTxt="Input OTP" onComplete={(value) => { console.log(value); }} />

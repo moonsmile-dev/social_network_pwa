@@ -11,7 +11,7 @@ import { useState } from "@hookstate/core";
 import { useMutation } from "@apollo/client";
 import { LOGIN_ACCOUNT_MUTATION } from "@Libs/Mutations/loginAccountMutation";
 import { NextRouter, useRouter } from "next/router";
-import { HOME_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_PASSWORD_RESET_PAGE_ROUTE, HOME_PAGE_ROUTE } from "src/Routes/contants";
 import { saveAuthInfo } from "src/Commons/Auths/utils";
 import AuthenticatePageNotRequired from "@Components/Auths/AuthenticatePageNotRequired";
 
@@ -74,6 +74,10 @@ const AccountSignIn: NextPage<
 
     };
 
+    const handleRouteResetPasswordPage = async () => {
+        await router.push(ACCOUNT_PASSWORD_RESET_PAGE_ROUTE);
+    }
+
     return (
         <AuthenticatePageNotRequired>
             <div style={headerInfoDivStyle}>
@@ -104,7 +108,7 @@ const AccountSignIn: NextPage<
                             </CntTxt>
                     </button>
                     <p style={{ color: "#A3A3A3" }}>
-                        Forgot password! <span style={{ fontWeight: "bold", color: "black" }}>Reset now</span>
+                        Forgot password! <span style={{ fontWeight: "bold", color: "black" }} onClick={() => { handleRouteResetPasswordPage() }}>Reset now</span>
                     </p>
                 </div>
             </div>
