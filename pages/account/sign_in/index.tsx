@@ -3,7 +3,7 @@ import { withTranslation } from "@Server/i18n";
 import UsernameIcon from "@Assets/images/username_icon.png";
 import { NextPage } from "next";
 import React, { useEffect } from "react";
-import FlexInput from "@Components/Basic/FlexButton";
+import FlexInput from "@Components/Basic/FlexInput";
 import PasswordIcon from "@Assets/images/key.png";
 import PasswordExpandIcon from "@Assets/images/eye.png";
 import { btnCntStyle, CntTxt } from "@Styled/Base";

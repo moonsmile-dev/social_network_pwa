@@ -7,7 +7,7 @@ import passwordIcon from "@Assets/images/key.png";
 import passwordExpandIcon from "@Assets/images/eye.png";
 import usernameExpandIcon from "@Assets/images/confirm.png";
 import fbIcon from "@Assets/images/facebook.png";
-import FlexInput from "@Components/Basic/FlexButton";
+import FlexInput from "@Components/Basic/FlexInput";
 import { btnCntStyle, CntTxt } from "@Styled/Base";
 import Link from "next/link";
 import { NextPage } from "next";
