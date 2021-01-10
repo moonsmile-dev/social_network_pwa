@@ -4,6 +4,7 @@ import plusIcon from "@Assets/images/add.png";
 import sendIcon from "@Assets/images/send.png";
 import previousIcon from "@Assets/images/previous.png";
 import voiceIcon from "@Assets/images/voicemail.png";
+import { useRouter } from "next/router";
 
 interface IMessage {
     isMe: boolean;
@@ -49,30 +50,31 @@ const MessageComponent = (props: IMessage) => {
 //     )
 // }
 
+const chatInputContainer = {
+    position: "absolute",
+    bottom: "0%",
+    left: "0%",
+    right: "0%",
+    backgroundColor: "#f2f2f2",
+    border: "1px solid white",
+};
+
+const measureInputStyle = {
+    fontWeight: "bold",
+    border: "none",
+    opacity: "70%",
+    outline: "none",
+    width: "70%",
+};
+
+const centerDisplayStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+}
 
 const AccountChatIdx: NextPage<any, any> = (props: any) => {
-    const chatInputContainer = {
-        position: "absolute",
-        bottom: "0%",
-        left: "0%",
-        right: "0%",
-        backgroundColor: "#f2f2f2",
-        border: "1px solid white",
-    };
-
-    const measureInputStyle = {
-        fontWeight: "bold",
-        border: "none",
-        opacity: "70%",
-        outline: "none",
-        width: "70%",
-    };
-
-    const centerDisplayStyle = {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    }
+    const router = useRouter();
 
     return (
         <div style={{ position: "relative", height: '100vh', backgroundColor: "#cfcfcf" }}>
@@ -83,7 +85,14 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                 backgroundColor: "#ca00ff"
             }}>
                 <div style={{ display: "flex" }}>
-                    <div style={{ height: "35px", width: "35px", margin: "10px" }}>
+                    <div
+                        style={{
+                            height: "35px",
+                            width: "35px",
+                            margin: "10px",
+                        }}
+                        onClick={() => router.back()}
+                    >
                         <img alt="XXX" height="100%" width="100%" src={previousIcon} />
                     </div>
                     <div className="txtHeaderName" style={{ marginLeft: "10px" }}>

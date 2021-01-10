@@ -6,6 +6,7 @@ import profileImage from "@Assets/images/profile.jpeg";
 import followerImage from "@Assets/images/followers.png";
 import { UserPost } from "@Components/Basic";
 import backImage from "@Assets/images/back.png";
+import { useRouter } from "next/router";
 
 const FConnection = () => {
     const MasterDetailCnt = (props: { val: string, cnt: string }) => {
@@ -69,22 +70,23 @@ const ProfileInformation = () => {
     );
 };
 
+const scrollTabStyle = {
+    height: "40px",
+    width: "100%",
+    backgroundColor: "#FAFAFA",
+    display: "inline-grid",
+    gridTemplateColumns: "auto auto"
+};
 interface IAccountProfileProp {
     cover: string;
     avtImg: string;
 }
 
 const AccountProfile: NextPage<IAccountProfile.IProps, IAccountProfile.InitialProps> = (props: IAccountProfileProp) => {
-    const scrollTabStyle = {
-        height: "40px",
-        width: "100%",
-        backgroundColor: "#FAFAFA",
-        display: "inline-grid",
-        gridTemplateColumns: "auto auto"
-    };
+    const router = useRouter();
     return (
         <div style={{ height: "100vh", position: "relative" }}>
-            <div style={{ position: "absolute", height: "35px", width: "35px", top: "15px", left: "15px" }}>
+            <div style={{ position: "fixed", height: "35px", width: "35px", top: "15px", left: "15px", zIndex: "1" }} onClick={() => router.back() }>
                 <img src={backImage} alt="X" height="100%" width="100%" />
             </div>
             <div style={{ height: "58%" }}>

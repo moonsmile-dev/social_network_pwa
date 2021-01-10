@@ -61,7 +61,7 @@ const AccountDatingReacs: NextPage<any, any> = () => {
             <div className="Header" style={styles.header}>
                 <Grid templateColumns="repeat(5, 1fr)" gap={4} h="100%">
                     <GridItem colSpan={1} h="100%">
-                        <Center boxSize="100%">
+                        <Center boxSize="100%" onClick={() => router.back()}>
                             <Image src={backIcon} boxSize="35px" />
                         </Center>
                     </GridItem>

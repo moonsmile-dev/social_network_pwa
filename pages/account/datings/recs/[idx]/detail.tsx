@@ -23,6 +23,7 @@ import locationIcon from "@Assets/images/pin.png";
 import closeDatingIcon from "@Assets/images/dating_close.png";
 import heartDatingIcon from "@Assets/images/heart-dating.png";
 import Gallery from "react-photo-gallery";
+import { useRouter } from "next/router";
 
 const PHOTOS = [
     {
@@ -87,6 +88,8 @@ const InfoField = (props: IInfoFieldProp) => {
 }
 
 const AccountDatingRecsPartnerDetail: NextPage<any, any> = () => {
+    const router = useRouter();
+
     return (
         <PageContainer>
             <Box
@@ -96,7 +99,7 @@ const AccountDatingRecsPartnerDetail: NextPage<any, any> = () => {
                 top="10px"
                 left="10px"
             >
-                <Image src={backIcon} />
+                <Image src={backIcon} onClick={() => router.back()} />
             </Box>
             <Container position="fixed" bottom="10px" zIndex="0">
                 <Center>

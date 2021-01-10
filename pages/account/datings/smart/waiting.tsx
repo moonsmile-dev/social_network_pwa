@@ -10,6 +10,7 @@ import monsterTwoIcon from "@Assets/images/monster_2.png";
 import monsterThreeIcon from "@Assets/images/monster_3.png";
 import monsterFourIcon from "@Assets/images/monster_4.png";
 import monsterFiveIcon from "@Assets/images/monster_5.png";
+import { useRouter } from "next/router";
 
 const styles = {
     container: {
@@ -24,9 +25,16 @@ const styles = {
 };
 
 const AccountDatingSmartWaiting: NextPage<any, any> = () => {
+    const router = useRouter();
     return (
         <Container bg="#B56AFF" h="100vh" position="relative">
-            <Box position="fixed" boxSize="25px" right="20px" top="20px">
+            <Box
+                position="fixed"
+                boxSize="25px"
+                right="20px"
+                top="20px"
+                onClick={() => router.back()}
+            >
                 <Image src={closeIcon} />
             </Box>
             <Box className="main_header" h="30%">
