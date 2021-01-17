@@ -5,7 +5,7 @@ import sendIcon from "@Assets/images/paper-plane.png";
 import avatarIcon from "@Assets/images/profile.jpeg";
 import closeIcon from "@Assets/images/close.png";
 interface ISlicingItem {
-    isVisible: boolean;
+    isVisible?: boolean;
 }
 
 const SlicingItemComponent = (props: ISlicingItem) => {
@@ -22,26 +22,17 @@ const SlicingItemComponent = (props: ISlicingItem) => {
     return <div style={{ ...stickStyle, ...slicingVisibleStyling }} />;
 };
 
-const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
-    const footerStyle = {
-        position: "absolute",
-        width: "100%",
-        bottom: "0%",
-    }
-    const headerStyle = {
-        position: "absolute",
-        width: "100%",
-        top: "5px"
-    }
+const sendMessageStyle = {
+    outline: "none",
+    height: "46px",
+    borderRadius: "23px",
+    opacity: "50%",
+    backgroundColor: "black",
+    color: "white",
+}
 
-    const sendMessageStyle = {
-        outline: "none",
-        height: "46px",
-        borderRadius: "23px",
-        opacity: "50%",
-        backgroundColor: "black",
-        color: "white",
-    }
+
+const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
     return (
         <div style={{ position: "relative", height: '100vh' }}>
             <div className="close_btn" style={{ position: "absolute", top: "2%", right: "2%" }}>
@@ -49,9 +40,13 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
                     <img src={closeIcon} alt="X" width="100%" height="100%" />
                 </div>
             </div>
-            <div className="header_slicing" style={{ ...headerStyle }}>
+            <div className="header_slicing" style={{
+                position: "absolute",
+                width: "100%",
+                top: "5px",
+            }}>
                 <div style={{ display: "flex", margin: "0px 5px" }}>
-                    <SlicingItemComponent isVisible="true" />
+                    <SlicingItemComponent isVisible={true} />
                     <SlicingItemComponent />
                 </div>
                 <div style={{ margin: "15px", display: "flex" }}>
@@ -64,10 +59,14 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
                     </div>
                 </div>
             </div>
-            <div className="Bg_viewer" style={{ backgroundColor: "black", width: "100%", height: "100%", zIndex: "0" }}>
+            <div className="Bg_viewer" style={{ backgroundColor: "black", width: "100%", height: "100%", zIndex: 0 }}>
                 <img src={imageExampleIcon} alt="XX" width="100%" height="100%" />
             </div>
-            <div className="chat_footer" style={{ zIndex: "1", ...footerStyle }}>
+            <div className="chat_footer" style={{
+                zIndex: 1, position: "absolute",
+                width: "100%",
+                bottom: "0%",
+            }}>
                 <div style={{ display: "flex" }}>
                     <input style={{ ...sendMessageStyle, padding: "0px 20px", width: "80%", margin: "5px 10px", border: "2px solid white" }} placeholder="Rely..." />
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

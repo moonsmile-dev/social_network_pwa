@@ -8,7 +8,7 @@ export const btnCntStyle = {
     borderRadius: "25px",
     textAlign: "center",
     borderStyle: "solid",
-};
+} as React.CSSProperties;
 
 export const CntTxt = styled.p`
     color: white;

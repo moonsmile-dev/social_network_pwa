@@ -7,12 +7,16 @@ import voiceIcon from "@Assets/images/voicemail.png";
 import { useRouter } from "next/router";
 
 interface IMessage {
-    isMe: boolean;
-    msg: string;
+    isMe?: boolean;
+    msg?: string;
+}
+
+interface IShiftText {
+    textAlign: undefined | any;
 }
 
 const MessageComponent = (props: IMessage) => {
-    let posMsgStyle = {
+    let posMsgStyle: IShiftText = {
         // left: "10px",
         textAlign: "left",
     }
@@ -57,7 +61,7 @@ const chatInputContainer = {
     right: "0%",
     backgroundColor: "#f2f2f2",
     border: "1px solid white",
-};
+} as React.CSSProperties;
 
 const measureInputStyle = {
     fontWeight: "bold",
@@ -65,7 +69,7 @@ const measureInputStyle = {
     opacity: "70%",
     outline: "none",
     width: "70%",
-};
+} as React.CSSProperties;
 
 const centerDisplayStyle = {
     display: "flex",
@@ -106,7 +110,7 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                 </div>
             </div>
             <div className="chat_area" style={{ height: "90%", display: "flex", flexDirection: "column-reverse" }}>
-                <MessageComponent isMe="true" />
+                <MessageComponent isMe={true} />
                 <MessageComponent />
             </div>
             <div className="chat_input_container" style={chatInputContainer} >

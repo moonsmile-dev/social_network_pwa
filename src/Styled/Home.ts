@@ -86,12 +86,3 @@ export const TopText = styled.div`
     color: #ffffff;
     margin-bottom: 10px;
 `;
-
-export const Circle = styled.div`
-    width: ${({ r }) => r * 2}px;
-    height: ${(props) => props.r * 2}px;
-    -webkit-border-radius: ${(props) => props.r}px;
-    -moz-border-radius: ${(props) => props.r}px;
-    border-radius: ${(props) => props.r}px;
-    background: ${(props) => props.color};
-`;

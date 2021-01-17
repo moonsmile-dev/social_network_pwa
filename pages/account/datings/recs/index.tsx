@@ -53,12 +53,12 @@ const AccountDatingReacs: NextPage<any, any> = () => {
     const router = useRouter();
 
     const handleRouteToMatchRecsDetail = async () => {
-        await router.push(FormatString(DATING_RECS_DETAIL_PAGE_ROUTE, 0))
+        await router.push(FormatString(DATING_RECS_DETAIL_PAGE_ROUTE, "0"))
     }
 
     return (
-        <div style={styles.container}>
-            <div className="Header" style={styles.header}>
+        <div style={styles.container as React.CSSProperties}>
+            <div className="Header" style={styles.header as React.CSSProperties}>
                 <Grid templateColumns="repeat(5, 1fr)" gap={4} h="100%">
                     <GridItem colSpan={1} h="100%">
                         <Center boxSize="100%" onClick={() => router.back()}>
@@ -85,7 +85,7 @@ const AccountDatingReacs: NextPage<any, any> = () => {
             </div>
             <div
                 className="Main"
-                style={{ ...styles.main, backgroundColor: "#E5E5E5" }}
+                style={{ ...styles.main as React.CSSProperties, backgroundColor: "#E5E5E5" }}
             >
                 <Box
                     height="90%"

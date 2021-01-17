@@ -4,12 +4,19 @@ WORKDIR /opt/app
 
 ENV NODE_ENV production
 
-COPY package*.json ./
+ADD package*.json ./
+ADD yarn.lock ./
 
-RUN npm ci 
+RUN yarn install
 
-COPY . /opt/app
+ADD . /opt/app
 
-RUN npm install --dev && npm run build
+RUN yarn add --dev typescript @types/node @types/styled-components
 
-CMD [ "npm", "start" ]
+RUN yarn install --dev
+
+# RUN yarn install --dev && yarn build
+
+EXPOSE 3000
+
+CMD [ "yarn", "start" ]

@@ -36,6 +36,15 @@ const styles = {
         paddingBottom: "94px",
         zIndex: "1"
     },
+    notifyIcon: {
+        textAlign: "center",
+        height: "35px",
+        width: "35px",
+        top: "50%",
+        left: "50%",
+        position: "absolute",
+        transform: "translate(-50%, -50%)",
+    },
     profileIcon: {
         textAlign: "center",
         height: "40px",
@@ -72,9 +81,9 @@ const styles = {
 
 interface IOptionDatingProp {
     bg: string;
-    icon: string;
     name: string;
     dTxt: string;
+    iconSrc: string;
 
     onClick: () => any;
 }
@@ -147,18 +156,18 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
 
     return (
         <AuthenticatePageRequired>
-            <div className="Header" style={styles.header}>
-                <div style={styles.avatarHeader}>
-                    <img style={styles.profileIcon} src={avatarIcon} alt="X" />
+            <div className="Header" style={styles.header as React.CSSProperties}>
+                <div style={styles.avatarHeader as React.CSSProperties}>
+                    <img style={styles.profileIcon as React.CSSProperties} src={avatarIcon} alt="X" />
                 </div>
-                <div style={styles.txtHeader}>
+                <div style={styles.txtHeader as React.CSSProperties}>
                     <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Let's start Dating</p>
                 </div>
-                <div style={styles.settingHeader}>
-                    <img style={styles.notifyIcon} src={matchSettingIcon} />
+                <div style={styles.settingHeader as React.CSSProperties}>
+                    <img style={styles.notifyIcon as React.CSSProperties} src={matchSettingIcon} />
                 </div>
             </div>
-            <div className="Main" style={styles.main}>
+            <div className="Main" style={styles.main as React.CSSProperties}>
                 <div className="Dating Selection" style={{ width: "100%", border: "1px solid white" }}>
                     <div style={{ display: "flex", margin: "0px 15px" }}>
                         <OptionDating bg="#7000FF" iconSrc={smartChatIcon} name="Smart Chat" dTxt="120 onlines" onClick={() => handleRouteToMatchSmartWaiting()} />
@@ -171,13 +180,13 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
                             avtSrc={avatarIcon}
                             name="Nguyen Minh Tuan"
                             preTxt="Toi muon ngam binh minh vao buoi toi.... abc =))"
-                            age="21"
+                            age={21}
                             gender={Gender.MALE}
                         />
                     )}
                 </div>
             </div>
-            <NavFooter className="Footer" type={NavPageType.DATING} />
+            <NavFooter type={NavPageType.DATING} />
         </AuthenticatePageRequired>
     )
 }

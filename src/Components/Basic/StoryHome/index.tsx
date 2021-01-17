@@ -9,12 +9,18 @@ const container = {
     backgroundColor: "white",
     paddingTop: "5px",
 }
-export const StoryHome = (props: {}) => {
+interface IStoryHome {
+    name?: string;
+    imgSrc?: string
+}
+
+
+export const StoryHome = (props: IStoryHome) => {
     const router = useRouter();
 
 
     const handleRouteToUserStoryView = async () => {
-        await router.push(FormatString(ACCOUNT_STORY_PAGE_ROUTE, 1))
+        await router.push(FormatString(ACCOUNT_STORY_PAGE_ROUTE, "1"))
     }
     return (
         <div style={container} onClick={() => { handleRouteToUserStoryView() }}>

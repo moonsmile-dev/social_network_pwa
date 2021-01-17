@@ -30,7 +30,7 @@ const styles = {
 const AccountDatingSmartWaiting: NextPage<any, any> = () => {
     const router = useRouter();
     const handleRouteToChatRoom = async () => {
-        await router.push(FormatString(DATING_SMART_CHAT_PAGE_ROUTE, 1))
+        await router.push(FormatString(DATING_SMART_CHAT_PAGE_ROUTE, "1"))
     }
 
     // TODO handle logic to get match user on smart chat system. 
@@ -108,7 +108,7 @@ const AccountDatingSmartWaiting: NextPage<any, any> = () => {
                                 >
                                     12s
                                 </Text>
-                                <ClapSpinner size="75" frontColor="white" />
+                                <ClapSpinner size={75} frontColor="white" />
                             </Box>
                         </Center>
                     </Box>

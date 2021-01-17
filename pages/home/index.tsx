@@ -6,18 +6,7 @@ import { NextPage } from "next";
 // #region Local Imports
 import { withTranslation } from "@Server/i18n";
 import {
-    Container,
-    Top,
-    TopText,
-    Middle,
-    MiddleLeft,
-    MiddleLeftButtons,
-    MiddleRight,
-    Apod,
-    ApodButton,
-    LogoPreview,
-    InfoGetStarted,
-    Circle,
+    Container
 } from "@Styled/Home";
 import { HomeActions } from "@Actions";
 import { Heading, LocaleButton } from "@Components";
@@ -38,23 +27,23 @@ const logoRawStyle = {
     width: "100%",
     height: "60%",
     position: "relative",
-};
+} as React.CSSProperties;
 
 const cntStyle = {
     backgroundColor: "white",
     width: "100%",
     height: "40%",
-};
+} as React.CSSProperties;
 
 const bigCircleStyle = {
     position: "absolute",
     right: "0px",
     transform: "translate(100px,-100px)"
-};
+} as React.CSSProperties;
 const smallCircleStyle = {
     position: "absolute",
     transform: "translate(-50px,300px)",
-};
+} as React.CSSProperties;
 
 const logoImageStyle = {
     width: "275px",
@@ -63,11 +52,11 @@ const logoImageStyle = {
     transform: "translate(-50%,-50%)",
     top: "50%",
     left: "50%",
-};
+} as React.CSSProperties;
 const divInfoStyle = {
     textAlign: "center",
     padding: "20px"
-};
+} as React.CSSProperties;
 
 const divBtnStyle = {
     textAlign: "center",
@@ -77,7 +66,7 @@ const divBtnStyle = {
 const txtMasterStyle = {
     fontSize: "20px",
     fontWeight: "bold"
-};
+} as React.CSSProperties;
 
 const txtDetailStyle = {
     fontSize: "12px",
@@ -122,7 +111,7 @@ const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = (props: any) =>
     return (
         <Container>
             <div style={logoRawStyle}>
-                <div span={24}>
+                <div>
                     <img src={LogoImage} style={logoImageStyle} />
                     <div style={{
                         ...bigCircleStyle,
@@ -156,8 +145,8 @@ const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = (props: any) =>
                             lover. Please join us...
                         </p>
                     </div>
-                    <div style={divBtnStyle}>
-                        <Link href="/account/sign_up" style={{ btnCntStyle }}>
+                    <div style={divBtnStyle as React.CSSProperties}>
+                        <Link href="/account/sign_up">
                             <button style={btnCntStyle}>
                                 <CntTxt>Get Started</CntTxt>
                             </button>

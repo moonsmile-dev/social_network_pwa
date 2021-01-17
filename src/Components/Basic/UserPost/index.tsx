@@ -59,7 +59,7 @@ const boundContainer = {
     transform: "translate(0%, -50%)",
     paddingLeft: "10px",
     display: "flex",
-}
+} as React.CSSProperties;
 const iconTicketStyle = {
     width: "32px",
     height: "32px",
@@ -70,16 +70,18 @@ const iconTicketStyle = {
 };
 
 interface IUserPostProp {
-    isDetail: boolean;
-    avatar: string;
-    cnt: string;
-};
+    isDetail?: boolean;
+    avatar?: string;
+    cnt?: string;
+    num_comments?: number;
+    num_shared?: number;
+}
 
 
 export const UserPost = (props: IUserPostProp) => {
     const router = useRouter();
     const handleRouteToParnerProfile = async () => {
-        await router.push(FormatString(PROFILE_PAGE_ROUTE, 1))
+        await router.push(FormatString(PROFILE_PAGE_ROUTE, "1"))
     }
 
 

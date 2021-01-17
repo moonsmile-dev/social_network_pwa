@@ -1,11 +1,11 @@
 interface IFlexInput {
     name: string,
     iconUrl: string,
-    iconExpand: string | undefined,
-    placeHolder: string | undefined,
-    hideContent: boolean | null,
+    iconExpand?: string | undefined,
+    placeHolder?: string | undefined,
+    hideContent?: boolean | null,
 
-    onChange: () => any,
+    onChange?: (target: any) => any,
 }
 
 const headerDetailStyle = {

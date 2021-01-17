@@ -26,7 +26,8 @@ if (process.env === "production") {
         [
             [withCSS],
             [withSass],
-            [withBundleAnalyzer],[withImages],
+            [withBundleAnalyzer],
+            [withImages, {  fileExtensions: ["jpg", "jpeg", "png", "gif"] } ],
             [withPWA, { pwa: { dest: "public/static", runtimeCaching } }],
         ],
         nextConfig

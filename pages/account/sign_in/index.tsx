@@ -22,14 +22,14 @@ const headerStyle = {
     fontSize: "36px",
     fontWeight: "bold",
     margin: "0px",
-};
+} as React.CSSProperties;
 const headerDetailStyle = {
     color: "#8F8F8F",
 };
 
 
 const handleRoute = async (router: NextRouter) => {
-    const authToken: string = localStorage.getItem('auth_token')
+    const authToken: string | null = localStorage.getItem('auth_token')
 
     if (authToken) {
         await router.push("/main_in_app/root")
@@ -103,7 +103,7 @@ const AccountSignIn: NextPage<
                 />
                 <div style={{ textAlign: "center", marginTop: "100px" }}>
                     <button style={{ ...btnCntStyle, margin: "10px" }} onClick={handleSignInOnClick}>
-                        <CntTxt style={{ fontWeight: "300" }}>
+                        <CntTxt style={{ fontWeight: "bold" }}>
                             Sign In
                             </CntTxt>
                     </button>

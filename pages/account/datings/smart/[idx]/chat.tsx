@@ -8,6 +8,8 @@ import goOutIcon from "@Assets/images/out.png";
 import flagIcon from "@Assets/images/flag.png";
 import { ClapSpinner } from "react-spinners-kit";
 import loveActionIcon from "@Assets/images/heart_action.png";
+import { useRouter } from "next/router";
+import { DATING_PAGE_ROUTE } from "src/Routes/contants";
 
 const styles = {
     boderTxt: {
@@ -16,18 +18,24 @@ const styles = {
 }
 
 const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
+    const router = useRouter();
+
+    const handleGoOutSmartRoom = () => {
+        router.push(DATING_PAGE_ROUTE)
+    }
+
     return (
         <PageContainer>
             <Box className="header" position="fixed" h="80px" w="100%" bg="#672AB6">
                 <Center boxSize="100%">
                     <Grid templateColumns="repeat(3, 1fr)" gap={20}>
-                        <Box boxSize="60px" >
+                        <Box boxSize="60px" onClick={() => handleGoOutSmartRoom()}>
                             <Image src={goOutIcon} />
                         </Box>
                         <Box boxSize="60px" >
                             <Center boxSize="100%">
                                 <Flex>
-                                    <ClapSpinner size="20" frontColor="white" />
+                                    <ClapSpinner size={20} frontColor="white" />
                                     <Text marginLeft="10px" color="#D049FF" fontWeight="bold">10s</Text>
                                 </Flex>
                             </Center>

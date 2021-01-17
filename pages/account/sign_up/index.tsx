@@ -81,7 +81,7 @@ const AccountSignUp: NextPage<
     return (
         <AuthenticatePageNotRequired>
             <div style={headerInfoDivStyle}>
-                <p style={headerStyle}>Getting started</p>
+                <p style={headerStyle as React.CSSProperties}>Getting started</p>
                 <p style={headerDetailStyle}>
                     create an account to continue
                         </p>
@@ -127,7 +127,7 @@ const AccountSignUp: NextPage<
                     </div>
                     <div style={{ textAlign: "center", marginTop: "35px" }}>
                         <button style={{ ...btnCntStyle, margin: "10px" }} onClick={() => { handleSignUpAccount() }}>
-                            <CntTxt style={{ fontWeight: "300" }}>
+                            <CntTxt style={{ fontWeight: "bold" }}>
                                 Sign Up
                                 </CntTxt>
                         </button>

@@ -81,24 +81,24 @@ const timeCounterStyle = {
     position: "absolute",
     right: "10px",
     backgroundColor: "white",
-}
+} as React.CSSProperties;
 
 interface IMessagePreviewProps {
-    numNewMsgs: number;
-    latestMsgTime: string;
-    avatar: string;
-    msgPreview: string;
-    name: string;
+    numNewMsgs?: number;
+    latestMsgTime?: string;
+    avatar?: string;
+    msgPreview?: string;
+    name?: string;
 }
 
 const MessagePreviewComponent = (props: IMessagePreviewProps) => {
     const router = useRouter();
     const handleRouteToRoomMessage = async () => {
-        await router.push(FormatString(ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, 1));
+        await router.push(FormatString(ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, "1"));
     }
 
     return (
-        <div style={{ backgroundColor: "inherit", position: "relative", padding: "12px 15px", display: "flex" }} onClick={() => {handleRouteToRoomMessage()}} >
+        <div style={{ backgroundColor: "inherit", position: "relative", padding: "12px 15px", display: "flex" }} onClick={() => { handleRouteToRoomMessage() }} >
             <div className="avatar_user" style={avatarContainerStyle}>
                 <img alt="XXX" height="100%" width="100%" src={props.avatar ? props.avatar : avatarIcon} />
             </div>

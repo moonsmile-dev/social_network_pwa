@@ -111,19 +111,19 @@ const MainInAppRoot: NextPage<
     // eslint-disable-next-line react/react-in-jsx-scope
     return (
         <AuthenticatePageRequired>
-            <div style={styles.container}>
-                <div style={styles.header}>
-                    <div style={styles.avatarHeader}>
-                        <img style={styles.profileIcon} src={avatarIcon} alt="X" />
+            <div style={styles.container as React.CSSProperties}>
+                <div style={styles.header as React.CSSProperties}>
+                    <div style={styles.avatarHeader as React.CSSProperties}>
+                        <img style={styles.profileIcon as React.CSSProperties} src={avatarIcon} alt="X" />
                     </div>
-                    <div style={styles.txtHeader}>
+                    <div style={styles.txtHeader as React.CSSProperties}>
                         <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Good Morning</p>
                     </div>
-                    <div style={styles.notifyHeader}>
-                        <img style={styles.notifyIcon} src={notifyIcon} />
+                    <div style={styles.notifyHeader as React.CSSProperties}>
+                        <img style={styles.notifyIcon as React.CSSProperties} src={notifyIcon} />
                     </div>
                 </div>
-                <div style={styles.main}>
+                <div style={styles.main as React.CSSProperties}>
                     <div style={{
                         display: "flex",
                         overflowX: "auto",

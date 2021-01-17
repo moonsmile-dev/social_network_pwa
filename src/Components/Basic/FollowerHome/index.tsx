@@ -8,19 +8,18 @@ const absoluteCenter = {
     left: "50%",
     position: "absolute",
     transform: "translate(-50%, -50%)",
-};
+} as React.CSSProperties;
 
 const containerStyle = {
     height: "160px",
     width: "136px",
     backgroundColor: "white",
-    margin: "1px",
     borderRadius: "12px",
     display: "inline-block",
     position: "relative",
     boxShadow: "0 0 30px rgba(0, 0, 0, 0.15)",
     margin: "3px 2px",
-};
+} as React.CSSProperties;
 
 const buttonStyle = {
     width: "80px",
@@ -35,19 +34,24 @@ const iconContainer = {
     textAlign: "center",
     display: "flex",
     justifyContent: "center",
-};
-export const FollowerHome = (props: {}) => {
+} as React.CSSProperties;
+
+interface IFollowerHome {
+    srcImg?: string;
+    name?: string;
+
+}
+
+export const FollowerHome = (props: IFollowerHome) => {
     const router = useRouter();
     const handleRouteToParnerProfile = async () => {
-        await router.push(FormatString(PROFILE_PAGE_ROUTE, 1))
+        await router.push(FormatString(PROFILE_PAGE_ROUTE, "1"))
     }
 
     return (
         <div style={containerStyle}>
             <div
-                style={{
-                    ...absoluteCenter,
-                }}
+                style={absoluteCenter}
             >
                 <div className="avt-area" onClick={() => { handleRouteToParnerProfile() }}>
                     <div style={iconContainer}>

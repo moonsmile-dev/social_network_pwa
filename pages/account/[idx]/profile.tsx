@@ -89,7 +89,7 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
 
     return (
         <div style={{ height: "100vh", position: "relative" }}>
-            <div style={{ position: "fixed", height: "35px", width: "35px", top: "15px", left: "15px", zIndex: "1" }} onClick={() => router.back()}>
+            <div style={{ position: "fixed", height: "35px", width: "35px", top: "15px", left: "15px", zIndex: 1 }} onClick={() => router.back()}>
                 <img src={backImage} alt="X" height="100%" width="100%" />
             </div>
             <div style={{ height: "58%" }}>
