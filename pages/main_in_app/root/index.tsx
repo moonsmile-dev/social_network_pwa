@@ -11,6 +11,7 @@ import { useQuery } from "@apollo/client";
 import { GET_USER_FOLLOW_LIST_QUERY } from "@Libs/Queries/getUserFollowListQuery";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { GET_USER_STORY_LIST_QUERY } from "@Libs/Queries/getUserStoryListQuery";
+import { GET_USER_HOME_PAGE_QUERY } from "@Libs/Queries/getUserHomePageQuery";
 
 const absoluteCenter = {
     top: "50%",
@@ -126,7 +127,6 @@ const UserStoryList = (props: any) => {
     }
 
     const userStories: Array<any> = data.userStories
-    console.log(data.userStories)
 
     return (
         <>
@@ -151,7 +151,7 @@ const UserFollowList = (props: any) => {
     });
 
     if (error) {
-        return <div>Error loading players.</div>;
+        return <div>Error loading user followers.</div>;
     }
     if (loading) {
         return null
@@ -168,10 +168,55 @@ const UserFollowList = (props: any) => {
     )
 }
 
+interface IMediaPost {
+    url: string;
+    type?: string;
+}
+interface ArticlePost {
+    content?: string;
+    accountId?: string;
+    id?: string;
+    medias: Array<IMediaPost>;
+    userCommentCount: number;
+    userReactCount: number;
+}
+
+const UserPostList = (props: any) => {
+    const { accountId, authToken } = getAuthInfo()
+    const { loading, error, data } = useQuery(GET_USER_HOME_PAGE_QUERY, {
+        variables: {
+            auth_token: authToken,
+            account_id: accountId
+        }
+    });
+
+    if (error) {
+        return <div>Error loading user posts.</div>
+    }
+
+    if (loading) {
+        return null
+    }
+
+    const articlePosts: Array<ArticlePost> = data.accountHomepage.articlePosts
+    console.log(articlePosts)
+
+    return (
+        <>
+            {
+                articlePosts.map((post, idx) => (
+                    <UserPost key={idx} isDetail={false} cnt={post.content} accountId={post.accountId} medias={post.medias} num_reacts={post.userReactCount} num_comments={post.userReactCount} id={post.id || ""} />
+                ))
+            }
+        </>
+    )
+
+}
+
 const MainInAppRoot: NextPage<
     IMainInAppRoot.IProps,
     IMainInAppRoot.InitialProps
-> = ({ }) => {
+> = (props: any) => {
     // eslint-disable-next-line react/react-in-jsx-scope
     return (
         <AuthenticatePageRequired>
@@ -206,9 +251,7 @@ const MainInAppRoot: NextPage<
                     }}>
                         <UserFollowList />
                     </div>
-                    <UserPost />
-                    <UserPost />
-                    <UserPost />
+                    <UserPostList />
                 </div>
                 <NavFooter type={NavPageType.HOME} />
             </div >
