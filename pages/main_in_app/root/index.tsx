@@ -10,6 +10,7 @@ import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired
 import { useQuery } from "@apollo/client";
 import { GET_USER_FOLLOW_LIST_QUERY } from "@Libs/Queries/getUserFollowListQuery";
 import { getAuthInfo } from "src/Commons/Auths/utils";
+import { GET_USER_STORY_LIST_QUERY } from "@Libs/Queries/getUserStoryListQuery";
 
 const absoluteCenter = {
     top: "50%",
@@ -107,6 +108,37 @@ const styles = {
     }
 };
 
+const UserStoryList = (props: any) => {
+    const { accountId, authToken } = getAuthInfo()
+
+    const { loading, error, data } = useQuery(GET_USER_STORY_LIST_QUERY, {
+        variables: {
+            auth_token: authToken,
+            account_id: accountId
+        }
+    })
+    if (error) {
+        return <div>Error loading players.</div>;
+    }
+
+    if (loading) {
+        return null;
+    }
+
+    const userStories: Array<any> = data.userStories
+    console.log(data.userStories)
+
+    return (
+        <>
+            {
+                userStories.map((user, idx) =>
+                    < StoryHome key={idx} name={user.name} imgSrc={user.mediaDatas[0].mediaUrl} />
+                )
+            }
+        </>
+    )
+}
+
 
 
 const UserFollowList = (props: any) => {
@@ -122,18 +154,14 @@ const UserFollowList = (props: any) => {
         return <div>Error loading players.</div>;
     }
     if (loading) {
-        return <div>Loading</div>;
+        return null
     }
-
     const userFollowers: Array<any> = data.userFollowers
-
-    console.log(data.userFollowers)
-
 
     return (
         <>{
-            userFollowers.map((user, i) =>
-                <FollowerHome key={user.id} name={user.name} id={user.id} srcImg={user.avatar} />
+            userFollowers.map((user, idx) =>
+                <FollowerHome key={idx} name={user.name} id={user.id} srcImg={user.avatar} />
             )
         }
         </>
@@ -166,16 +194,7 @@ const MainInAppRoot: NextPage<
                         overflowY: "hidden",
                         whiteSpace: "nowrap",
                     }}>
-                        <StoryHome name="Tuan" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
-                        <StoryHome name="Quang" />
+                        <UserStoryList />
                     </div>
 
                     <div style={{

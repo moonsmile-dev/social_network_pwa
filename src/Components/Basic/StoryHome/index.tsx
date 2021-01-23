@@ -47,7 +47,7 @@ export const StoryHome = (props: IStoryHome) => {
                 </div>
             </div>
             <div style={{ textAlign: "center" }}>
-                <p style={{ fontWeight: "bold" }}>{props.name ? props.name : "Alex"}</p>
+                <p style={{ fontWeight: "bold" }}>{props.name ? props.name.split(' ')[0] : "Alex"}</p>
             </div>
         </div>
     );

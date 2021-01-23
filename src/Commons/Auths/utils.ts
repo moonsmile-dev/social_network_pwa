@@ -15,16 +15,19 @@ export const saveAuthInfo = (
 };
 
 export const getAuthInfo = () => {
+    let accountId = null
+    let authToken = null
+    let refreshToken = null
+
     if (typeof window !== 'undefined') {
-        return {
-            accountId: localStorage.getItem(ACCOUNT_ID_KEY),
-            authToken: localStorage.getItem(AUTH_TOKEN_KEY),
-            refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY),
-        };
+        accountId = localStorage.getItem(ACCOUNT_ID_KEY)
+        authToken = localStorage.getItem(AUTH_TOKEN_KEY)
+        refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
     }
+
     return {
-        accountId: null,
-        authToken: null,
-        refreshToken: null
+        accountId: accountId,
+        authToken: authToken,
+        refreshToken: refreshToken
     }
 };
