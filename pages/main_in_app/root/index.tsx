@@ -207,7 +207,7 @@ const UserPostList = (props: any) => {
         <>
             {
                 articlePosts.map((post, idx) => (
-                    <UserPost key={idx} isDetail={false} cnt={post.content} accountId={post.accountId} medias={post.medias} num_reacts={post.userReactCount} num_comments={post.userReactCount} id={post.id || ""} />
+                    <UserPost key={idx} isDetail={false} cnt={post.content} accountId={post.accountId} medias={post.medias} num_reacts={post.userReactCount} num_comments={post.userCommentCount} id={post.id || ""} />
                 ))
             }
         </>
