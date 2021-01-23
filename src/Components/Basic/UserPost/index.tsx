@@ -7,54 +7,12 @@ import { useState } from "@hookstate/core";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { FormatString } from "src/Commons/Strings/utils";
 import { PROFILE_PAGE_ROUTE } from "src/Routes/contants";
-
-// const IMAGES =
-//     [{
-//         src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-//         thumbnail: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
-//         thumbnailWidth: 320,
-//         thumbnailHeight: 174,
-//         isSelected: false,
-//         caption: "After Rain (Jeshu John - designerspics.com)"
-//     },
-//     {
-//         src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-//         thumbnail: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_n.jpg",
-//         thumbnailWidth: 320,
-//         thumbnailHeight: 212,
-//         tags: [{ value: "Ocean", title: "Ocean" }, { value: "People", title: "People" }],
-//         caption: "Boats (Jeshu John - designerspics.com)"
-//     },
-
-//     {
-//         src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-//         thumbnail: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_n.jpg",
-//         thumbnailWidth: 320,
-//         thumbnailHeight: 212
-//     }]
-
-const PHOTOS = [
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/xejm9edreuxuuokne_0b8aba5c.jpeg",
-        width: 4,
-        height: 2,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/ccg1walpzr5lq4mbq_fce894ad.jpeg",
-        width: 4,
-        height: 1,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/cm9owltqkl0xbcods_ed868f53.jpeg",
-        width: 2,
-        height: 2,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/4pjjidpb5ugjmjrim_eed38f0d.jpeg",
-        width: 2,
-        height: 4,
-    }
-];
+import { useCallback } from "react";
+interface IPhotoData {
+    src: string;
+    width: number;
+    height: number;
+}
 
 const boundContainer = {
     left: "0%",
@@ -103,11 +61,13 @@ export const UserPost = (props: IUserPostProp) => {
     const accountName = useState("");
     const accountAvatar = useState("");
 
-    const handleRouteToParnerProfile = async () => {
-        await router.push(FormatString(PROFILE_PAGE_ROUTE, `${props.accountId}`))
-    }
+    const handleRouteToParnerProfile = useCallback(
+        async () => {
+            await router.push(FormatString(PROFILE_PAGE_ROUTE, `${props.accountId}`))
+        },
+        [],
+    )
 
-    console.log(`User post: ${JSON.stringify(props)}`)
     const { authToken } = getAuthInfo();
 
     const { loading, error, data } = useQuery(GET_ACCOUNT_INFO_QUERY, {
@@ -153,8 +113,8 @@ export const UserPost = (props: IUserPostProp) => {
                         (media, _idx) => {
                             return {
                                 src: media.url ? media.url : "",
-                                width: 1,
-                                height: 1,
+                                width: _idx + 1,
+                                height: _idx + 1,
                             }
                         }) as any)
                 } />

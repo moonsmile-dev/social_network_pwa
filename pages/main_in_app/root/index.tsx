@@ -12,6 +12,7 @@ import { GET_USER_FOLLOW_LIST_QUERY } from "@Libs/Queries/getUserFollowListQuery
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { GET_USER_STORY_LIST_QUERY } from "@Libs/Queries/getUserStoryListQuery";
 import { GET_USER_HOME_PAGE_QUERY } from "@Libs/Queries/getUserHomePageQuery";
+import { GET_ACCOUNT_INFO_QUERY, IAccountInfo } from "@Libs/Queries/getAccountInfoQuery";
 
 const absoluteCenter = {
     top: "50%",
@@ -143,12 +144,13 @@ const UserStoryList = (props: any) => {
 
 const UserFollowList = (props: any) => {
     const { accountId, authToken } = getAuthInfo()
+
     const { loading, error, data } = useQuery(GET_USER_FOLLOW_LIST_QUERY, {
         variables: {
             auth_token: authToken,
             account_id: accountId
         }
-    });
+    })
 
     if (error) {
         return <div>Error loading user followers.</div>;
@@ -156,6 +158,7 @@ const UserFollowList = (props: any) => {
     if (loading) {
         return null
     }
+
     const userFollowers: Array<any> = data.userFollowers
 
     return (
@@ -199,7 +202,6 @@ const UserPostList = (props: any) => {
     }
 
     const articlePosts: Array<ArticlePost> = data.accountHomepage.articlePosts
-    console.log(articlePosts)
 
     return (
         <>
@@ -213,24 +215,46 @@ const UserPostList = (props: any) => {
 
 }
 
+const HeaderHome = (props: any) => {
+    const { accountId, authToken } = getAuthInfo();
+    const { error, loading, data } = useQuery(
+        GET_ACCOUNT_INFO_QUERY, {
+        variables: { auth_token: authToken, account_id: accountId }
+    });
+
+    if (error) {
+        return <div>Error when get account info</div>
+    }
+
+    if (loading) {
+        return null;
+    }
+    const accountInfo: IAccountInfo = data.accountProfile;
+
+    return (
+        <>
+            <div style={styles.avatarHeader as React.CSSProperties}>
+                <img style={styles.profileIcon as React.CSSProperties} src={accountInfo.avatarUrl ? accountInfo.avatarUrl : avatarIcon} alt="X" />
+            </div>
+            <div style={styles.txtHeader as React.CSSProperties}>
+                <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Good Morning</p>
+            </div>
+            <div style={styles.notifyHeader as React.CSSProperties}>
+                <img style={styles.notifyIcon as React.CSSProperties} src={notifyIcon} />
+            </div>
+        </>
+    )
+}
+
 const MainInAppRoot: NextPage<
     IMainInAppRoot.IProps,
     IMainInAppRoot.InitialProps
 > = (props: any) => {
-    // eslint-disable-next-line react/react-in-jsx-scope
     return (
         <AuthenticatePageRequired>
             <div style={styles.container as React.CSSProperties}>
                 <div style={styles.header as React.CSSProperties}>
-                    <div style={styles.avatarHeader as React.CSSProperties}>
-                        <img style={styles.profileIcon as React.CSSProperties} src={avatarIcon} alt="X" />
-                    </div>
-                    <div style={styles.txtHeader as React.CSSProperties}>
-                        <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Good Morning</p>
-                    </div>
-                    <div style={styles.notifyHeader as React.CSSProperties}>
-                        <img style={styles.notifyIcon as React.CSSProperties} src={notifyIcon} />
-                    </div>
+                    <HeaderHome />
                 </div>
                 <div style={styles.main as React.CSSProperties}>
                     <div style={{
@@ -251,7 +275,9 @@ const MainInAppRoot: NextPage<
                     }}>
                         <UserFollowList />
                     </div>
-                    <UserPostList />
+                    <div style={{ paddingBottom: "94px" }}>
+                        <UserPostList />
+                    </div>
                 </div>
                 <NavFooter type={NavPageType.HOME} />
             </div >

@@ -1,5 +1,6 @@
 import storyIcon from "@Assets/images/profile.jpeg";
 import { useRouter } from "next/router";
+import { useCallback } from "react";
 import { FormatString } from "src/Commons/Strings/utils";
 import { ACCOUNT_STORY_PAGE_ROUTE } from "src/Routes/contants";
 
@@ -18,10 +19,13 @@ interface IStoryHome {
 export const StoryHome = (props: IStoryHome) => {
     const router = useRouter();
 
+    const handleRouteToUserStoryView = useCallback(
+        async () => {
+            await router.push(FormatString(ACCOUNT_STORY_PAGE_ROUTE, "1"))
+        },
+        [],
+    )
 
-    const handleRouteToUserStoryView = async () => {
-        await router.push(FormatString(ACCOUNT_STORY_PAGE_ROUTE, "1"))
-    }
     return (
         <div style={container} onClick={() => { handleRouteToUserStoryView() }}>
             <div style={{ height: "70%", display: "flex", justifyContent: "center" }}>
