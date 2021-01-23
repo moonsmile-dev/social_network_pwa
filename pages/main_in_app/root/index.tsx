@@ -7,6 +7,9 @@ import notifyIcon from "@Assets/images/alarm.png";
 import { StoryHome, FollowerHome, UserPost } from "@Components/Basic";
 import NavFooter, { NavPageType } from "@Components/NavFooter";
 import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
+import { useQuery } from "@apollo/client";
+import { GET_USER_FOLLOW_LIST_QUERY } from "@Libs/Queries/getUserFollowListQuery";
+import { getAuthInfo } from "src/Commons/Auths/utils";
 
 const absoluteCenter = {
     top: "50%",
@@ -104,6 +107,39 @@ const styles = {
     }
 };
 
+
+
+const UserFollowList = (props: any) => {
+    const { accountId, authToken } = getAuthInfo()
+    const { loading, error, data } = useQuery(GET_USER_FOLLOW_LIST_QUERY, {
+        variables: {
+            auth_token: authToken,
+            account_id: accountId
+        }
+    });
+
+    if (error) {
+        return <div>Error loading players.</div>;
+    }
+    if (loading) {
+        return <div>Loading</div>;
+    }
+
+    const userFollowers: Array<any> = data.userFollowers
+
+    console.log(data.userFollowers)
+
+
+    return (
+        <>{
+            userFollowers.map((user, i) =>
+                <FollowerHome key={user.id} name={user.name} id={user.id} srcImg={user.avatar} />
+            )
+        }
+        </>
+    )
+}
+
 const MainInAppRoot: NextPage<
     IMainInAppRoot.IProps,
     IMainInAppRoot.InitialProps
@@ -149,10 +185,7 @@ const MainInAppRoot: NextPage<
                         whiteSpace: "nowrap",
                         backgroundColor: "white",
                     }}>
-                        <FollowerHome />
-                        <FollowerHome />
-                        <FollowerHome />
-                        <FollowerHome />
+                        <UserFollowList />
                     </div>
                     <UserPost />
                     <UserPost />

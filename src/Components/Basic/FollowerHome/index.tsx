@@ -37,6 +37,7 @@ const iconContainer = {
 } as React.CSSProperties;
 
 interface IFollowerHome {
+    id?: string;
     srcImg?: string;
     name?: string;
 
@@ -45,7 +46,7 @@ interface IFollowerHome {
 export const FollowerHome = (props: IFollowerHome) => {
     const router = useRouter();
     const handleRouteToParnerProfile = async () => {
-        await router.push(FormatString(PROFILE_PAGE_ROUTE, "1"))
+        await router.push(FormatString(PROFILE_PAGE_ROUTE, `${props.id}`))
     }
 
     return (

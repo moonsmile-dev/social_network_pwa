@@ -7,15 +7,24 @@ export const saveAuthInfo = (
     authToken: string,
     refreshToken: string
 ) => {
-    localStorage.setItem(ACCOUNT_ID_KEY, accountId);
-    localStorage.setItem(AUTH_TOKEN_KEY, authToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    if (typeof window !== 'undefined') {
+        localStorage.setItem(ACCOUNT_ID_KEY, accountId);
+        localStorage.setItem(AUTH_TOKEN_KEY, authToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    }
 };
 
 export const getAuthInfo = () => {
+    if (typeof window !== 'undefined') {
+        return {
+            accountId: localStorage.getItem(ACCOUNT_ID_KEY),
+            authToken: localStorage.getItem(AUTH_TOKEN_KEY),
+            refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY),
+        };
+    }
     return {
-        accountId: localStorage.getItem(ACCOUNT_ID_KEY),
-        authToken: localStorage.getItem(AUTH_TOKEN_KEY),
-        refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY),
-    };
+        accountId: null,
+        authToken: null,
+        refreshToken: null
+    }
 };
