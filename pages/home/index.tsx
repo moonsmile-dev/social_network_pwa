@@ -87,26 +87,6 @@ const barItemStyle = {
 };
 
 const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = (props: any) => {
-    // const renderLocaleButtons = (activeLanguage: string) =>
-    //     ["en", "es", "tr"].map(lang => (
-    //         <LocaleButton
-    //             key={lang}
-    //             lang={lang}
-    //             isActive={activeLanguage === lang}
-    //             onClick={() => i18n.changeLanguage(lang)}
-    //         />
-    //     ));
-
-    const { loading, error, data } = useQuery(helloQuery);
-    if (error) {
-        return <div>Error loading players.</div>;
-    }
-    if (loading) {
-        return <div>Loading</div>;
-    }
-
-    console.log(`Fetched data: ${JSON.stringify(data)}`)
-
 
     return (
         <Container>

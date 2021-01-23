@@ -120,7 +120,7 @@ const UserStoryList = (props: any) => {
         }
     })
     if (error) {
-        return <div>Error loading players.</div>;
+        return <div>Error loading user stories</div>;
     }
 
     if (loading) {

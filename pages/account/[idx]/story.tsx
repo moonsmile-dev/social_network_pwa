@@ -1,9 +1,12 @@
 import { NextPage } from "next";
 import { withTranslation } from "@Server/i18n";
-import imageExampleIcon from "@Assets/images/story_image.jpeg";
+import imageExampleIcon from "@Assets/images/story_image.png";
 import sendIcon from "@Assets/images/paper-plane.png";
 import avatarIcon from "@Assets/images/profile.jpeg";
 import closeIcon from "@Assets/images/close.png";
+import { Image } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
 interface ISlicingItem {
     isVisible?: boolean;
 }
@@ -33,11 +36,20 @@ const sendMessageStyle = {
 
 
 const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
+    const router = useRouter();
+
+    const handleCloseStoryBtn = useCallback(
+        () => {
+            router.back()
+        },
+        [],
+    )
+
     return (
         <div style={{ position: "relative", height: '100vh' }}>
-            <div className="close_btn" style={{ position: "absolute", top: "2%", right: "2%" }}>
+            <div className="close_btn" style={{ position: "absolute", top: "10px", right: "10px", zIndex: 2 }} onClick={() => handleCloseStoryBtn()}>
                 <div style={{ height: "30px", width: "30px" }}>
-                    <img src={closeIcon} alt="X" width="100%" height="100%" />
+                    <Image boxSize="100%" src={closeIcon} />
                 </div>
             </div>
             <div className="header_slicing" style={{
@@ -59,8 +71,8 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
                     </div>
                 </div>
             </div>
-            <div className="Bg_viewer" style={{ backgroundColor: "black", width: "100%", height: "100%", zIndex: 0 }}>
-                <img src={imageExampleIcon} alt="XX" width="100%" height="100%" />
+            <div className="Bg_viewer" style={{ backgroundColor: "yellow", width: "100%", height: "100%", zIndex: 0 }}>
+                <Image boxSize="100%" src={imageExampleIcon} />
             </div>
             <div className="chat_footer" style={{
                 zIndex: 1, position: "absolute",
