@@ -3,6 +3,7 @@ import { withTranslation } from "@Server/i18n";
 import coverImg from "@Assets/images/shanghai-skyline.png";
 import profileImage from "@Assets/images/profile.jpeg";
 import followerImage from "@Assets/images/followers.png";
+import mediaIcon from "@Assets/images/gallery.png";
 import { UserPost } from "@Components/Basic";
 import backImage from "@Assets/images/back.png";
 import { useRouter } from "next/router";
@@ -12,6 +13,12 @@ import { getAuthInfo } from "src/Commons/Auths/utils";
 import { IArticlePost } from "@Libs/Dtos/articlePost.interface";
 import { GET_ACCOUNT_PROFILE_QUERY } from "@Libs/Queries/getAccountProfileQuery";
 import { IAccountProfile } from "@Libs/Dtos/accountProfile.interface";
+import { Box, Button, Center, Container, Image, Input, Text, Textarea } from "@chakra-ui/react";
+import { useState } from "@hookstate/core";
+import { useCallback } from "react";
+import React from "react";
+import { CloseIcon } from '@chakra-ui/icons'
+import { useForm } from "react-hook-form";
 
 
 const chatStyle = {
@@ -125,6 +132,135 @@ const AccountTimeLine = (props: any) => {
     )
 }
 
+
+interface IImagePreviewProps {
+    imgSrc: string;
+    onClose: () => any;
+}
+const UploadedImagePreview = (props: IImagePreviewProps) => {
+    return (
+        <Box position="relative" boxSize="100px" padding="10px">
+            <Box position="absolute" boxSize="15px"
+                top="-5px"
+                right="10px" onClick={() => props.onClose()}>
+                <CloseIcon boxSize="100%" color="#ff0000" />
+            </Box>
+            <Box overflow="hidden" boxSize="100%">
+                <Image boxSize="100%" src={props.imgSrc} />
+            </Box>
+        </Box>
+    )
+}
+
+const AccountPostCreateFC = (props: any) => {
+    const selectedDataFiles = useState([]);
+    const { register, handleSubmit } = useForm();
+
+
+    const handleOnUploadFiles = useCallback(
+        (event) => {
+            const files: FileList = event.target.files;
+
+            const crtDataFiles: Array<any> = [...selectedDataFiles.value];
+            for (let idx = 0; idx < files.length; idx++) {
+                const _file = files[idx];
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    crtDataFiles.push(reader.result)
+                }
+                reader.readAsDataURL(_file)
+            }
+
+            selectedDataFiles.set(crtDataFiles as Array<never>)
+        }, [],
+    )
+
+    const fileUploadAction = useCallback(
+        () => {
+            document.getElementById("fileButton")?.click();
+        }, [],
+    )
+
+    const onRemoveUploadedImage = useCallback(
+        (file: string) => {
+            let crtFiles: Array<any> = [...selectedDataFiles.value];
+            const index = crtFiles.indexOf(file);
+            if (index !== -1) {
+                crtFiles.splice(index, 1)
+                selectedDataFiles.set(crtFiles as Array<never>)
+            }
+        }, [],
+    )
+    const onPostSubmit = useCallback(
+        (data) => {
+            console.log(data)
+            console.log(selectedDataFiles.value)
+        }, [],
+    )
+
+
+
+    return (
+        <Container {...props} padding="10px 5px">
+            <form onSubmit={handleSubmit(onPostSubmit)}>
+                <Box w="100%" h="100px" bg="#F2F2F2" borderRadius="10px" >
+                    <Textarea
+                        name="content"
+                        boxSize="100%"
+                        placeholder="Please speak up about your feelings"
+                        color="black"
+                        focusBorderColor="none"
+                        ref={register}
+                    />
+                </Box>
+                <Box className="image-uploader-area" display="flex"
+                >
+                    {
+                        selectedDataFiles.value.map(
+                            (file, idx) => (
+                                <UploadedImagePreview key={idx} imgSrc={file} onClose={() => onRemoveUploadedImage(file)} />
+                            )
+                        )
+                    }
+                </Box>
+                <Box justifyContent="end"
+                    display="flex"
+                    w="100%"
+                    margin="10px 0px"
+                >
+                    <Box margin="0px 10px">
+                        <input type="file" id="fileButton" multiple hidden onChange={(event) => handleOnUploadFiles(event)} />
+                        <Button borderRadius="full"
+                            color="#00A3FF"
+                            bg="#FF5BEF"
+                            fontSize="15px"
+                            border="solid white 1px"
+                            onClick={() => fileUploadAction()}
+                        >
+                            <Box display="flex">
+                                <Box margin="2px">
+                                    <Image boxSize="20px" src={mediaIcon} />
+                                </Box>
+                                <Text lineHeight="25px">
+                                    Photos
+                                </Text>
+                            </Box>
+                        </Button>
+                    </Box>
+                    <Button type="submit"
+                        borderRadius="0px"
+                        bg="#995AFF"
+                        color="white"
+                        w="70px">
+                        Post
+                    </Button>
+                </Box>
+            </form>
+        </Container>
+    )
+}
+
 const scrollTabStyle = {
     height: "40px",
     width: "100%",
@@ -193,6 +329,7 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
                 </div>
 
                 <div>
+                    <AccountPostCreateFC w="100%" bg="#F8F8F8" />
                     <AccountTimeLine accountId={currentAccountId} />
                 </div>
             </div>
