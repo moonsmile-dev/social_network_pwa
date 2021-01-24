@@ -10,6 +10,7 @@ export const DATING_RECS_DETAIL_PAGE_ROUTE = "/account/datings/recs/{0}/detail";
 export const DATING_SMART_WAITING_PAGE_ROUTE = "/account/datings/smart/waiting";
 export const DATING_SMART_CHAT_PAGE_ROUTE = "/account/datings/smart/{0}/chat";
 export const ACCOUNT_CONFIRM_OTP_PAGE_ROUTE = "/account/{0}/register_confirm";
+export const ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE = "/account/{0}/update_profile";
 export const ACCOUNT_FORGOT_PASSWORD_PAGE_ROUTE = "/account/passwords/forgot";
 export const ACCOUNT_FORGOT_PASSWORD_CONFIRM_PAGE_ROUTE = "/account/passwords/forgot_confirm";
 export const ACCOUNT_RESET_PASSWORD_PAGE_ROUTE = "/account/passwords/reset";

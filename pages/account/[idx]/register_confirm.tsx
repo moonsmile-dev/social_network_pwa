@@ -7,13 +7,18 @@ import { PageContainer } from "@Styled/Root";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import { HOME_PAGE_ROUTE } from "src/Routes/contants";
+import { useCallback } from "react";
+import { FormatString } from "src/Commons/Strings/utils";
+import { ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE, HOME_PAGE_ROUTE } from "src/Routes/contants";
 
 const AccountIdxRegisterConfirm: NextPage<any, any> = () => {
     const router = useRouter();
-    const handleRouteToHomePage = async () => {
-        await router.push(HOME_PAGE_ROUTE);
-    }
+    const handleRouteToHomePage = useCallback(
+        async () => {
+            await router.push(FormatString(ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE, "1"));
+        },
+        [],
+    )
 
     return (
         <PageContainer>
