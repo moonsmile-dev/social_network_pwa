@@ -54,7 +54,7 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
     const router = useRouter();
     const images = useState(["http://localhost:1338/file_streams/abc/account/post/synced_image_1592417944256.jpeg", "http://localhost:1338/file_streams/abc/account/post/synced_image_1592935202753.jpeg"]);
     const currentPos = useState(-1);
-    const timers: Array[] = [];
+    const timers: Array<any> = [];
 
 
     const handleCloseStoryBtn = useCallback(
