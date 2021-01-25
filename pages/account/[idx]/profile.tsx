@@ -19,7 +19,8 @@ import { useCallback } from "react";
 import React from "react";
 import { CloseIcon } from '@chakra-ui/icons'
 import { useForm } from "react-hook-form";
-
+import settingIcon from "@Assets/images/settings.png";
+import { ACCOUNT_SETTING_PAGE_ROUTE } from "src/Routes/contants";
 
 const chatStyle = {
     width: "134px",
@@ -49,7 +50,14 @@ const MasterDetailCnt = (props: { val: string, cnt: string }) => {
     );
 };
 
-const FConnection = () => {
+const FConnection = (props: any) => {
+    const router = useRouter();
+    const handleRouteToAccountSettingPage = useCallback(
+        async () => {
+            await router.push(ACCOUNT_SETTING_PAGE_ROUTE);
+        }, [],
+    )
+
     return (
         <div >
             <div style={{ display: "inline-grid", gridTemplateColumns: "auto auto auto", borderSpacing: "5px", width: "100%", paddingLeft: "10px" }}>
@@ -61,11 +69,21 @@ const FConnection = () => {
                 <button style={chatStyle}>
                     Message
                 </button>
-                <div style={followerStyle}>
-                    <img src={followerImage} alt="Friend" height="80%" />
-                </div>
+                {
+                    props.isOwn ? (
+                        <Box boxSize="20px" marginRight="10px" onClick={() => handleRouteToAccountSettingPage()}>
+                            <Image src={settingIcon} boxSize="100%" />
+                        </Box>
+
+                    ) : (
+                            <div style={followerStyle}>
+                                <img src={followerImage} alt="Friend" height="80%" />
+                            </div>
+                        )
+                }
+
             </div>
-        </div>
+        </div >
     );
 };
 
@@ -278,6 +296,7 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
 
     const currentAccountId: string = props.accountId;
     const { accountId, authToken } = getAuthInfo();
+    const isOwn = useState(accountId === currentAccountId)
 
     const { error, data, loading } = useQuery(GET_ACCOUNT_PROFILE_QUERY, {
         variables: {
@@ -292,7 +311,6 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
     if (loading) {
         return null
     }
-
     const accountProfile: IAccountProfile = data.accountProfile;
 
     return (
@@ -306,7 +324,7 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
                 </div>
                 <div style={{ position: "relative" }}>
                     <div style={{ position: "absolute", right: "0%", top: "10px" }}>
-                        <FConnection />
+                        <FConnection isOwn={isOwn.value} />
                     </div>
                     <div style={{ marginLeft: "15px", marginTop: "15px" }}>
                         <div style={{ height: "80px", width: "80px", overflow: "hidden", borderRadius: "50%" }}>
@@ -329,7 +347,11 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
                 </div>
 
                 <div>
-                    <AccountPostCreateFC w="100%" bg="#F8F8F8" />
+                    {
+                        isOwn.value && (
+                            <AccountPostCreateFC w="100%" bg="#F8F8F8" />
+                        )
+                    }
                     <AccountTimeLine accountId={currentAccountId} />
                 </div>
             </div>

@@ -31,3 +31,11 @@ export const getAuthInfo = () => {
         refreshToken: refreshToken
     }
 };
+
+export const removeAuthInfo = () => {
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem(ACCOUNT_ID_KEY);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+    }
+}

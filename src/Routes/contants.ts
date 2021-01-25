@@ -15,3 +15,4 @@ export const ACCOUNT_FORGOT_PASSWORD_PAGE_ROUTE = "/account/passwords/forgot";
 export const ACCOUNT_FORGOT_PASSWORD_CONFIRM_PAGE_ROUTE = "/account/passwords/forgot_confirm";
 export const ACCOUNT_RESET_PASSWORD_PAGE_ROUTE = "/account/passwords/reset";
 export const ACCOUNT_SIGN_IN_PAGE_ROUTE = "/account/sign_in";
+export const ACCOUNT_SETTING_PAGE_ROUTE = "/account/settings";
