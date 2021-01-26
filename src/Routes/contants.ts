@@ -18,3 +18,4 @@ export const ACCOUNT_SIGN_IN_PAGE_ROUTE = "/account/sign_in";
 export const ACCOUNT_SETTING_PAGE_ROUTE = "/account/settings";
 export const ACCOUNT_POST_REACTION_PAGE_ROUTE = "/account/{0}/posts/{1}/reactions";
 export const ACCOUNT_POST_COMMENT_PAGE_ROUTE = "/account/{0}/posts/{1}/comments";
+export const ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE = "/account/passwords/change";

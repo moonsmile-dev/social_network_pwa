@@ -16,15 +16,15 @@ import logoutIcon from "@Assets/images/logout.png";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { getAuthInfo, removeAuthInfo } from "src/Commons/Auths/utils";
-import { ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE, GET_STARTED_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE, ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE, GET_STARTED_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
 import { FormatString } from "src/Commons/Strings/utils";
 
 interface IBasicSettingFCProps {
-    iconSrc: string;
+    icon_src: string;
     title: string;
     status?: string;
-    statusColor?: string;
-    hideBarTab?: boolean;
+    status_color?: string;
+    hide_bar_tab?: boolean;
     onClick?: () => any;
 }
 
@@ -36,9 +36,9 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
             {...props}>
             <Box boxSize="40px"
                 margin="20px">
-                <Image boxSize="100%" src={props.iconSrc} />
+                <Image boxSize="100%" src={props.icon_src} />
             </Box>
-            <Box className="Info" w="70%" lineHeight={!props.hideBarTab ? "60px" : "80px"}>
+            <Box className="Info" w="70%" lineHeight={!props.hide_bar_tab ? "60px" : "80px"}>
                 <Box display="flex">
                     <Box w="80%">
                         <Text fontSize="25px" marginRight="10px">{props.title}</Text>
@@ -46,12 +46,12 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
                     {
                         props.status && (
                             <Box w="20%" justifyContent="end" display="flex">
-                                <Text color={props.statusColor}>{props.status}</Text>
+                                <Text color={props.status_color}>{props.status}</Text>
                             </Box>
                         )
                     }
                 </Box>
-                {!props.hideBarTab && (
+                {!props.hide_bar_tab && (
                     <Box w="100%" h="2px" bg="#B5B5B5" />
                 )}
             </Box>
@@ -81,6 +81,11 @@ const AccountSettings: NextPage<any, any> = (props: any) => {
         async () => {
             removeAuthInfo()
             await router.push(GET_STARTED_PAGE_ROUTE)
+        }, [],
+    )
+    const handleRouteToChangePasswordPage = useCallback(
+        async () => {
+            await router.push(ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE)
         }, [],
     )
 
@@ -117,23 +122,23 @@ const AccountSettings: NextPage<any, any> = (props: any) => {
                     bg="#B5B5B5"
                     padding="10px 0px"
                 >
-                    <BasicSettingFC title="Update profile" iconSrc={updateProfileIcon} onClick={() => handleRouteToUpdateProfilePage()} />
-                    <BasicSettingFC title="Verify Account" status="Pending" statusColor="#FF0000" iconSrc={verifyAccountIcon} />
-                    <BasicSettingFC title="Change password" iconSrc={changePasswordIcon} />
+                    <BasicSettingFC title="Update profile" icon_src={updateProfileIcon} onClick={() => handleRouteToUpdateProfilePage()} />
+                    <BasicSettingFC title="Verify Account" status="Pending" status_color="#FF0000" icon_src={verifyAccountIcon} />
+                    <BasicSettingFC title="Change password" icon_src={changePasswordIcon} onClick={() => handleRouteToChangePasswordPage()} />
                 </Box>
                 <Box w="100%"
                     padding="10px 0px"
                     bg="#B5B5B5">
-                    <BasicSettingFC title="Languages" iconSrc={translateIcon} />
-                    <BasicSettingFC title="Themes" iconSrc={themeIcon} />
-                    <BasicSettingFC title="Notifications" iconSrc={notificationIcon} />
-                    <BasicSettingFC title="Devices" iconSrc={devicesIcon} />
+                    <BasicSettingFC title="Languages" icon_src={translateIcon} />
+                    <BasicSettingFC title="Themes" icon_src={themeIcon} />
+                    <BasicSettingFC title="Notifications" icon_src={notificationIcon} />
+                    <BasicSettingFC title="Devices" icon_src={devicesIcon} />
                 </Box>
                 <Box w="100%"
                     padding="10px 0px"
                     bg="#B5B5B5">
-                    <BasicSettingFC title="Switch account" iconSrc={switchAccountIcon} hideBarTab={true} />
-                    <BasicSettingFC title="Log out" iconSrc={logoutIcon} hideBarTab={true} onClick={() => handleLogoutAccount()} />
+                    <BasicSettingFC title="Switch account" icon_src={switchAccountIcon} hide_bar_tab={true} />
+                    <BasicSettingFC title="Log out" icon_src={logoutIcon} hide_bar_tab={true} onClick={() => handleLogoutAccount()} />
                 </Box>
             </Container>
         </PageContainer>
