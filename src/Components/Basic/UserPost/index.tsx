@@ -9,6 +9,13 @@ import { FormatString } from "src/Commons/Strings/utils";
 import { ACCOUNT_POST_REACTION_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
 import { useCallback } from "react";
 import avatarReactionIcon from "@Assets/images/monster_1.png";
+import { Box, Container, Image, Text } from "@chakra-ui/react";
+import commentIcon from '@Assets/images/chat.png';
+import laughingIcon from "@Assets/images/laughing.png";
+import laughingEmptyIcon from "@Assets/images/laughing-empty.png";
+import heartIcon from "@Assets/images/heart.png";
+import heartEmptyIcon from "@Assets/images/heart-empty.png";
+
 interface IPhotoData {
     src: string;
     width: number;
@@ -52,6 +59,60 @@ interface IUserPostProp {
     num_reacts?: number;
     num_comments?: number;
     num_shared?: number;
+}
+
+enum ReactType {
+    NONE = 0,
+    LOVE = 1,
+    HAHA = 2
+}
+
+const UserReactTabFC = (props: any) => {
+    const react = useState(ReactType.NONE);
+
+    return (
+        <>
+            <Box w="50%" className="ReactArea">
+                <Container boxSize="100%" display="flex">
+                    {react.value !== ReactType.NONE ? (
+                        react.value === ReactType.LOVE ? (
+                            <Box onClick={() => react.set(ReactType.NONE)} display="flex">
+                                <Box boxSize="25px" margin="5px">
+                                    <Image src={heartIcon} boxSize="100%" />
+                                </Box>
+                                <Text lineHeight="35px" fontWeight="bold" color="#ff0000">Love</Text>
+                            </Box>
+                        ) : (
+                                <Box onClick={() => react.set(ReactType.NONE)} display="flex">
+                                    <Box boxSize="25px" margin="5px">
+                                        <Image src={laughingIcon} boxSize="100%" />
+                                    </Box>
+                                    <Text lineHeight="35px" fontWeight="bold" color="#ffff00">Haha</Text>
+                                </Box>
+                            )
+                    ) : (
+                            <>
+                                <Box boxSize="25px" margin="5px" onClick={() => react.set(ReactType.LOVE)}>
+                                    <Image src={heartEmptyIcon} boxSize="100%" />
+                                </Box>
+                                <Box boxSize="25px" margin="5px" onClick={() => react.set(ReactType.HAHA)}>
+                                    <Image src={laughingEmptyIcon} boxSize="100%" />
+                                </Box>
+                                <Text lineHeight="35px">React</Text>
+                            </>
+                        )}
+                </Container>
+            </Box>
+            <Box w="50%" className="CommentArea">
+                <Container boxSize="100%" display="flex" justifyContent="end">
+                    <Box boxSize="25px" margin="5px">
+                        <Image src={commentIcon} boxSize="100%" />
+                    </Box>
+                    <Text lineHeight="35px">Comments</Text>
+                </Container>
+            </Box>
+        </>
+    )
 }
 
 
@@ -147,7 +208,14 @@ export const UserPost = (props: IUserPostProp) => {
                 <div style={{ right: "0%", position: "absolute", top: "50%", transform: "translate(0%, -50%)", display: "flex" }} onClick={() => { alert("Turn on comment") }}>
                     <p style={{ margin: "0px", marginRight: "5px", color: "#9597A1" }}>{`${props.num_comments} comments`}</p>
                 </div>
+
             </div>
+            <Box
+                className="action"
+                w="100%"
+                display="flex">
+                <UserReactTabFC />
+            </Box>
         </div>
     )
 }
