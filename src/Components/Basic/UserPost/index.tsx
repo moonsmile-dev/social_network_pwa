@@ -6,7 +6,7 @@ import Gallery from 'react-photo-gallery';
 import { useState } from "@hookstate/core";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { FormatString } from "src/Commons/Strings/utils";
-import { ACCOUNT_POST_REACTION_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_POST_COMMENT_PAGE_ROUTE, ACCOUNT_POST_REACTION_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
 import { useCallback } from "react";
 import avatarReactionIcon from "@Assets/images/monster_1.png";
 import { Box, Container, Image, Text } from "@chakra-ui/react";
@@ -67,8 +67,21 @@ enum ReactType {
     HAHA = 2
 }
 
-const UserReactTabFC = (props: any) => {
+interface IUserReactTabFCProps {
+    accountId: string;
+    postId: string;
+}
+
+const UserReactTabFC = (props: IUserReactTabFCProps) => {
     const react = useState(ReactType.NONE);
+    const router = useRouter();
+
+    const handleRouteToPostComment = useCallback(
+        async () => {
+            await router.push(FormatString(ACCOUNT_POST_COMMENT_PAGE_ROUTE, `${props.accountId}`, `${props.id}`))
+        }, [],
+    )
+    
 
     return (
         <>
@@ -103,7 +116,8 @@ const UserReactTabFC = (props: any) => {
                         )}
                 </Container>
             </Box>
-            <Box w="50%" className="CommentArea">
+            <Box w="50%" className="CommentArea"
+                onClick={() => handleRouteToPostComment()}>
                 <Container boxSize="100%" display="flex" justifyContent="end">
                     <Box boxSize="25px" margin="5px">
                         <Image src={commentIcon} boxSize="100%" />
@@ -129,7 +143,6 @@ export const UserPost = (props: IUserPostProp) => {
         },
         [],
     )
-
     const handleRouteToPostReaction = useCallback(
         async () => {
             await router.push(FormatString(ACCOUNT_POST_REACTION_PAGE_ROUTE, `${props.accountId}`, `${props.id}`));
@@ -205,7 +218,7 @@ export const UserPost = (props: IUserPostProp) => {
                     <p style={{ margin: "0px", lineHeight: "30px", color: "#9597A1" }}>{`${props.num_reacts} likes`} </p>
                 </div>
 
-                <div style={{ right: "0%", position: "absolute", top: "50%", transform: "translate(0%, -50%)", display: "flex" }} onClick={() => { alert("Turn on comment") }}>
+                <div style={{ right: "0%", position: "absolute", top: "50%", transform: "translate(0%, -50%)", display: "flex" }}>
                     <p style={{ margin: "0px", marginRight: "5px", color: "#9597A1" }}>{`${props.num_comments} comments`}</p>
                 </div>
 
