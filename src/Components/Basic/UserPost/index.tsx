@@ -6,8 +6,9 @@ import Gallery from 'react-photo-gallery';
 import { useState } from "@hookstate/core";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { FormatString } from "src/Commons/Strings/utils";
-import { PROFILE_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_POST_REACTION_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
 import { useCallback } from "react";
+import avatarReactionIcon from "@Assets/images/monster_1.png";
 interface IPhotoData {
     src: string;
     width: number;
@@ -68,6 +69,12 @@ export const UserPost = (props: IUserPostProp) => {
         [],
     )
 
+    const handleRouteToPostReaction = useCallback(
+        async () => {
+            await router.push(FormatString(ACCOUNT_POST_REACTION_PAGE_ROUTE, `${props.accountId}`, `${props.id}`));
+        }, [],
+    )
+
     const { authToken } = getAuthInfo();
 
     const { loading, error, data } = useQuery(GET_ACCOUNT_INFO_QUERY, {
@@ -121,16 +128,16 @@ export const UserPost = (props: IUserPostProp) => {
 
             </div>
             <div className="footer_post" style={{ height: "40px", position: "relative" }}>
-                <div style={boundContainer}>
+                <div style={boundContainer} onClick={() => handleRouteToPostReaction()}>
                     <div style={{ display: "flex", marginRight: "5px" }}>
                         <div style={iconTicketStyle}>
-                            <img style={{ height: "100%", width: "100%" }} alt="X" src={avatarIcon} />
+                            <img style={{ height: "100%", width: "100%" }} alt="X" src={avatarReactionIcon} />
                         </div>
                         <div style={iconTicketStyle}>
-                            <img style={{ height: "100%", width: "100%" }} alt="X" src={avatarIcon} />
+                            <img style={{ height: "100%", width: "100%" }} alt="X" src={avatarReactionIcon} />
                         </div>
                         <div style={iconTicketStyle}>
-                            <img style={{ height: "100%", width: "100%" }} alt="X" src={avatarIcon} />
+                            <img style={{ height: "100%", width: "100%" }} alt="X" src={avatarReactionIcon} />
                         </div>
                     </div>
 

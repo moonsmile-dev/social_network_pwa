@@ -16,3 +16,4 @@ export const ACCOUNT_FORGOT_PASSWORD_CONFIRM_PAGE_ROUTE = "/account/passwords/fo
 export const ACCOUNT_RESET_PASSWORD_PAGE_ROUTE = "/account/passwords/reset";
 export const ACCOUNT_SIGN_IN_PAGE_ROUTE = "/account/sign_in";
 export const ACCOUNT_SETTING_PAGE_ROUTE = "/account/settings";
+export const ACCOUNT_POST_REACTION_PAGE_ROUTE = "/account/{0}/posts/{1}/reactions";
