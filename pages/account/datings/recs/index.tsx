@@ -132,7 +132,7 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                             boxSize="100%"
                         >
                             {[...Array(images.value.length)].map((_, idx) => (
-                                <GridItem h="100%" padding="0px 2px">
+                                <GridItem key={idx} h="100%" padding="0px 2px">
                                     <Box
                                         bg={crtPos.value === idx ? "white" : "#C4C4C4"}
                                         boxSize="100%"
