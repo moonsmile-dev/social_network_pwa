@@ -3,7 +3,7 @@ import { withTranslation } from "@Server/i18n";
 import { NextPage } from "next";
 import avatarIcon from "@Assets/images/profile.jpeg";
 import matchSettingIcon from "@Assets/images/match_option.png";
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, useDisclosure } from "@chakra-ui/react";
 import smartChatIcon from "@Assets/images/speech-bubble.png";
 import datingTraditionIcon from "@Assets/images/handshake.png";
 import genderManIcon from "@Assets/images/gender_man.png";
@@ -11,6 +11,8 @@ import genderWomanIcon from "@Assets/images/gender_woman.png";
 import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
 import { useRouter } from "next/router";
 import { DATING_RECS_PAGE_ROUTE, DATING_SMART_WAITING_PAGE_ROUTE } from "src/Routes/contants";
+import React from "react";
+import { useState } from "@hookstate/core";
 
 const styles = {
     container: {
@@ -144,6 +146,96 @@ const UserDating = (props: IUserDatingProps) => {
     )
 }
 
+const UserDatingSetupFC = (props: any) => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const minAge = useState(18);
+    const maxAge = useState(21);
+    const maxDistance = useState(1);
+
+    const initialRef = React.useRef()
+    const finalRef = React.useRef()
+
+    return (
+        <>
+            <div style={styles.settingHeader as React.CSSProperties} onClick={onOpen}>
+                <img style={styles.notifyIcon as React.CSSProperties} src={matchSettingIcon} />
+            </div>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Settings</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        <FormControl>
+                            <FormLabel>Min Age</FormLabel>
+                            <Box display="flex">
+                                <Slider aria-label="slider-ex-2" colorScheme="purple"
+                                    defaultValue={18} min={18} max={maxAge.value} onChange={(value) => minAge.set(value)}>
+                                    <SliderTrack>
+                                        <SliderFilledTrack />
+                                    </SliderTrack>
+                                    <SliderThumb />
+                                </Slider>
+                                <Box margin="0px 5px">
+                                    <Text>{minAge.value}</Text>
+                                </Box>
+                            </Box>
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>Max Age</FormLabel>
+                            <Box display="flex">
+                                <Slider aria-label="slider-ex-2" colorScheme="purple"
+                                    defaultValue={21} min={minAge.value} max={100} onChange={(value) => maxAge.set(value)}>
+                                    <SliderTrack>
+                                        <SliderFilledTrack />
+                                    </SliderTrack>
+                                    <SliderThumb />
+                                </Slider>
+                                <Box margin="0px 5px">
+                                    <Text>{maxAge.value}</Text>
+                                </Box>
+                            </Box>
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>Gender</FormLabel>
+                            <Select>
+                                <option value={0}>Male</option>
+                                <option value={1}>Female</option>
+                                <option value={2}>Unknown</option>
+                            </Select>
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>Max distance (km)</FormLabel>
+                            <FormControl>
+                                <Box display="flex">
+                                    <Slider aria-label="slider-ex-1" defaultValue={30} max={1000} min={1} onChange={(value) => maxDistance.set(value)}>
+                                        <SliderTrack>
+                                            <SliderFilledTrack />
+                                        </SliderTrack>
+                                        <SliderThumb />
+                                    </Slider>
+                                    <Box margin="0px 5px">
+                                        <Text>{maxDistance.value}</Text>
+                                    </Box>
+                                </Box>
+                            </FormControl>
+
+                        </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="purple" mr={3} onClick={onClose}>
+                            Save
+                        </Button>
+                        <Button onClick={onClose}>Cancel</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
+    )
+}
+
 const AccountDatings: NextPage<any, any> = (props: any) => {
     const router = useRouter();
 
@@ -163,9 +255,7 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
                 <div style={styles.txtHeader as React.CSSProperties}>
                     <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Let's start Dating</p>
                 </div>
-                <div style={styles.settingHeader as React.CSSProperties}>
-                    <img style={styles.notifyIcon as React.CSSProperties} src={matchSettingIcon} />
-                </div>
+                <UserDatingSetupFC />
             </div>
             <div className="Main" style={styles.main as React.CSSProperties}>
                 <div className="Dating Selection" style={{ width: "100%", border: "1px solid white" }}>

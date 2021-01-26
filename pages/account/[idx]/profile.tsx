@@ -20,7 +20,8 @@ import React from "react";
 import { CloseIcon } from '@chakra-ui/icons'
 import { useForm } from "react-hook-form";
 import settingIcon from "@Assets/images/settings.png";
-import { ACCOUNT_SETTING_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_SETTING_PAGE_ROUTE, CHAT_PAGE_ROUTE } from "src/Routes/contants";
+import flagIcon from "@Assets/images/black_flag.png";
 
 const chatStyle = {
     width: "134px",
@@ -50,11 +51,22 @@ const MasterDetailCnt = (props: { val: string, cnt: string }) => {
     );
 };
 
-const FConnection = (props: any) => {
+interface IFConnectionProps {
+    isOwn: boolean;
+}
+
+const FConnection = (props: IFConnectionProps) => {
     const router = useRouter();
     const handleRouteToAccountSettingPage = useCallback(
         async () => {
             await router.push(ACCOUNT_SETTING_PAGE_ROUTE);
+        }, [],
+    )
+    const handleRouteToAccountMessagePage = useCallback(
+        async () => {
+            if (props.isOwn) {
+                await router.push(CHAT_PAGE_ROUTE)
+            }
         }, [],
     )
 
@@ -66,7 +78,7 @@ const FConnection = (props: any) => {
                 <MasterDetailCnt val="117" cnt="Following" />
             </div>
             <div style={{ display: "flex" }}>
-                <button style={chatStyle}>
+                <button style={chatStyle} onClick={() => handleRouteToAccountMessagePage()}>
                     Message
                 </button>
                 {
@@ -76,9 +88,10 @@ const FConnection = (props: any) => {
                         </Box>
 
                     ) : (
-                            <div style={followerStyle}>
-                                <img src={followerImage} alt="Friend" height="80%" />
-                            </div>
+                            <Box boxSize="20px" marginRight="10px"
+                                onClick={() => alert("Report this user")}>
+                                <Image src={flagIcon} boxSize="100%" />
+                            </Box>
                         )
                 }
 

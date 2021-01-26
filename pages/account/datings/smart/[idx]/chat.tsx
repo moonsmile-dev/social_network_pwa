@@ -61,8 +61,9 @@ const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
                 bg="#EDD0FF"
                 border="solid white 1px">
                 <Flex boxSize="100%">
-                    <Input h="100%" w="80%" border="none" outline="none" placeholder="Input your mind here" color="white" />
-                    <Center boxSize="100%">
+                    <Input h="100%" w="80%" border="none" focusBorderColor="none" outline="none" placeholder="Input your mind here" color="white" />
+                    <Center w="20%" display="flex"
+                        paddingRight="5px" justifyContent="end" >
                         <Text fontWeight="bold" color="#0085FF" {...styles.boderTxt}>SEND</Text>
                     </Center>
                 </Flex>

@@ -16,12 +16,15 @@ import { InfoIcon } from "@chakra-ui/icons";
 import backIcon from "@Assets/images/back.png";
 import matchOptionIcon from "@Assets/images/match_option.png";
 import demoImg from "@Assets/images/abcde.png";
+import demo2Img from "@Assets/images/abc.png";
+import demo3Img from "@Assets/images/story_image_old.jpeg";
 import heartDatingIcon from "@Assets/images/heart-dating.png";
 import closeDatingIcon from "@Assets/images/dating_close.png";
 import starDatingIcon from "@Assets/images/dating_star.png";
 import { useRouter } from "next/router";
 import { FormatString } from "src/Commons/Strings/utils";
 import { DATING_RECS_DETAIL_PAGE_ROUTE } from "src/Routes/contants";
+import { useState } from "@hookstate/core";
 
 const styles = {
     container: {
@@ -51,6 +54,8 @@ const styles = {
 
 const AccountDatingReacs: NextPage<any, any> = () => {
     const router = useRouter();
+    const images = useState([demoImg, demo2Img, demo3Img]);
+    const crtPos = useState(0)
 
     const handleRouteToMatchRecsDetail = async () => {
         await router.push(FormatString(DATING_RECS_DETAIL_PAGE_ROUTE, "0"))
@@ -97,7 +102,23 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                     overflow="hidden"
                     border="solid #7000FF 1px"
                 >
-                    <Image boxSize="100%" src={demoImg} fit="cover" />
+                    <Image boxSize="100%" src={images.value[crtPos.value]} fit="cover" />
+                    <Box className="leftArea"
+                        position="absolute"
+                        w="50%"
+                        h="100%"
+                        top="0px"
+                        left="0px"
+                        bg="transparent"
+                        onClick={() => crtPos.set(Math.max(0, crtPos.value - 1))} />
+                    <Box className="rightArea"
+                        position="absolute"
+                        w="50%"
+                        h="100%"
+                        top="0px"
+                        right="0px"
+                        bg="transparent"
+                        onClick={() => crtPos.set(Math.min(images.value.length - 1, crtPos.value + 1))} />
                     <Box
                         position="absolute"
                         top="10px"
@@ -107,31 +128,18 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                         paddingRight="20px"
                     >
                         <Grid
-                            templateColumns="repeat(3, 1fr)"
+                            templateColumns={`repeat(${images.value.length}, 1fr)`}
                             boxSize="100%"
-                            bg="black"
                         >
-                            <GridItem h="100%" padding="0px 2px">
-                                <Box
-                                    bg="white"
-                                    boxSize="100%"
-                                    borderRadius="2px"
-                                />
-                            </GridItem>
-                            <GridItem h="100%" padding="0px 2px">
-                                <Box
-                                    bg="#C4C4C4"
-                                    boxSize="100%"
-                                    borderRadius="2px"
-                                />
-                            </GridItem>
-                            <GridItem h="100%" padding="0px 2px">
-                                <Box
-                                    bg="#C4C4C4"
-                                    boxSize="100%"
-                                    borderRadius="2px"
-                                />
-                            </GridItem>
+                            {[...Array(images.value.length)].map((_, idx) => (
+                                <GridItem h="100%" padding="0px 2px">
+                                    <Box
+                                        bg={crtPos.value === idx ? "white" : "#C4C4C4"}
+                                        boxSize="100%"
+                                        borderRadius="2px"
+                                    />
+                                </GridItem>
+                            ))}
                         </Grid>
                     </Box>
                     <Box
