@@ -78,7 +78,7 @@ const UserReactTabFC = (props: IUserReactTabFCProps) => {
 
     const handleRouteToPostComment = useCallback(
         async () => {
-            await router.push(FormatString(ACCOUNT_POST_COMMENT_PAGE_ROUTE, `${props.accountId}`, `${props.id}`))
+            await router.push(FormatString(ACCOUNT_POST_COMMENT_PAGE_ROUTE, `${props.accountId}`, `${props.postId}`))
         }, [],
     )
     
@@ -227,7 +227,7 @@ export const UserPost = (props: IUserPostProp) => {
                 className="action"
                 w="100%"
                 display="flex">
-                <UserReactTabFC />
+                <UserReactTabFC postId={props.id || "1"} accountId={props.accountId || "1"}/>
             </Box>
         </div>
     )
