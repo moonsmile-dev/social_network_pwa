@@ -13,6 +13,10 @@ import React from "react";
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import { HOME_PAGE_ROUTE } from "src/Routes/contants";
+import { getAuthInfo } from "src/Commons/Auths/utils";
+import { useMutation } from "@apollo/client";
+import { UPDATE_ACCOUNT_PROFILE_MUTATION } from "@Libs/Mutations/updateAccountProfileMutation";
+import { useEffect } from "react";
 
 
 enum InputType {
@@ -85,9 +89,9 @@ const FlexDateSelectInput = (props: IFlexDateSelectInput) => {
                             border="none"
                             focusBorderColor="none"
                         >
-                            <option value={0}>Male</option>
-                            <option value={1}>Female</option>
-                            <option value={2}>Unknown</option>
+                            <option value={"MALE"}>Male</option>
+                            <option value={"FEMALE"}>Female</option>
+                            <option value={"UN_KNOWN"}>Unknown</option>
                         </Select>
                     )
             }
@@ -109,11 +113,32 @@ type Inputs = {
 const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
     const router = useRouter();
     const { register, handleSubmit, watch, errors, setValue } = useForm<Inputs>();
+    const { accountId, authToken } = getAuthInfo();
+    const [updateProfileAction] = useMutation(UPDATE_ACCOUNT_PROFILE_MUTATION);
 
     const OnHandleUpdateAccountProfile = useCallback(
         async (d: any) => {
             console.log(d);
-            await router.push(HOME_PAGE_ROUTE)
+
+            await updateProfileAction({
+                variables: {
+                    account_id: accountId,
+                    auth_token: authToken,
+
+                    address: d["address"],
+                    avatar_url: "",
+                    bio: d["bio"],
+                    birth_date: d["birthDate"],
+                    cover_url: "",
+                    email: "",
+                    first_name: d["firstName"],
+                    gender: d["gender"],
+                    last_name: d["lastName"],
+                    marital_status: "",
+                    phone_number: "",
+                    school: d["school"]
+                }
+            })
         },
         [],
     )
