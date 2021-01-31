@@ -21,11 +21,13 @@ import React from "react";
 import { CloseIcon } from '@chakra-ui/icons'
 import { useForm } from "react-hook-form";
 import settingIcon from "@Assets/images/settings.png";
-import { ACCOUNT_SETTING_PAGE_ROUTE, CHAT_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, ACCOUNT_SETTING_PAGE_ROUTE, CHAT_PAGE_ROUTE } from "src/Routes/contants";
 import flagIcon from "@Assets/images/black_flag.png";
 import { useStorage } from "@Libs/Hooks";
 import { v4 as uuidV4 } from 'uuid';
 import { CREATE_POST_MUTATION } from "@Libs/Mutations/createPostMutation";
+import { CREATE_ROOM_MUTATION } from "@Libs/Mutations/createRoomMutation";
+import { FormatString } from "src/Commons/Strings/utils";
 
 const chatStyle = {
     width: "134px",
@@ -56,11 +58,15 @@ const MasterDetailCnt = (props: { val: string, cnt: string }) => {
 };
 
 interface IFConnectionProps {
+    currentAccountId: string;
     isOwn: boolean;
 }
 
 const FConnection = (props: IFConnectionProps) => {
     const router = useRouter();
+    const { accountId, authToken } = getAuthInfo();
+    const [createRoomAction] = useMutation(CREATE_ROOM_MUTATION);
+
     const handleRouteToAccountSettingPage = useCallback(
         async () => {
             await router.push(ACCOUNT_SETTING_PAGE_ROUTE);
@@ -70,6 +76,19 @@ const FConnection = (props: IFConnectionProps) => {
         async () => {
             if (props.isOwn) {
                 await router.push(CHAT_PAGE_ROUTE)
+            } else {
+                // const {data, error} 
+                const _dat = await createRoomAction({
+                    variables: {
+                        account_id: accountId,
+                        auth_token: authToken,
+                        receiver_id: props.currentAccountId
+                    }
+                });
+                const roomId: string = _dat.data?.userCreateRoom.roomId;
+
+                await router.push(FormatString(ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, `${roomId}`))
+
             }
         }, [],
     )
@@ -367,7 +386,7 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
                 </div>
                 <div style={{ position: "relative" }}>
                     <div style={{ position: "absolute", right: "0%", top: "10px" }}>
-                        <FConnection isOwn={isOwn.value} />
+                        <FConnection isOwn={isOwn.value} currentAccountId={currentAccountId} />
                     </div>
                     <div style={{ marginLeft: "15px", marginTop: "15px" }}>
                         <div style={{ height: "80px", width: "80px", overflow: "hidden", borderRadius: "50%" }}>

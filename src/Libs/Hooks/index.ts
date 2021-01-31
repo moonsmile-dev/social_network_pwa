@@ -6,8 +6,6 @@ export const useStorage = async (bucket: string, key: string, file: any): Promis
     formData.append("key", key)
     formData.append("bucket", bucket)
 
-    const result: any = { data: null, error: null }
-
     try {
         const res = await axios.post(`${process.env.NEXT_PUBLIC_SN_STORAGE_API}/files/upload`, formData, {
             headers: {
