@@ -114,8 +114,8 @@ enum Gender {
 interface IUserDatingProps {
     name: string;
     gender: Gender;
-    avtSrc: string;
-    preTxt: string;
+    avt_src: string;
+    pre_txt: string;
     age: number;
 }
 
@@ -125,7 +125,7 @@ const UserDating = (props: IUserDatingProps) => {
             <Image
                 borderRadius="full"
                 boxSize="50px"
-                src={props.avtSrc}
+                src={props.avt_src}
                 alt="XXX"
             />
             <div style={{ paddingLeft: "15px" }}>
@@ -139,7 +139,7 @@ const UserDating = (props: IUserDatingProps) => {
                     </Box>
                 </div>
                 <div>
-                    <p style={{ color: "#717171", fontSize: "12px" }}>{props.preTxt}</p>
+                    <p style={{ color: "#717171", fontSize: "12px" }}>{props.pre_txt}</p>
                 </div>
             </div>
         </div>
@@ -267,9 +267,9 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
                 <div className="User dating section">
                     {[...Array(10)].map((x, i) =>
                         <UserDating
-                            avtSrc={avatarIcon}
+                            avt_src={avatarIcon}
                             name="Nguyen Minh Tuan"
-                            preTxt="Toi muon ngam binh minh vao buoi toi.... abc =))"
+                            pre_txt="Toi muon ngam binh minh vao buoi toi.... abc =))"
                             age={21}
                             gender={Gender.MALE}
                         />
