@@ -50,7 +50,7 @@ const AccountVerifies: NextPage<any, any> = (props: any) => {
                     <Image boxSize="100%" src={backIcon} opacity="50%" />
                 </Box>
                 <Center w="100%" margin="0px 10px">
-                    <Text fontSize="25px" fontWeight="bold">Account Verify</Text>
+                    <Text fontSize="25px" fontWeight="bold" color="#0066FF">Account Verify</Text>
                 </Center>
             </Container>
             <Container padding="20px">
