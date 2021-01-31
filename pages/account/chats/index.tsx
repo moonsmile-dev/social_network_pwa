@@ -9,6 +9,11 @@ import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired
 import { useRouter } from "next/router";
 import { ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE } from "src/Routes/contants";
 import { FormatString } from "src/Commons/Strings/utils";
+import { getAuthInfo } from "src/Commons/Auths/utils";
+import { useQuery } from "@apollo/client";
+import { GET_USER_STORY_LIST_QUERY } from "@Libs/Queries/getUserStoryListQuery";
+import { GET_ROOM_CHAT_LIST_QUERY } from "@Libs/Queries/getRoomChatListQuery";
+import { IRoomChat } from "@Libs/Dtos/roomChat.interface";
 
 const absoluteCenter = {
     top: "50%",
@@ -50,6 +55,24 @@ const styles = {
 }
 
 const UserStoriesSliding = (props: any) => {
+    const { accountId, authToken } = getAuthInfo();
+
+    const { loading, error, data } = useQuery(GET_USER_STORY_LIST_QUERY, {
+        variables: {
+            auth_token: authToken,
+            account_id: accountId
+        }
+    })
+    if (error) {
+        return <div>Error loading user stories</div>;
+    }
+
+    if (loading) {
+        return null;
+    }
+
+    const userStories: Array<any> = data.userStories
+
     return (
         <div style={{
             display: "flex",
@@ -58,14 +81,11 @@ const UserStoriesSliding = (props: any) => {
             whiteSpace: "nowrap",
             height: "100px"
         }}>
-            <StoryHome name="Tuan" />
-            <StoryHome name="Tuan" />
-            <StoryHome name="Tuan" />
-            <StoryHome name="Tuan" />
-            <StoryHome name="Tuan" />
-            <StoryHome name="Tuan" />
-            <StoryHome name="Tuan" />
-            <StoryHome name="Tuan" />
+            {
+                userStories.map((user, idx) =>
+                    < StoryHome key={idx} name={user.name} imgSrc={user?.mediaDatas[0]?.mediaUrl || ""} />
+                )
+            }
         </div>
     )
 }
@@ -84,6 +104,7 @@ const timeCounterStyle = {
 } as React.CSSProperties;
 
 interface IMessagePreviewProps {
+    id: string;
     numNewMsgs?: number;
     latestMsgTime?: string;
     avatar?: string;
@@ -94,7 +115,7 @@ interface IMessagePreviewProps {
 const MessagePreviewComponent = (props: IMessagePreviewProps) => {
     const router = useRouter();
     const handleRouteToRoomMessage = async () => {
-        await router.push(FormatString(ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, "1"));
+        await router.push(FormatString(ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, `${props.id}`));
     }
 
     return (
@@ -122,6 +143,45 @@ const MessagePreviewComponent = (props: IMessagePreviewProps) => {
                 }
             </div>
         </div>
+    )
+}
+
+const UserRoomListFC = (props: any) => {
+    const { accountId, authToken } = getAuthInfo();
+
+    const { error, loading, data } = useQuery(GET_ROOM_CHAT_LIST_QUERY, {
+        variables: {
+            account_id: accountId,
+            auth_token: authToken
+        }
+    })
+
+    if (error) {
+        return <div>Error when get list of room chats.</div>
+    }
+
+    if (loading) {
+        return null;
+    }
+
+    const rooms: Array<IRoomChat> = data.userRooms;
+
+
+    return (
+        <>
+            {
+                rooms.map((room, idx) =>
+                (
+                    <MessagePreviewComponent
+                        key={idx}
+                        id={room.id}
+                        numNewMsgs={room.numUnReadMsg}
+                        avatar={room.avtIconUrl}
+                        msgPreview={room.latestMsg}
+                        name={room.name} />
+                ))
+            }
+        </>
     )
 }
 
@@ -159,17 +219,7 @@ const AccountChat: NextPage<IAccountChat.IProps, IAccountChat.InitialProps> = (p
                         className="messages"
                         style={{ backgroundColor: "inherit", overflowY: "auto" }}
                     >
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
-                        <MessagePreviewComponent />
+                        <UserRoomListFC />
                     </div>
                 </div>
                 <NavFooter type={NavPageType.CHAT} />

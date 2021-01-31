@@ -84,8 +84,8 @@ const styles = {
 interface IOptionDatingProp {
     bg: string;
     name: string;
-    dTxt: string;
-    iconSrc: string;
+    d_txt: string;
+    icon_src: string;
 
     onClick: () => any;
 }
@@ -96,10 +96,10 @@ const OptionDating = (props: IOptionDatingProp) => {
             onClick={props.onClick}>
             <div style={{ textAlign: "center" }}>
                 <div style={{ width: "100%", display: "flex", justifyItems: "center", justifyContent: "center", padding: "7px" }}>
-                    <Image src={props.iconSrc} h="70px" w="70px" />
+                    <Image src={props.icon_src} h="70px" w="70px" />
                 </div>
                 <p style={{ fontSize: "19px", borderColor: "#FFFFFF", fontWeight: "bold", color: "white" }}>{props.name}</p>
-                <p style={{ fontSize: "15px", color: "#D3D3D3" }}>{props.dTxt}</p>
+                <p style={{ fontSize: "15px", color: "#D3D3D3" }}>{props.d_txt}</p>
             </div>
         </Box>
     );
@@ -260,8 +260,8 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
             <div className="Main" style={styles.main as React.CSSProperties}>
                 <div className="Dating Selection" style={{ width: "100%", border: "1px solid white" }}>
                     <div style={{ display: "flex", margin: "0px 15px" }}>
-                        <OptionDating bg="#7000FF" iconSrc={smartChatIcon} name="Smart Chat" dTxt="120 onlines" onClick={() => handleRouteToMatchSmartWaiting()} />
-                        <OptionDating bg="#FF0000" iconSrc={datingTraditionIcon} name="Matching" dTxt="20 updated daily" onClick={() => handleRouteToMatchRecs()} />
+                        <OptionDating bg="#7000FF" icon_src={smartChatIcon} name="Smart Chat" d_txt="120 onlines" onClick={() => handleRouteToMatchSmartWaiting()} />
+                        <OptionDating bg="#FF0000" icon_src={datingTraditionIcon} name="Matching" d_txt="20 updated daily" onClick={() => handleRouteToMatchRecs()} />
                     </div>
                 </div>
                 <div className="User dating section">

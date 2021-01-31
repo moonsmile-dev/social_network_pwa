@@ -5,6 +5,15 @@ import sendIcon from "@Assets/images/send.png";
 import previousIcon from "@Assets/images/previous.png";
 import voiceIcon from "@Assets/images/voicemail.png";
 import { useRouter } from "next/router";
+import { getAuthInfo } from "src/Commons/Auths/utils";
+import { useQuery } from "@apollo/client";
+import { GET_MESSAGES_IN_ROOM_QUERY } from "@Libs/Queries/getMessagesInRoomQuery";
+import { State, useState } from "@hookstate/core";
+import { useEffect, useRef, useState as useStateReact } from "react";
+import { initializeApollo } from "@Libs/apolloClient";
+import { IMessageChat } from "@Libs/Dtos/messageChat.interface";
+import io from 'socket.io-client';
+import { useCallback } from "react";
 
 interface IMessage {
     isMe?: boolean;
@@ -45,14 +54,33 @@ const MessageComponent = (props: IMessage) => {
     )
 }
 
-// const MessageListComponent = (props: any) => {
-//     return (
-//         <div style={{ width: "100%", display: "flex", flexDirection: "column-reverse" }}>
-//             <MessageComponent isMe="true" />
-//             <MessageComponent />
-//         </div>
-//     )
-// }
+const OriginMessageListFC = (props: { roomId: string }) => {
+    const { accountId, authToken } = getAuthInfo();
+    const { error, loading, data } = useQuery(GET_MESSAGES_IN_ROOM_QUERY, {
+        variables: {
+            auth_token: authToken,
+            account_id: accountId,
+            room_id: props.roomId
+        }
+    })
+
+    if (error) {
+        return <div>Error when get messages</div>
+    }
+    if (loading) {
+        return null;
+    }
+
+    console.log(data)
+    const roomMsgs: Array<IMessageChat> = data.userRoomMessages;
+    return (
+        <>
+            {roomMsgs.map((msg, idx) => (
+                <MessageComponent key={idx} isMe={accountId == msg.senderId} msg={msg.content} />
+            ))}
+        </>
+    )
+}
 
 const chatInputContainer = {
     position: "absolute",
@@ -77,8 +105,53 @@ const centerDisplayStyle = {
     alignItems: "center",
 }
 
+const useSocket = (url: string) => {
+    const [socket, setSocket] = useStateReact(null)
+
+    useEffect(() => {
+        // const socketIo = io(url)
+
+        // setSocket(socketIo)
+
+        // function cleanup() {
+        //     socketIo.disconnect()
+        // }
+        // return cleanup
+
+        // should only run once and not on every re-render,
+        // so pass an empty array
+    }, [])
+
+    return socket
+}
+
+
 const AccountChatIdx: NextPage<any, any> = (props: any) => {
+    const [messages, setMessages] = useStateReact([]);
+    const typingMsgContent = useState("")
+    // const socket = useSocket(process.env.NEXT_PUBLIC_SN_SOCKET_API || "");
+
     const router = useRouter();
+    const roomId: any = router.query.chat_idx || "";
+    const { accountId, authToken } = getAuthInfo();
+
+
+    useEffect(() => {
+
+    }, [])
+
+    const handleSendMessageAction = () => {
+        const msg = {
+            senderId: accountId,
+            content: typingMsgContent.value
+        } as never
+        if (typingMsgContent.value !== "") {
+            setMessages([msg, ...messages])
+            typingMsgContent.set("")
+            console.log(messages)
+        }
+    }
+
 
     return (
         <div style={{ position: "relative", height: '100vh', backgroundColor: "#cfcfcf" }}>
@@ -110,17 +183,24 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                 </div>
             </div>
             <div className="chat_area" style={{ height: "90%", display: "flex", flexDirection: "column-reverse" }}>
-                <MessageComponent isMe={true} />
-                <MessageComponent />
+                {
+                    [...messages].map((msg: any, idx) => {
+                        return (
+                            <MessageComponent key={idx} msg={msg.content} isMe={accountId === msg.senderId} />
+                        )
+                    })
+                }
+                <OriginMessageListFC roomId={roomId} />
             </div>
             <div className="chat_input_container" style={chatInputContainer} >
                 <div className="chat_input" style={{ display: "flex" }}>
                     <div className="icon_container" style={{ padding: "7px" }}>
                         <img alt="XXX" src={plusIcon} height="45px" width="45px" />
                     </div>
-                    <input placeholder="Send message" style={{ ...measureInputStyle, backgroundColor: "inherit" }} />
+                    <input placeholder="Send message" id="message-chat" style={{ ...measureInputStyle, backgroundColor: "inherit" }} onChange={(event) => typingMsgContent.set(event.target.value)} />
                 </div>
-                <div className="send_icon" style={{ ...centerDisplayStyle, position: "absolute", right: "0%", top: "0%", height: "100%" }}>
+                <div className="send_icon" style={{ ...centerDisplayStyle, position: "absolute", right: "0%", top: "0%", height: "100%" }}
+                    onClick={() => handleSendMessageAction()}>
                     <img src={sendIcon} alt="abc" height="40px" width="40px" />
                 </div>
             </div>
