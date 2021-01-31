@@ -189,7 +189,7 @@ const AccountPostCreateFC = (props: any) => {
 
 
     const handleOnUploadFiles = useCallback(
-        (event) => {
+        (event: any) => {
             const files: FileList = event.target.files;
 
             const crtDataFiles: Array<any> = [...selectedDataFiles.value];
@@ -224,7 +224,7 @@ const AccountPostCreateFC = (props: any) => {
         }, [],
     )
     const onPostSubmit = useCallback(
-        (data) => {
+        (data: any) => {
             console.log(data)
             console.log(selectedDataFiles.value)
         }, [],

@@ -16,7 +16,7 @@ import logoutIcon from "@Assets/images/logout.png";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { getAuthInfo, removeAuthInfo } from "src/Commons/Auths/utils";
-import { ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE, ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE, GET_STARTED_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE, ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE, ACCOUNT_VERIFIES_PAGE_ROUTE, GET_STARTED_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
 import { FormatString } from "src/Commons/Strings/utils";
 
 interface IBasicSettingFCProps {
@@ -88,6 +88,11 @@ const AccountSettings: NextPage<any, any> = (props: any) => {
             await router.push(ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE)
         }, [],
     )
+    const handleRouteToAccountVerifiesPage = useCallback(
+        async () => {
+            await router.push(ACCOUNT_VERIFIES_PAGE_ROUTE)
+        }, []
+    )
 
 
 
@@ -123,7 +128,7 @@ const AccountSettings: NextPage<any, any> = (props: any) => {
                     padding="10px 0px"
                 >
                     <BasicSettingFC title="Update profile" icon_src={updateProfileIcon} onClick={() => handleRouteToUpdateProfilePage()} />
-                    <BasicSettingFC title="Verify Account" status="Pending" status_color="#FF0000" icon_src={verifyAccountIcon} />
+                    <BasicSettingFC title="Verify Account" status="Pending" status_color="#FF0000" icon_src={verifyAccountIcon} onClick={() => handleRouteToAccountVerifiesPage()} />
                     <BasicSettingFC title="Change password" icon_src={changePasswordIcon} onClick={() => handleRouteToChangePasswordPage()} />
                 </Box>
                 <Box w="100%"
