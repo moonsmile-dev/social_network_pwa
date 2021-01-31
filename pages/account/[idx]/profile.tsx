@@ -14,6 +14,7 @@ import { IArticlePost } from "@Libs/Dtos/articlePost.interface";
 import { GET_ACCOUNT_PROFILE_QUERY } from "@Libs/Queries/getAccountProfileQuery";
 import { IAccountProfile } from "@Libs/Dtos/accountProfile.interface";
 import { Box, Button, Center, Container, Image, Input, Text, Textarea } from "@chakra-ui/react";
+import { useState as ReactUseState } from 'react';
 import { useState } from "@hookstate/core";
 import { useCallback } from "react";
 import React from "react";
@@ -188,24 +189,21 @@ const AccountPostCreateFC = (props: any) => {
     const { register, handleSubmit } = useForm();
 
 
-    const handleOnUploadFiles = useCallback(
-        (event: any) => {
-            const files: FileList = event.target.files;
+    const handleOnUploadFiles = (event: any) => {
+        const files: FileList = event.target.files;
 
-            const crtDataFiles: Array<any> = [...selectedDataFiles.value];
-            for (let idx = 0; idx < files.length; idx++) {
-                const _file = files[idx];
+        const crtDataFiles: Array<any> = [...selectedDataFiles.value];
+        for (let idx = 0; idx < files.length; idx++) {
+            const _file = files[idx];
 
-                const reader = new FileReader();
-                reader.onload = () => {
-                    crtDataFiles.push(reader.result)
-                }
-                reader.readAsDataURL(_file)
+            const reader = new FileReader();
+            reader.onload = () => {
+                crtDataFiles.push(reader.result)
+                selectedDataFiles.set(crtDataFiles as Array<never>)
             }
-
-            selectedDataFiles.set(crtDataFiles as Array<never>)
-        }, [],
-    )
+            reader.readAsDataURL(_file)
+        }
+    }
 
     const fileUploadAction = useCallback(
         () => {
@@ -213,16 +211,14 @@ const AccountPostCreateFC = (props: any) => {
         }, [],
     )
 
-    const onRemoveUploadedImage = useCallback(
-        (file: string) => {
-            let crtFiles: Array<any> = [...selectedDataFiles.value];
-            const index = crtFiles.indexOf(file);
-            if (index !== -1) {
-                crtFiles.splice(index, 1)
-                selectedDataFiles.set(crtFiles as Array<never>)
-            }
-        }, [],
-    )
+    const onRemoveUploadedImage = (file: string) => {
+        let crtFiles: Array<any> = [...selectedDataFiles.value];
+        const index = crtFiles.indexOf(file);
+        if (index !== -1) {
+            crtFiles.splice(index, 1)
+            selectedDataFiles.set(crtFiles as Array<never>)
+        }
+    }
     const onPostSubmit = useCallback(
         (data: any) => {
             console.log(data)
@@ -255,7 +251,8 @@ const AccountPostCreateFC = (props: any) => {
                         )
                     }
                 </Box>
-                <Box justifyContent="end"
+                <Box
+                    justifyContent="end"
                     display="flex"
                     w="100%"
                     margin="10px 0px"

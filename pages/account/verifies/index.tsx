@@ -6,13 +6,17 @@ import { useCallback } from "react";
 import { useRef } from "react";
 import backIcon from "@Assets/images/back.png";
 import { useState } from "@hookstate/core";
+import { useState as useStateReact } from 'react';
 import cameraIcon from "@Assets/images/photo-camera-interface-symbol-for-button.png";
 import { useRouter } from "next/router";
+import { v4 as uuidV4 } from "uuid";
+import axios from "axios";
+import { useStorage } from "@Libs/Hooks";
 
 
 const AccountVerifies: NextPage<any, any> = (props: any) => {
-    const imgSrc = useState("")
-    const router = useRouter()
+    const [imgFile, setImgFile] = useStateReact("");
+    const router = useRouter();
 
     const handleBackPage = useCallback(() => {
         router.back()
@@ -23,8 +27,7 @@ const AccountVerifies: NextPage<any, any> = (props: any) => {
             if (target.files) {
                 if (target.files.length !== 0) {
                     const file = target.files[0];
-                    const newUrl = URL.createObjectURL(file);
-                    imgSrc.set(newUrl);
+                    setImgFile(file);
                 }
             }
         }, []
@@ -37,9 +40,15 @@ const AccountVerifies: NextPage<any, any> = (props: any) => {
     )
 
     const submitPassportImage = useCallback(
-        () => {
-            console.log(imgSrc.value)
-        }, []
+        async () => {
+            if (imgFile !== "") {
+                const { error, data } = await useStorage("abc", `account/verifies/test/${uuidV4()}.png`, imgFile)
+
+                if (data) {
+                    console.log(data);
+                }
+            }
+        }, [imgFile]
     )
 
 
@@ -54,7 +63,7 @@ const AccountVerifies: NextPage<any, any> = (props: any) => {
                 </Center>
             </Container>
             <Container padding="20px">
-                {imgSrc.value === "" ? (
+                {imgFile === "" ? (
                     <Center h="400px">
                         <input accept="image/*" type="file" id="capture-img-id" capture="environment" onChange={(event) => captureImg(event.target)} hidden />
                         <Box bg="transparent" onClick={() => openCamera()}
@@ -74,7 +83,7 @@ const AccountVerifies: NextPage<any, any> = (props: any) => {
                 ) : (
                         <Box w="100%"
                             h="400px">
-                            <Image boxSize="100%" src={imgSrc.value} alt="No Images" />
+                            <Image boxSize="100%" src={URL.createObjectURL(imgFile)} alt="No Images" />
                         </Box>
                     )}
 
