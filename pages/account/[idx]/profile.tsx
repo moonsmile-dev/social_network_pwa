@@ -7,14 +7,14 @@ import mediaIcon from "@Assets/images/gallery.png";
 import { UserPost } from "@Components/Basic";
 import backImage from "@Assets/images/back.png";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_ACCOUNT_TIME_LINE_QUERY } from "@Libs/Queries/getAccountTimeLineQuery";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { IArticlePost } from "@Libs/Dtos/articlePost.interface";
 import { GET_ACCOUNT_PROFILE_QUERY } from "@Libs/Queries/getAccountProfileQuery";
 import { IAccountProfile } from "@Libs/Dtos/accountProfile.interface";
 import { Box, Button, Center, Container, Image, Input, Text, Textarea } from "@chakra-ui/react";
-import { useState as ReactUseState } from 'react';
+import { useState as useStateReact } from 'react';
 import { useState } from "@hookstate/core";
 import { useCallback } from "react";
 import React from "react";
@@ -23,6 +23,9 @@ import { useForm } from "react-hook-form";
 import settingIcon from "@Assets/images/settings.png";
 import { ACCOUNT_SETTING_PAGE_ROUTE, CHAT_PAGE_ROUTE } from "src/Routes/contants";
 import flagIcon from "@Assets/images/black_flag.png";
+import { useStorage } from "@Libs/Hooks";
+import { v4 as uuidV4 } from 'uuid';
+import { CREATE_POST_MUTATION } from "@Libs/Mutations/createPostMutation";
 
 const chatStyle = {
     width: "134px",
@@ -185,8 +188,12 @@ const UploadedImagePreview = (props: IImagePreviewProps) => {
 }
 
 const AccountPostCreateFC = (props: any) => {
+    const router = useRouter()
     const selectedDataFiles = useState([]);
+    const [selectedFiles, setSelectedFiles] = useStateReact([]);
     const { register, handleSubmit } = useForm();
+    const { accountId, authToken } = getAuthInfo();
+    const [createPostAction] = useMutation(CREATE_POST_MUTATION);
 
 
     const handleOnUploadFiles = (event: any) => {
@@ -202,6 +209,7 @@ const AccountPostCreateFC = (props: any) => {
                 selectedDataFiles.set(crtDataFiles as Array<never>)
             }
             reader.readAsDataURL(_file)
+            setSelectedFiles([...selectedFiles as never[], _file as never])
         }
     }
 
@@ -220,10 +228,34 @@ const AccountPostCreateFC = (props: any) => {
         }
     }
     const onPostSubmit = useCallback(
-        (data: any) => {
-            console.log(data)
+        async (formData: any) => {
+            console.log(formData)
             console.log(selectedDataFiles.value)
-        }, [],
+
+            const mediaData: Array<any> = [];
+            console.log(selectedFiles.length);
+            for (let idx = 0; idx < selectedFiles.length; idx++) {
+                const _file = selectedFiles[idx];
+                const { data, error } = await useStorage("abc", `account/posts/${uuidV4()}.png`, _file)
+
+                if (data) {
+                    mediaData.push({ url: data.publicUrl, type: 0 })
+                }
+            }
+
+            console.log(mediaData)
+            const _dat = await createPostAction({
+                variables: {
+                    account_id: accountId,
+                    auth_token: authToken,
+                    content: formData['content'],
+                    medias: mediaData
+                }
+            })
+
+            router.reload()
+
+        }, [selectedFiles],
     )
 
 
@@ -280,7 +312,8 @@ const AccountPostCreateFC = (props: any) => {
                         borderRadius="0px"
                         bg="#995AFF"
                         color="white"
-                        w="70px">
+                        w="70px"
+                    >
                         Post
                     </Button>
                 </Box>
