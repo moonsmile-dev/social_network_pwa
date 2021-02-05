@@ -154,7 +154,7 @@ documentation/website/build
 # local history plugin
 .history
 
-# storybook build folder
-.storybookout
+# env
+.env.local
 
 # End of https://www.gitignore.io/api/vim,node,macos

@@ -15,7 +15,6 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@Actions": ["src/Actions"],
       "@Components/*": ["src/Components/*"],
       "@Components": ["src/Components"],
       "@Definitions/*": ["src/Definitions/*"],

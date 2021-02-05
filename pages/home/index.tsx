@@ -8,9 +8,6 @@ import { withTranslation } from "@Server/i18n";
 import {
     Container
 } from "@Styled/Home";
-import { HomeActions } from "@Actions";
-import { Heading, LocaleButton } from "@Components";
-import { useQuery } from "@apollo/client";
 
 import LogoImage from "@Assets/images/dating_logo.jpg";
 // #endregion Local Imports
@@ -137,25 +134,6 @@ const Home: NextPage<IHomePage.IProps, IHomePage.InitialProps> = (props: any) =>
         </Container >
     );
 };
-
-export async function getStaticProps() {
-    const apolloClient = initializeApollo();
-
-    const data = await apolloClient.query({
-        query: helloQuery,
-    });
-
-    console.log(`Data is gotten on reload page: ${JSON.stringify(data)}`)
-
-
-    return {
-        props: {
-            initialApolloState: apolloClient.cache.extract(),
-        },
-        revalidate: 1,
-    };
-}
-
 
 const Extended = withTranslation("common")(Home);
 
