@@ -9,6 +9,4 @@ services:
     volumes:
       - /opt/app/node_modules
       - /opt/app/.next
-    
-    env_file:
-      - .env.local
+    env_file: ./.env.development

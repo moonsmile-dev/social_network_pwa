@@ -11,12 +11,10 @@ RUN yarn install
 
 ADD . /opt/app
 
-RUN yarn add --dev typescript @types/node @types/styled-components
+RUN yarn add --dev typescript @types/node @types/styled-components @types/uuid @testing-library/react babel-plugin-module-resolver sass-loader
 
-RUN yarn install --dev
-
-# RUN yarn install --dev && yarn build
+RUN yarn install --dev && yarn build
 
 EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "start:dev" ]
