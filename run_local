@@ -3,5 +3,4 @@
 . ~/.nvm/nvm.sh
 nvm use v10.14.2
 
-npm ci
-# yarn install && yarn start:dev
+yarn install && yarn start:dev
