@@ -75,15 +75,10 @@ interface IFlexDateSelectInput {
     title: string;
     type?: InputType;
     register?: any;
-    init_value?: string | Date;
+    init_value?: any;
 }
 const FlexDateSelectInput = (props: IFlexDateSelectInput) => {
     const inputValue = useState(convertDateStringToDateInput(props.init_value || ""));
-    const defaultGenders: Record<string, string> = {
-        "MALE": "Male",
-        "FEMALE": "Female",
-        "UN_KNOWN": "Unknown"
-    }
 
     return (
         <Container margin="10px 0px">
