@@ -14,9 +14,12 @@ import { useCallback } from "react";
 import { useRouter } from "next/router";
 import { HOME_PAGE_ROUTE } from "src/Routes/contants";
 import { getAuthInfo } from "src/Commons/Auths/utils";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_ACCOUNT_PROFILE_MUTATION } from "@Libs/Mutations/updateAccountProfileMutation";
 import { useEffect } from "react";
+import { GET_ACCOUNT_PROFILE_QUERY } from "@Libs/Queries/getAccountProfileQuery";
+import { IAccountProfile } from "@Libs/Dtos/accountProfile.interface";
+import { useState } from "@hookstate/core";
 
 
 enum InputType {
@@ -30,9 +33,11 @@ interface IFlexInput {
     type?: InputType;
     iconSrc?: string;
     register?: any;
+    init_value?: string;
 }
 
 const FlexDataInput = (props: IFlexInput) => {
+    const inputValue = useState(props.init_value);
     return (
         <Box margin="10px 0px" padding="0px 15px">
             <Box padding="5px 0px" >
@@ -46,19 +51,23 @@ const FlexDataInput = (props: IFlexInput) => {
                         </Center>
                     )
                 }
-                <Input name={props.name} outline="none" border="none" focusBorderColor="none" fontSize="23px" w="85%" maxLength={20} ref={props.register} />
+                <Input name={props.name} outline="none" border="none" focusBorderColor="none" fontSize="23px" w="85%" maxLength={20} ref={props.register} value={inputValue.value} onChange={(event) => inputValue.set(event.target.value)} />
             </Box>
             <Box w="100%" h="2px" borderRadius="full" bg="#9C9C9C" marginTop="5px" />
         </Box>
     )
 }
 
+const convertDateStringToDateInput = (val: string) => {
+    try {
+        const local = new Date(val);
 
-const options = [
-    { value: 0, label: 'Male' },
-    { value: 1, label: 'Female' },
-    { value: 2, label: 'Unknown' },
-];
+        local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+        return local.toJSON().slice(0, 10);
+    } catch {
+        return val
+    }
+}
 
 
 interface IFlexDateSelectInput {
@@ -66,8 +75,15 @@ interface IFlexDateSelectInput {
     title: string;
     type?: InputType;
     register?: any;
+    init_value?: string | Date;
 }
 const FlexDateSelectInput = (props: IFlexDateSelectInput) => {
+    const inputValue = useState(convertDateStringToDateInput(props.init_value || ""));
+    const defaultGenders: Record<string, string> = {
+        "MALE": "Male",
+        "FEMALE": "Female",
+        "UN_KNOWN": "Unknown"
+    }
 
     return (
         <Container margin="10px 0px">
@@ -79,16 +95,19 @@ const FlexDateSelectInput = (props: IFlexDateSelectInput) => {
                     <Input name={props.name} type={props.type || "date"}
                         outline="none" border="none" focusBorderColor="none"
                         ref={props.register}
+                        value={inputValue.value}
+                        onChange={(event) => inputValue.set(event.target.value)}
                     />
                 ) : (
                         <Select
                             name={props.name}
                             ref={props.register}
-                            options={options}
                             outline="none"
                             border="none"
                             focusBorderColor="none"
+                            defaultValue={inputValue.value}
                         >
+
                             <option value={"MALE"}>Male</option>
                             <option value={"FEMALE"}>Female</option>
                             <option value={"UN_KNOWN"}>Unknown</option>
@@ -143,6 +162,23 @@ const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
         [],
     )
 
+    const { data, error, loading } = useQuery(GET_ACCOUNT_PROFILE_QUERY, {
+        variables: {
+            account_id: accountId,
+            auth_token: authToken
+        }
+    })
+
+    if (error) {
+        return <div>Error when get account profile</div>
+    }
+
+    if (loading) {
+        return null;
+    }
+
+    console.log(data)
+    const accountProfile: IAccountProfile = data.accountProfile;
 
     return (
         <PageContainer>
@@ -154,16 +190,16 @@ const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
 
             <Box w="100%">
                 <form onSubmit={handleSubmit(OnHandleUpdateAccountProfile)}>
-                    <FlexDataInput name="firstName" title="First Name" iconSrc={firstNameIcon} register={register} />
-                    <FlexDataInput name="lastName" title="Last Name" iconSrc={lastNameIcon} register={register} />
+                    <FlexDataInput name="firstName" title="First Name" iconSrc={firstNameIcon} register={register} init_value={accountProfile.firstName} />
+                    <FlexDataInput name="lastName" title="Last Name" iconSrc={lastNameIcon} register={register} init_value={accountProfile.lastName} />
                     <Box display="flex" w="100%">
-                        <FlexDateSelectInput title="Birth Date" name="birthDate" register={register} type={InputType.DATE} />
-                        <FlexDateSelectInput title="Gender" name="gender" register={register} type={InputType.SELECT} />
+                        <FlexDateSelectInput title="Birth Date" name="birthDate" register={register} type={InputType.DATE} init_value={accountProfile.birthDate} />
+                        <FlexDateSelectInput title="Gender" name="gender" register={register} type={InputType.SELECT} init_value={accountProfile.gender} />
                     </Box>
-                    <FlexDataInput name="bio" title="Bio" iconSrc={bioIcon} register={register} />
+                    <FlexDataInput name="bio" title="Bio" iconSrc={bioIcon} register={register} init_value={accountProfile.bio} />
                     <FlexDataInput name="address" title="Address" iconSrc={addressIcon}
-                        register={register} />
-                    <FlexDataInput name="school" title="School" iconSrc={schoolIcon} register={register} />
+                        register={register} init_value={accountProfile.address} />
+                    <FlexDataInput name="school" title="School" iconSrc={schoolIcon} register={register} init_value={accountProfile.school} />
 
                     <Center w="100%" padding="50px 0px">
                         <Button
