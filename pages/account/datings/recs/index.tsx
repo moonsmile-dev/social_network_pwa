@@ -148,7 +148,7 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                         left="10px"
                         height="20%"
                         width="65%"
-                        bg="gray"
+                        bg="transparent"
                     >
                         <Text fontSize="24px" fontWeight="bold" color="white">
                             ABC II * 22.yo
