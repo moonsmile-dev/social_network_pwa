@@ -271,6 +271,7 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
                             name="Nguyen Minh Tuan"
                             pre_txt="Toi muon ngam binh minh vao buoi toi.... abc =))"
                             age={21}
+                            key={i}
                             gender={Gender.MALE}
                         />
                     )}
