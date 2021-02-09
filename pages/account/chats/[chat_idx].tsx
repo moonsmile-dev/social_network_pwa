@@ -15,6 +15,7 @@ import { IMessageChat } from "@Libs/Dtos/messageChat.interface";
 import io from 'socket.io-client';
 import { useCallback } from "react";
 import { useSocket } from "@Services";
+import { JOIN_ROOM_EVENT, NEW_MEM_JOINED_EVENT, NEW_MSG_EVENT, SEND_MSG_EVENT } from "@Services/Socket/contants";
 
 interface IMessage {
     isMe?: boolean;
@@ -72,7 +73,8 @@ const OriginMessageListFC = (props: { roomId: string }) => {
         return null;
     }
 
-    console.log(data)
+    console.log(`Account id: on origin message list: ${accountId}`)
+
     const roomMsgs: Array<IMessageChat> = data.userRoomMessages;
     return (
         <>
@@ -107,7 +109,7 @@ const centerDisplayStyle = {
 }
 
 const AccountChatIdx: NextPage<any, any> = (props: any) => {
-    const [messages, setMessages] = useStateReact([]);
+    const [messages, setMessages] = useStateReact<Array<any>>([]);
     const typingMsgContent = useState("")
     const socket = useSocket(process.env.NEXT_PUBLIC_SN_SOCKET_API || "");
 
@@ -115,20 +117,43 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
     const roomId: any = router.query.chat_idx || "";
     const { accountId, authToken } = getAuthInfo();
 
+    const registerSocketListenerEvents = useCallback(
+        () => {
+            if (socket) {
+                socket.on(NEW_MSG_EVENT, (data: any) => {
+                    console.log(`New msg data: ${JSON.stringify(data)}`)
+                    const msg = {
+                        senderId: data.accountId,
+                        content: data.message.content
+                    }
+                    setMessages([msg, ...messages])
+                });
+                socket.on(NEW_MEM_JOINED_EVENT, (data: any) => {
+                    console.log(`new member joined: ${JSON.stringify(data)}`);
+                })
+            }
+        }, [socket, messages]
+    )
 
     useEffect(() => {
-
-    }, [])
+        registerSocketListenerEvents()
+        // Action
+        if (socket) {
+            socket.emit(JOIN_ROOM_EVENT, { "userId": accountId, "roomId": roomId })
+        }
+    }, [socket])
 
     const handleSendMessageAction = () => {
-        const msg = {
-            senderId: accountId,
-            content: typingMsgContent.value
-        } as never
         if (typingMsgContent.value !== "") {
-            setMessages([msg, ...messages])
+            const sendMsgData = {
+                roomId: roomId,
+                senderId: accountId,
+                message: { content: typingMsgContent.value },
+            };
+            socket.emit(SEND_MSG_EVENT, sendMsgData)
+
+            // setMessages([msg, ...messages])
             typingMsgContent.set("")
-            console.log(messages)
         }
     }
 
