@@ -1,0 +1,9 @@
+export const NEW_MEM_JOINED_EVENT = "new-mem-joined";
+export const JOIN_ROOM_EVENT = "join-room";
+export const JOIN_SMART_ROOM_EVENT = "join-smart-room";
+export const NEW_MEM_JOINED_SMART_CHAT_EVENT = "new-mem-joined-smart-chat";
+export const SEND_MSG_EVENT = "send-msg";
+export const NEW_MSG_EVENT = "new-msg";
+export const FIND_SMART_CHAT_EVENT = "find-smart-chat";
+export const SEND_SMART_MSG_EVENT = "send-smart-msg";
+export const NEW_SMART_MSG_EVENT = "new-smart-msg";
