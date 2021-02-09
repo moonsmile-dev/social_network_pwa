@@ -1,3 +1,5 @@
+import { useState } from "@hookstate/core"
+
 interface IFlexInput {
     name: string,
     iconUrl: string,
@@ -33,6 +35,9 @@ const iconStyle = {
 }
 
 function FlexInput(props: IFlexInput) {
+    const isPassword = useState(props.hideContent === true);
+    const hideContentStatus = useState(props.hideContent);
+
     return (
         <div style={{ margin: "30px 0px" }}>
             <p style={headerDetailStyle}>{props.name}</p>
@@ -44,10 +49,10 @@ function FlexInput(props: IFlexInput) {
                         </div>
                     )}
                     <div style={{ flex: "1" }}>
-                        <input placeholder={props.placeHolder} style={InputStyle} onChange={props.onChange} type={props.hideContent ? "password" : "text"} />
+                        <input placeholder={props.placeHolder} style={InputStyle} onChange={props.onChange} type={isPassword.value && hideContentStatus.value ? "password" : "text"} />
                     </div>
                     {props.iconExpand && (
-                        <div>
+                        <div onClick={() => isPassword.value && hideContentStatus.set(!hideContentStatus.value)}>
                             <img style={iconStyle} src={props.iconExpand} />
                         </div>
                     )}

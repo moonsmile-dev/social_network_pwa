@@ -20,7 +20,7 @@ const AccountPasswordReset: NextPage<any, any> = () => {
                     <Text fontWeight="bold" fontSize="30px">Password Recovery</Text>
                     <Text color="#8C8C8C">Enter your Phone number to recovery your password</Text>
                 </Box>
-                <FlexPhoneInput isButtonVisible={false} />
+                <FlexPhoneInput is_button_visiable={false} />
             </Container>
 
             <Container className="submit" padding="70px 0px">

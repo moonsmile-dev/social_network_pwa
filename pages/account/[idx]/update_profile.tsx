@@ -126,6 +126,7 @@ type Inputs = {
 
 const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
     const router = useRouter();
+    const nextRoute: string = router.query.next as string;
     const { register, handleSubmit, watch, errors, setValue } = useForm<Inputs>();
     const { accountId, authToken } = getAuthInfo();
     const [updateProfileAction] = useMutation(UPDATE_ACCOUNT_PROFILE_MUTATION);
@@ -153,6 +154,10 @@ const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
                     school: d["school"]
                 }
             })
+
+            if (nextRoute) {
+                await router.push(nextRoute);
+            }
         },
         [],
     )
@@ -185,16 +190,16 @@ const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
 
             <Box w="100%">
                 <form onSubmit={handleSubmit(OnHandleUpdateAccountProfile)}>
-                    <FlexDataInput name="firstName" title="First Name" iconSrc={firstNameIcon} register={register} init_value={accountProfile.firstName} />
-                    <FlexDataInput name="lastName" title="Last Name" iconSrc={lastNameIcon} register={register} init_value={accountProfile.lastName} />
+                    <FlexDataInput name="firstName" title="First Name" iconSrc={firstNameIcon} register={register} init_value={accountProfile.firstName || ""} />
+                    <FlexDataInput name="lastName" title="Last Name" iconSrc={lastNameIcon} register={register} init_value={accountProfile.lastName || ""} />
                     <Box display="flex" w="100%">
                         <FlexDateSelectInput title="Birth Date" name="birthDate" register={register} type={InputType.DATE} init_value={accountProfile.birthDate} />
                         <FlexDateSelectInput title="Gender" name="gender" register={register} type={InputType.SELECT} init_value={accountProfile.gender} />
                     </Box>
-                    <FlexDataInput name="bio" title="Bio" iconSrc={bioIcon} register={register} init_value={accountProfile.bio} />
+                    <FlexDataInput name="bio" title="Bio" iconSrc={bioIcon} register={register} init_value={accountProfile.bio || ""} />
                     <FlexDataInput name="address" title="Address" iconSrc={addressIcon}
-                        register={register} init_value={accountProfile.address} />
-                    <FlexDataInput name="school" title="School" iconSrc={schoolIcon} register={register} init_value={accountProfile.school} />
+                        register={register} init_value={accountProfile.address || ""} />
+                    <FlexDataInput name="school" title="School" iconSrc={schoolIcon} register={register} init_value={accountProfile.school || ""} />
 
                     <Center w="100%" padding="50px 0px">
                         <Button
