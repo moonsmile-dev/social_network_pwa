@@ -11,8 +11,7 @@ import { appWithTranslation, withTranslation } from "@Server/i18n";
 
 import "@Static/css/main.scss";
 import { ApolloProvider } from "@apollo/client";
-import { useApollo } from "@Libs/apolloClient";
-// #endregion Local Imports
+import { useApollo } from "@Libs/apolloClient";// #endregion Local Imports
 
 function WebApp(props: any) {
     const { Component, pageProps } = props;
@@ -30,7 +29,7 @@ function WebApp(props: any) {
                     />
                     <meta name="description" content="Description" />
                     <meta name="keywords" content="Keywords" />
-                    <title>Next.js PWA Example</title>
+                    <title>LovTee Social Network</title>
 
                     <link rel="manifest" href="/manifest.json" />
                     <link
