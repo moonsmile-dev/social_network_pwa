@@ -81,11 +81,6 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                             </Text>
                         </Center>
                     </GridItem>
-                    <GridItem colStart={5} colEnd={6} h="100%">
-                        <Center boxSize="100%">
-                            <Image boxSize="35px" src={matchOptionIcon} />
-                        </Center>
-                    </GridItem>
                 </Grid>
             </div>
             <div
