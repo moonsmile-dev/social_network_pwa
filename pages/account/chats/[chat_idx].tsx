@@ -14,6 +14,7 @@ import { initializeApollo } from "@Libs/apolloClient";
 import { IMessageChat } from "@Libs/Dtos/messageChat.interface";
 import io from 'socket.io-client';
 import { useCallback } from "react";
+import { useSocket } from "@Services";
 
 interface IMessage {
     isMe?: boolean;
@@ -105,31 +106,10 @@ const centerDisplayStyle = {
     alignItems: "center",
 }
 
-const useSocket = (url: string) => {
-    const [socket, setSocket] = useStateReact(null)
-
-    useEffect(() => {
-        // const socketIo = io(url)
-
-        // setSocket(socketIo)
-
-        // function cleanup() {
-        //     socketIo.disconnect()
-        // }
-        // return cleanup
-
-        // should only run once and not on every re-render,
-        // so pass an empty array
-    }, [])
-
-    return socket
-}
-
-
 const AccountChatIdx: NextPage<any, any> = (props: any) => {
     const [messages, setMessages] = useStateReact([]);
     const typingMsgContent = useState("")
-    // const socket = useSocket(process.env.NEXT_PUBLIC_SN_SOCKET_API || "");
+    const socket = useSocket(process.env.NEXT_PUBLIC_SN_SOCKET_API || "");
 
     const router = useRouter();
     const roomId: any = router.query.chat_idx || "";
@@ -197,7 +177,7 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                     <div className="icon_container" style={{ padding: "7px" }}>
                         <img alt="XXX" src={plusIcon} height="45px" width="45px" />
                     </div>
-                    <input placeholder="Send message" id="message-chat" style={{ ...measureInputStyle, backgroundColor: "inherit" }} onChange={(event) => typingMsgContent.set(event.target.value)} />
+                    <input placeholder="Send message" id="message-chat" style={{ ...measureInputStyle, backgroundColor: "inherit" }} value={typingMsgContent.value} onChange={(event) => typingMsgContent.set(event.target.value)} />
                 </div>
                 <div className="send_icon" style={{ ...centerDisplayStyle, position: "absolute", right: "0%", top: "0%", height: "100%" }}
                     onClick={() => handleSendMessageAction()}>
