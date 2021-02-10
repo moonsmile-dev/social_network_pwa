@@ -9,13 +9,13 @@ import { getAuthInfo } from "src/Commons/Auths/utils";
 import { useQuery } from "@apollo/client";
 import { GET_MESSAGES_IN_ROOM_QUERY } from "@Libs/Queries/getMessagesInRoomQuery";
 import { State, useState } from "@hookstate/core";
-import { useEffect, useRef, useState as useStateReact } from "react";
+import { useEffect, useMemo, useRef, useState as useStateReact } from "react";
 import { initializeApollo } from "@Libs/apolloClient";
 import { IMessageChat } from "@Libs/Dtos/messageChat.interface";
 import io from 'socket.io-client';
 import { useCallback } from "react";
 import { useSocket } from "@Services";
-import { JOIN_ROOM_EVENT, NEW_MEM_JOINED_EVENT, NEW_MSG_EVENT, SEND_MSG_EVENT } from "@Services/Socket/contants";
+import { HELLO_EVENT, JOIN_ROOM_EVENT, NEW_MEM_JOINED_EVENT, NEW_MSG_EVENT, SEND_MSG_EVENT } from "@Services/Socket/contants";
 
 interface IMessage {
     isMe?: boolean;
@@ -73,8 +73,6 @@ const OriginMessageListFC = (props: { roomId: string }) => {
         return null;
     }
 
-    console.log(`Account id: on origin message list: ${accountId}`)
-
     const roomMsgs: Array<IMessageChat> = data.userRoomMessages;
     return (
         <>
@@ -126,22 +124,29 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                         senderId: data.accountId,
                         content: data.message.content
                     }
+
+                    console.log(`Messages: ${JSON.stringify(messages)}`)
                     setMessages([msg, ...messages])
                 });
                 socket.on(NEW_MEM_JOINED_EVENT, (data: any) => {
                     console.log(`new member joined: ${JSON.stringify(data)}`);
-                })
+                });
+
+                socket.on(HELLO_EVENT, (data: any) => {
+                    console.log(`hello: ${data}`)
+                });
             }
-        }, [socket, messages]
+        }, [messages, socket]
     )
 
     useEffect(() => {
         registerSocketListenerEvents()
         // Action
         if (socket) {
+            socket.emit(HELLO_EVENT, { "userId": accountId, "roomId": roomId })
             socket.emit(JOIN_ROOM_EVENT, { "userId": accountId, "roomId": roomId })
         }
-    }, [socket])
+    }, [socket, messages])
 
     const handleSendMessageAction = () => {
         if (typingMsgContent.value !== "") {
@@ -151,8 +156,6 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                 message: { content: typingMsgContent.value },
             };
             socket.emit(SEND_MSG_EVENT, sendMsgData)
-
-            // setMessages([msg, ...messages])
             typingMsgContent.set("")
         }
     }

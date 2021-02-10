@@ -2,4 +2,4 @@
 export { Http } from "@Services/API/Http";
 export { PlanetaryService } from "@Services/API/Planetary";
 // #endregion Local Imports
-export { useSocket } from "@Services/Socket"
+export { useSocket } from "@Services/Socket";

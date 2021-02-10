@@ -7,3 +7,4 @@ export const NEW_MSG_EVENT = "new-msg";
 export const FIND_SMART_CHAT_EVENT = "find-smart-chat";
 export const SEND_SMART_MSG_EVENT = "send-smart-msg";
 export const NEW_SMART_MSG_EVENT = "new-smart-msg";
+export const HELLO_EVENT = "hello";
