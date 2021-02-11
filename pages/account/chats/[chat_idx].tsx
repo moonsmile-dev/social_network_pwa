@@ -129,7 +129,7 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                     setMessages([msg, ...messages])
                 });
                 socket.on(NEW_MEM_JOINED_EVENT, (data: any) => {
-                    console.log(`new member joined: ${JSON.stringify(data)}`);
+                    console.log(`New member joined: ${JSON.stringify(data)}`);
                 });
 
                 socket.on(HELLO_EVENT, (data: any) => {
