@@ -24,6 +24,10 @@ import closeDatingIcon from "@Assets/images/dating_close.png";
 import heartDatingIcon from "@Assets/images/heart-dating.png";
 import Gallery from "react-photo-gallery";
 import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
+import { GET_MATCHER_INFO_QUERY } from "@Libs/Queries/getMatcherInfoQuery";
+import { getAuthInfo } from "src/Commons/Auths/utils";
+import { IMatcherInfo } from "@Libs/Dtos/matcherInfo.interface";
 
 const PHOTOS = [
     {
@@ -89,6 +93,27 @@ const InfoField = (props: IInfoFieldProp) => {
 
 const AccountDatingRecsPartnerDetail: NextPage<any, any> = () => {
     const router = useRouter();
+    const matcherId: string = router.query.idx as string || "";
+    const { accountId, authToken } = getAuthInfo();
+    const { error, loading, data } = useQuery(GET_MATCHER_INFO_QUERY, {
+        variables: {
+            auth_token: authToken,
+            account_id: accountId,
+            matcher_id: matcherId
+        }
+    })
+
+    if (error) {
+        return <div>Error when get matcher info.</div>
+    }
+    if (loading) {
+        return null
+    }
+
+    const matcher: IMatcherInfo = data.matcherInfo;
+    console.log(JSON.stringify(matcher))
+
+
 
     return (
         <PageContainer>
@@ -146,36 +171,38 @@ const AccountDatingRecsPartnerDetail: NextPage<any, any> = () => {
                             <Container className="main-info" padding="30px">
                                 <Center >
                                     <Text fontWeight="bold" fontSize="30px">
-                                        ABC II SH.HAI
+                                        {matcher.name || "ABC II SH.HAI"}
                                     </Text>
                                 </Center>
-                                <Center>
-                                    <Flex>
-                                        <Box
-                                            margin="0px 5px"
-                                            bg="#00C738"
-                                            boxSize="10px"
-                                            borderRadius="100%"
-                                            border="solid white 1px"
-                                        />
-                                        <Text opacity="70%" lineHeight="10px">recently active</Text>
-                                    </Flex>
-                                </Center>
+                                {matcher.status === 1 && (
+                                    <Center>
+                                        <Flex>
+                                            <Box
+                                                margin="0px 5px"
+                                                bg="#00C738"
+                                                boxSize="10px"
+                                                borderRadius="100%"
+                                                border="solid white 1px"
+                                            />
+                                            <Text opacity="70%" lineHeight="10px">recently active</Text>
+                                        </Flex>
+                                    </Center>
+                                )}
 
                             </Container>
                             <Container className="detail-info" padding="0px 20px">
-                                <InfoField icon={ageIcon} headertxt="Age" detail="22" />
-                                <InfoField icon={genderIcon} headertxt="Gender" detail="Girl" />
+                                <InfoField icon={ageIcon} headertxt="Age" detail={matcher.age} />
+                                <InfoField icon={genderIcon} headertxt="Gender" detail={matcher.gender === 0 ? "Male" : "Female"} />
                                 <InfoField
                                     icon={locationIcon}
                                     headertxt="Live in"
-                                    detail="Ho Chi Minh 20"
+                                    detail={matcher.address}
                                 />
-                                <InfoField icon={workIcon} headertxt="Work" detail="Student" />
+                                <InfoField icon={workIcon} headertxt="Work" detail={matcher.job} />
                                 <InfoField
                                     icon={supportIcon}
                                     headertxt="Why here"
-                                    detail="Find lost pet"
+                                    detail={matcher.reason}
                                 />
                             </Container>
                         </Box>
@@ -186,7 +213,9 @@ const AccountDatingRecsPartnerDetail: NextPage<any, any> = () => {
                             overflow="hidden"
                         >
                             <Text fontWeight="bold" fontSize="25px">Photos</Text>
-                            <Gallery photos={PHOTOS} />
+                            <Gallery photos={matcher.medias.map(
+                                (_m) => { return { src: _m.url, width: 1, height: 1 } as any }
+                            )} />
                         </Box>
                     </Box>
                 </Center>

@@ -97,15 +97,13 @@ interface IMatcherProp {
 
 const MatcherFC = (props: IMatcherProp) => {
     const router = useRouter();
+    const matcherId: string = props.matcherId;
     const images = props.medias && props.medias.length > 0 && props.medias.filter(_m => _m.type === 0).map(_m => _m.url) || [demoImg, demo2Img, demo3Img];
     const crtPos = useState(0)
 
-    const handleRouteToMatchRecsDetail = useCallback(
-        async () => {
-            await router.push(FormatString(DATING_RECS_DETAIL_PAGE_ROUTE, `${props.matcherId}`))
-        },
-        [],
-    )
+    const handleRouteToMatchRecsDetail = async () => {
+        await router.push(FormatString(DATING_RECS_DETAIL_PAGE_ROUTE, `${matcherId}`))
+    }
 
     return (
         <>
@@ -222,8 +220,6 @@ const AccountDatingReacs: NextPage<any, any> = () => {
         }
     }
 
-    const ReMatcherFC = useMemo(() => MatcherFC, [crtPos])
-
     const { error, loading, data } = useQuery(GET_MATCHER_LIST_QUERY, {
         variables: {
             auth_token: authToken,
@@ -247,7 +243,7 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                 className="Main"
                 style={{ ...styles.main as React.CSSProperties, backgroundColor: "#E5E5E5" }}
             >
-                {matchers.length > 0 && (<ReMatcherFC matcherId={matchers[crtPos].matcherId} age={matchers[crtPos].age} name={matchers[crtPos].name} status={matchers[crtPos].status} medias={matchers[crtPos].medias} bio={matchers[crtPos].bio} />)}
+                {matchers.length > 0 && (<MatcherFC matcherId={matchers[crtPos].matcherId} age={matchers[crtPos].age} name={matchers[crtPos].name} status={matchers[crtPos].status} medias={matchers[crtPos].medias} bio={matchers[crtPos].bio} />)}
 
                 <Box height="10%" width="100%">
                     <Center boxSize="100%">
