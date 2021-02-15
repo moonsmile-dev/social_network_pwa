@@ -1,15 +1,20 @@
-import { Box, Center, Flex, Grid, Image, Input, Text } from "@chakra-ui/react";
+import { Box, Center, Container, Flex, Grid, Image, Input, Text } from "@chakra-ui/react";
 import { withTranslation } from "@Server/i18n";
 import { PageContainer } from "@Styled/Root";
 import { NextPage } from "next";
-import React from "react";
+import React, { useCallback, useEffect, useState as useStateReact } from "react";
 
 import goOutIcon from "@Assets/images/out.png";
 import flagIcon from "@Assets/images/flag.png";
 import { ClapSpinner } from "react-spinners-kit";
 import loveActionIcon from "@Assets/images/heart_action.png";
 import { useRouter } from "next/router";
-import { DATING_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, DATING_PAGE_ROUTE } from "src/Routes/contants";
+import { useSocket } from "@Services";
+import { EXIT_SMART_ROOM_EVENT, GOTO_NORMAL_ROOM_EVENT, JOIN_SMART_ROOM_EVENT, NEW_MEM_JOINED_SMART_CHAT_EVENT, NEW_SMART_MSG_EVENT, NOTIFY_PARTNER_EXIT_ROOM_EVENT, REACT_SMART_ROOM_EVENT, SEND_SMART_MSG_EVENT } from "@Services/Socket/contants";
+import { getAuthInfo } from "src/Commons/Auths/utils";
+import { useState } from "@hookstate/core";
+import { FormatString } from "src/Commons/Strings/utils";
 
 const styles = {
     boderTxt: {
@@ -17,12 +22,128 @@ const styles = {
     }
 }
 
+interface IMessage {
+    isMe?: boolean;
+    msg?: string;
+}
+
+interface IShiftText {
+    textAlign: undefined | any;
+}
+
+const MessageComponent = (props: IMessage) => {
+    let posMsgStyle: IShiftText = {
+        // left: "10px",
+        textAlign: "left",
+    }
+
+    let boundedMsgBlock = {
+        borderRadius: "10px 10px 10px 0px"
+    }
+
+    if (props.isMe) {
+        posMsgStyle = {
+            // right: "10px",
+            textAlign: "right",
+        }
+        boundedMsgBlock = {
+            borderRadius: "10px 10px 0px 10px"
+        }
+    }
+    return (
+        <div style={{ display: "block", ...posMsgStyle }}>
+            <div style={{ margin: "8px" }}>
+                <div className="message_area" style={{ backgroundColor: "white", ...boundedMsgBlock, padding: "10px", maxWidth: "70%", display: "inline-block" }}>
+                    <p style={{ margin: "0px", textAlign: "left", wordBreak: "break-all" }}>{props.msg ? props.msg : "Nguyen Minh Tuan"}</p>
+                </div>
+            </div>
+        </div >
+    )
+}
+
+interface IMessageData {
+    senderId: string;
+    content: string;
+}
+
 const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
     const router = useRouter();
+    const roomId = router.query.idx as string || "";
+    const [messages, setMessages] = useStateReact<Array<IMessageData>>([]);
+    const socket = useSocket(process.env.NEXT_PUBLIC_SN_SOCKET_API || "");
+    const { accountId, authToken } = getAuthInfo();
+    const [showReaction, setShowReaction] = useStateReact(true);
+    const [typingMsgContent, setTypingMsgContent] = useStateReact("");
 
-    const handleGoOutSmartRoom = () => {
-        router.push(DATING_PAGE_ROUTE)
-    }
+    const handleGoOutSmartRoom = useCallback(
+        async () => {
+            if (socket) {
+                console.log("Notify goout smart room.")
+                socket.emit(EXIT_SMART_ROOM_EVENT, { roomId: roomId, accountId: accountId });
+            }
+            await router.push(DATING_PAGE_ROUTE);
+        }, [socket]
+    )
+
+    const registerSocketListenerEvents = useCallback(
+        () => {
+            if (socket) {
+                socket.on(NEW_SMART_MSG_EVENT, (data: any) => {
+                    console.log(`New msg data: ${JSON.stringify(data)}`)
+                    const msg: IMessageData = {
+                        senderId: data.accountId,
+                        content: data.message.content
+                    };
+
+                    setMessages([msg, ...messages]);
+                });
+                socket.on(NEW_MEM_JOINED_SMART_CHAT_EVENT, (data: any) => {
+                    console.log(`New member joined: ${JSON.stringify(data)}`)
+                });
+                socket.on(GOTO_NORMAL_ROOM_EVENT, async (data: any) => {
+                    await router.push(FormatString(ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, `${roomId}`))
+                });
+
+                socket.on(NOTIFY_PARTNER_EXIT_ROOM_EVENT, async (data: any) => {
+                    await handleGoOutSmartRoom();
+                });
+            }
+        }, [messages, socket]
+    );
+
+    useEffect(() => {
+        registerSocketListenerEvents();
+        // action
+        if (socket) {
+            socket.emit(JOIN_SMART_ROOM_EVENT, { accountId: accountId, roomId: roomId });
+        }
+    }, [messages, socket])
+
+    const handleSendMsgAction = useCallback(
+        () => {
+            if (typingMsgContent !== "") {
+                const sendMsgData = {
+                    roomId: roomId,
+                    senderId: accountId,
+                    message: { content: typingMsgContent }
+                }
+
+                socket.emit(SEND_SMART_MSG_EVENT, sendMsgData);
+                setTypingMsgContent("");
+            }
+        }, [typingMsgContent, socket]
+    );
+
+    const handleReactSmartRoomAction = useCallback(
+        () => {
+            if (socket) {
+                socket.emit(REACT_SMART_ROOM_EVENT, { accountId: accountId, roomId: roomId })
+
+                setShowReaction(false)
+            }
+
+        }, [socket]
+    )
 
     return (
         <PageContainer>
@@ -61,9 +182,11 @@ const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
                 bg="#EDD0FF"
                 border="solid white 1px">
                 <Flex boxSize="100%">
-                    <Input h="100%" w="80%" border="none" focusBorderColor="none" outline="none" placeholder="Input your mind here" color="white" />
+                    <Input h="100%" w="80%" border="none" focusBorderColor="none" outline="none" placeholder="Input your mind here" color="white"
+                        value={typingMsgContent} onChange={(event) => setTypingMsgContent(event.target.value)} />
                     <Center w="20%" display="flex"
-                        paddingRight="5px" justifyContent="end" >
+                        paddingRight="5px" justifyContent="end"
+                        onClick={() => handleSendMsgAction()}>
                         <Text fontWeight="bold" color="#0085FF" {...styles.boderTxt}>SEND</Text>
                     </Center>
                 </Flex>
@@ -72,11 +195,32 @@ const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
                 boxSize="65px" bg="#F03FFF" top="50%" right="10px"
                 borderRadius="full"
                 border="solid white 1px"
-                padding="10px">
+                padding="10px"
+                hidden={!showReaction}
+                onClick={() => handleReactSmartRoomAction()}>
                 <Image src={loveActionIcon} />
 
             </Box>
-            <Box boxSize="100%" paddingTop="100px" height="1000px" bg="#7F43FF">
+            <Box
+                className="chat_area"
+                boxSize="100%"
+                padding="100px 0px 85px 0px"
+                height="100vh"
+                bg="#7F43FF"
+            >
+                <Box
+                    boxSize="100%"
+                    display="flex"
+                    flexDirection="column-reverse"
+                >
+                    {
+                        [...messages].map((msg: IMessageData, idx: number) => {
+                            return (
+                                <MessageComponent key={idx} msg={msg.content} isMe={accountId === msg.senderId} />
+                            )
+                        })
+                    }
+                </Box>
             </Box>
         </PageContainer>
     )

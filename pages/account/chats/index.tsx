@@ -170,7 +170,7 @@ const UserRoomListFC = (props: any) => {
     return (
         <>
             {
-                rooms.map((room, idx) =>
+                (rooms || []).map((room, idx) =>
                 (
                     <MessagePreviewComponent
                         key={idx}

@@ -16,6 +16,7 @@ import io from 'socket.io-client';
 import { useCallback } from "react";
 import { useSocket } from "@Services";
 import { HELLO_EVENT, JOIN_ROOM_EVENT, NEW_MEM_JOINED_EVENT, NEW_MSG_EVENT, SEND_MSG_EVENT } from "@Services/Socket/contants";
+import { CHAT_PAGE_ROUTE } from "src/Routes/contants";
 
 interface IMessage {
     isMe?: boolean;
@@ -125,7 +126,6 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                         content: data.message.content
                     }
 
-                    console.log(`Messages: ${JSON.stringify(messages)}`)
                     setMessages([msg, ...messages])
                 });
                 socket.on(NEW_MEM_JOINED_EVENT, (data: any) => {
@@ -176,7 +176,7 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                             width: "35px",
                             margin: "10px",
                         }}
-                        onClick={() => router.back()}
+                        onClick={async () => { await router.push(CHAT_PAGE_ROUTE) }}
                     >
                         <img alt="XXX" height="100%" width="100%" src={previousIcon} />
                     </div>

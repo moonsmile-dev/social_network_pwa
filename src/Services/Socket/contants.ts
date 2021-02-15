@@ -10,3 +10,7 @@ export const NEW_SMART_MSG_EVENT = "new-smart-msg";
 export const HELLO_EVENT = "hello";
 export const FIND_SMART_CHAT_SUCCESS_EVENT = "find-smart-chat-success";
 export const EXIT_SMART_CHAT_WAITING_EVENT = "exit-smart-chat-waiting";
+export const REACT_SMART_ROOM_EVENT = "react-smart-room";
+export const GOTO_NORMAL_ROOM_EVENT = "goto-normal-room";
+export const NOTIFY_PARTNER_EXIT_ROOM_EVENT = "notify-partner-exit-room";
+export const EXIT_SMART_ROOM_EVENT = 'exit-smart-chat';
