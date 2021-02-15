@@ -1,7 +1,7 @@
 import { Box, Center, Container, Flex, Image, Text } from "@chakra-ui/react";
 import { withTranslation } from "@Server/i18n";
 import { NextPage } from "next";
-import React from "react";
+import React, { useCallback, useState as useStateReact } from "react";
 
 import closeIcon from "@Assets/images/cancel_white.png";
 import { ClapSpinner } from "react-spinners-kit";
@@ -14,6 +14,9 @@ import { useRouter } from "next/router";
 import { FormatString } from "src/Commons/Strings/utils";
 import { DATING_SMART_CHAT_PAGE_ROUTE } from "src/Routes/contants";
 import { useEffect } from "react";
+import { useSocket } from "@Services";
+import { EXIT_SMART_CHAT_WAITING_EVENT, FIND_SMART_CHAT_EVENT, FIND_SMART_CHAT_SUCCESS_EVENT } from "@Services/Socket/contants";
+import { getAuthInfo } from "src/Commons/Auths/utils";
 
 const styles = {
     container: {
@@ -27,19 +30,72 @@ const styles = {
     },
 };
 
+const WaiterLoadingFC = (props: any) => {
+    const [timer, setTimer] = useStateReact(0);
+    useEffect(() => {
+        const runner = setTimeout(() => {
+            setTimer(timer + 1);
+        }, 1000)
+        return () => {
+            clearTimeout(runner)
+        }
+    }, [timer])
+    return (
+        <Box position="relative">
+            <Text
+                position="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                fontWeight="bold"
+                color="white"
+            >
+                {`${timer}s`}
+            </Text>
+            <ClapSpinner size={75} frontColor="white" />
+        </Box>
+    )
+}
+
 const AccountDatingSmartWaiting: NextPage<any, any> = () => {
     const router = useRouter();
-    const handleRouteToChatRoom = async () => {
-        await router.push(FormatString(DATING_SMART_CHAT_PAGE_ROUTE, "1"))
-    }
+    const socket = useSocket(process.env.NEXT_PUBLIC_SN_SOCKET_API || "");
+    const { accountId, authToken } = getAuthInfo();
+    const handleRouteToChatRoom = useCallback(
+        async (roomId: string) => {
+            await router.push(FormatString(DATING_SMART_CHAT_PAGE_ROUTE, roomId || "1"))
+        }, []
+    );
 
-    // TODO handle logic to get match user on smart chat system. 
+    const handleBackPage = useCallback(
+        async () => {
+            if (socket) {
+                socket.emit(EXIT_SMART_CHAT_WAITING_EVENT, { accountId: accountId })
+            }
+
+            router.back();
+        }, [socket]
+    )
+
+    const registerSocketListenerEvents = useCallback(() => {
+        if (socket) {
+            socket.on(FIND_SMART_CHAT_SUCCESS_EVENT, async (data: any) => {
+                console.log(`Find smart chat success: ${JSON.stringify(data)}`);
+                const { roomId } = data;
+
+                await handleRouteToChatRoom(roomId);
+            })
+        }
+    }, [socket])
 
     useEffect(() => {
-        setTimeout(async () => {
-            await handleRouteToChatRoom();
-        }, 1000);
-    }, [])
+        registerSocketListenerEvents();
+
+        if (socket) {
+            socket.emit(FIND_SMART_CHAT_EVENT, { accountId: accountId });
+        }
+
+    }, [socket])
     return (
         <Container bg="#B56AFF" h="100vh" position="relative">
             <Box
@@ -47,7 +103,7 @@ const AccountDatingSmartWaiting: NextPage<any, any> = () => {
                 boxSize="25px"
                 right="20px"
                 top="20px"
-                onClick={() => router.back()}
+                onClick={() => handleBackPage()}
             >
                 <Image src={closeIcon} />
             </Box>
@@ -97,19 +153,7 @@ const AccountDatingSmartWaiting: NextPage<any, any> = () => {
                             />
                         </Flex>
                         <Center>
-                            <Box position="relative">
-                                <Text
-                                    position="absolute"
-                                    top="50%"
-                                    left="50%"
-                                    transform="translate(-50%, -50%)"
-                                    fontWeight="bold"
-                                    color="white"
-                                >
-                                    12s
-                                </Text>
-                                <ClapSpinner size={75} frontColor="white" />
-                            </Box>
+                            <WaiterLoadingFC />
                         </Center>
                     </Box>
                 </Center>
