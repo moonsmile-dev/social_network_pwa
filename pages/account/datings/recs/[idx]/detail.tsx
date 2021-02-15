@@ -29,49 +29,6 @@ import { GET_MATCHER_INFO_QUERY } from "@Libs/Queries/getMatcherInfoQuery";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { IMatcherInfo } from "@Libs/Dtos/matcherInfo.interface";
 
-const PHOTOS = [
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/xejm9edreuxuuokne_0b8aba5c.jpeg",
-        width: 4,
-        height: 2,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/ccg1walpzr5lq4mbq_fce894ad.jpeg",
-        width: 4,
-        height: 1,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/cm9owltqkl0xbcods_ed868f53.jpeg",
-        width: 2,
-        height: 2,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/4pjjidpb5ugjmjrim_eed38f0d.jpeg",
-        width: 2,
-        height: 4,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/xejm9edreuxuuokne_0b8aba5c.jpeg",
-        width: 4,
-        height: 2,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/ccg1walpzr5lq4mbq_fce894ad.jpeg",
-        width: 4,
-        height: 1,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/cm9owltqkl0xbcods_ed868f53.jpeg",
-        width: 2,
-        height: 2,
-    },
-    {
-        src: "https://s3-ap-southeast-1.amazonaws.com/odv-stag/tenants/cd99c164-11b0-4ce2-ada4-4b8c6dd2d4ad/photos/4pjjidpb5ugjmjrim_eed38f0d.jpeg",
-        width: 2,
-        height: 4,
-    },
-];
-
 interface IInfoFieldProp {
     icon: string;
     headertxt: string;
