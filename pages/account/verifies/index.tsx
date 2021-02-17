@@ -12,11 +12,16 @@ import { useRouter } from "next/router";
 import { v4 as uuidV4 } from "uuid";
 import axios from "axios";
 import { useStorage } from "@Libs/Hooks";
+import { useMutation } from "@apollo/client";
+import { VERIFY_ACCOUNT_MUTATION } from "@Libs/Mutations/verifyAccountMutation";
+import { getAuthInfo } from "src/Commons/Auths/utils";
 
 
 const AccountVerifies: NextPage<any, any> = (props: any) => {
     const [imgFile, setImgFile] = useStateReact("");
     const router = useRouter();
+    const [verifyAccountAction] = useMutation(VERIFY_ACCOUNT_MUTATION);
+    const { accountId, authToken } = getAuthInfo();
 
     const handleBackPage = useCallback(() => {
         router.back()
@@ -45,7 +50,15 @@ const AccountVerifies: NextPage<any, any> = (props: any) => {
                 const { error, data } = await useStorage("abc", `account/verifies/test/${uuidV4()}.png`, imgFile)
 
                 if (data) {
-                    console.log(data);
+                    await verifyAccountAction({
+                        variables: {
+                            account_id: accountId,
+                            auth_token: authToken,
+
+                            front_photo_url: data["publicUrl"],
+                            back_photo_url: data["publicUrl"]
+                        }
+                    })
                 }
             }
         }, [imgFile]

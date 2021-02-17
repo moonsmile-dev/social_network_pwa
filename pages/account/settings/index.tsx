@@ -18,6 +18,9 @@ import { useCallback } from "react";
 import { getAuthInfo, removeAuthInfo } from "src/Commons/Auths/utils";
 import { ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE, ACCOUNT_UPDATE_PROFILE_PAGE_ROUTE, ACCOUNT_VERIFIES_PAGE_ROUTE, GET_STARTED_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
 import { FormatString } from "src/Commons/Strings/utils";
+import { useQuery } from "@apollo/client";
+import { GET_ACCOUNT_INFO_DATA_QUERY } from "@Libs/Queries/getAccountInfoDataQuery";
+import { IAccountInfo } from "@Libs/Dtos/accountInfo.interface";
 
 interface IBasicSettingFCProps {
     icon_src: string;
@@ -46,7 +49,7 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
                     {
                         props.status && (
                             <Box w="20%" justifyContent="end" display="flex">
-                                <Text color={props.status_color}>{props.status}</Text>
+                                <Text color={props.status_color} fontWeight="bold">{props.status}</Text>
                             </Box>
                         )
                     }
@@ -56,6 +59,68 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
                 )}
             </Box>
         </Box>
+    )
+}
+
+
+interface IVerifyAccountProp {
+    onClick: () => any;
+}
+
+interface RichStatus {
+    status: string;
+    status_color: string;
+}
+
+const VerifyAccountFC = (props: IVerifyAccountProp) => {
+    const { accountId, authToken } = getAuthInfo();
+    const { data, loading, error } = useQuery(GET_ACCOUNT_INFO_DATA_QUERY, {
+        variables: {
+            account_id: accountId,
+            auth_token: authToken
+        }
+    });
+
+    if (loading) {
+        return null;
+    }
+    if (error) {
+        return <div>Error when connect to system.</div>
+    }
+
+
+    let statusStyle: RichStatus = {
+        status: "Pending",
+        status_color: "#FF0000"
+    }
+
+    const accountInfo: IAccountInfo = data.accountInfo;
+    if (accountInfo.verifyStatus === 0) {
+        statusStyle = {
+            status: "Pending",
+            status_color: "#FF0000"
+        }
+    } else if (accountInfo.verifyStatus === 1) {
+        statusStyle = {
+            status: "Verifed",
+            status_color: "#27be00"
+        }
+    } else if (accountInfo.verifyStatus === -1) {
+        statusStyle = {
+            status: "Rejected",
+            status_color: "#ca0000"
+        }
+    } else if (accountInfo.verifyStatus === -2) {
+        statusStyle = {
+            status: "Unknown",
+            status_color: "#c0c0c0"
+        }
+    }
+
+
+
+    return (
+        <BasicSettingFC title="Verify Account" {...statusStyle} icon_src={verifyAccountIcon} {...props} />
     )
 }
 
@@ -128,7 +193,7 @@ const AccountSettings: NextPage<any, any> = (props: any) => {
                     padding="10px 0px"
                 >
                     <BasicSettingFC title="Update profile" icon_src={updateProfileIcon} onClick={() => handleRouteToUpdateProfilePage()} />
-                    <BasicSettingFC title="Verify Account" status="Pending" status_color="#FF0000" icon_src={verifyAccountIcon} onClick={() => handleRouteToAccountVerifiesPage()} />
+                    <VerifyAccountFC onClick={() => handleRouteToAccountVerifiesPage()} />
                     <BasicSettingFC title="Change password" icon_src={changePasswordIcon} onClick={() => handleRouteToChangePasswordPage()} />
                 </Box>
                 <Box w="100%"
