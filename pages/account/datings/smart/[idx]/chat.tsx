@@ -1,4 +1,4 @@
-import { Box, Center, Container, Flex, Grid, Image, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Checkbox, Container, Flex, Grid, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import { withTranslation } from "@Server/i18n";
 import { PageContainer } from "@Styled/Root";
 import { NextPage } from "next";
@@ -11,10 +11,11 @@ import loveActionIcon from "@Assets/images/heart_action.png";
 import { useRouter } from "next/router";
 import { ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, DATING_PAGE_ROUTE } from "src/Routes/contants";
 import { useSocket } from "@Services";
-import { EXIT_SMART_ROOM_EVENT, GOTO_NORMAL_ROOM_EVENT, JOIN_SMART_ROOM_EVENT, NEW_MEM_JOINED_SMART_CHAT_EVENT, NEW_SMART_MSG_EVENT, NOTIFY_PARTNER_EXIT_ROOM_EVENT, REACT_SMART_ROOM_EVENT, SEND_SMART_MSG_EVENT } from "@Services/Socket/contants";
+import { EXIT_SMART_ROOM_EVENT, GOTO_NORMAL_ROOM_EVENT, JOIN_SMART_ROOM_EVENT, NEW_MEM_JOINED_SMART_CHAT_EVENT, NEW_SMART_MSG_EVENT, NOTIFY_PARTNER_EXIT_ROOM_EVENT, REACT_SMART_ROOM_EVENT, REPORT_SMART_CHAT_EVENT, SEND_SMART_MSG_EVENT } from "@Services/Socket/contants";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { useState } from "@hookstate/core";
 import { FormatString } from "src/Commons/Strings/utils";
+import { useForm } from "react-hook-form";
 
 const styles = {
     boderTxt: {
@@ -58,6 +59,54 @@ const MessageComponent = (props: IMessage) => {
                 </div>
             </div>
         </div >
+    )
+}
+
+interface IReportUserSmartChatProp {
+    reportCallback: (reason: string) => any;
+}
+
+const ReportUserSmartChatFC = (props: IReportUserSmartChatProp) => {
+    const { onClose, onOpen, isOpen } = useDisclosure();
+    const { register, handleSubmit } = useForm();
+
+    const onReportUserSmartChatSubmit = (data: any) => {
+        const reason = Object.values(data).filter(item => item !== false).join(',') || "Spam";
+
+        props.reportCallback(reason);
+        onClose();
+    };
+
+    return (
+        <>
+            <Box boxSize="60px" padding="10px" onClick={onOpen}>
+                <Image src={flagIcon} />
+            </Box>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Report User</ModalHeader>
+                    <ModalCloseButton />
+                    <form onSubmit={handleSubmit(onReportUserSmartChatSubmit)}>
+                        <ModalBody>
+                            <Stack direction="column">
+                                <Checkbox name="spam" value="Spam information" ref={register}>Spam information.</Checkbox>
+                                <Checkbox name="sex" value="Sex, 18+, FWB ..." ref={register}>Sex, 18+, FWB ...</Checkbox>
+                                <Checkbox name="uncensored" value="False and uncensored information." ref={register}>False and uncensored information.</Checkbox>
+                            </Stack>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button colorScheme="blue" mr={3} onClick={onClose}>Close</Button>
+                            <Button
+                                border="none"
+                                variant="ghost"
+                                type="submit"
+                            >Submit</Button>
+                        </ModalFooter>
+                    </form>
+                </ModalContent>
+            </Modal>
+        </>
     )
 }
 
@@ -143,6 +192,17 @@ const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
             }
 
         }, [socket]
+    );
+
+    const handleReportSmartRoomAction = useCallback(
+        async (reason: string) => {
+            if (socket) {
+                socket.emit(REPORT_SMART_CHAT_EVENT, { roomId: roomId, accountId: accountId, reason: reason });
+
+                // go out room
+                await handleGoOutSmartRoom();
+            }
+        }, [socket]
     )
 
     return (
@@ -161,9 +221,7 @@ const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
                                 </Flex>
                             </Center>
                         </Box>
-                        <Box boxSize="60px" padding="10px">
-                            <Image src={flagIcon} />
-                        </Box>
+                        <ReportUserSmartChatFC reportCallback={(reason) => handleReportSmartRoomAction(reason)} />
                     </Grid>
                 </Center>
             </Box>

@@ -14,3 +14,4 @@ export const REACT_SMART_ROOM_EVENT = "react-smart-room";
 export const GOTO_NORMAL_ROOM_EVENT = "goto-normal-room";
 export const NOTIFY_PARTNER_EXIT_ROOM_EVENT = "notify-partner-exit-room";
 export const EXIT_SMART_ROOM_EVENT = 'exit-smart-chat';
+export const REPORT_SMART_CHAT_EVENT = 'report-smart-chat';
