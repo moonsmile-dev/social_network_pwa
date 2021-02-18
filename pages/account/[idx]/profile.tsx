@@ -13,7 +13,7 @@ import { getAuthInfo } from "src/Commons/Auths/utils";
 import { IArticlePost } from "@Libs/Dtos/articlePost.interface";
 import { GET_ACCOUNT_PROFILE_QUERY } from "@Libs/Queries/getAccountProfileQuery";
 import { IAccountProfile } from "@Libs/Dtos/accountProfile.interface";
-import { Box, Button, Center, Container, Image, Input, Text, Textarea } from "@chakra-ui/react";
+import { Box, Button, Center, Checkbox, CheckboxGroup, Container, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, Textarea, useDisclosure } from "@chakra-ui/react";
 import { useState as useStateReact } from 'react';
 import { useState } from "@hookstate/core";
 import { useCallback } from "react";
@@ -28,6 +28,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { CREATE_POST_MUTATION } from "@Libs/Mutations/createPostMutation";
 import { CREATE_ROOM_MUTATION } from "@Libs/Mutations/createRoomMutation";
 import { FormatString } from "src/Commons/Strings/utils";
+import { REPORT_USER_MUTATION } from "@Libs/Mutations/reportUserMutation";
 
 const chatStyle = {
     width: "134px",
@@ -56,6 +57,71 @@ const MasterDetailCnt = (props: { val: string, cnt: string }) => {
         </div>
     );
 };
+
+interface IReportPopupProp {
+    accountId: string;
+    currentAccountId: string;
+}
+
+const ReportPopupFC = (props: IReportPopupProp) => {
+    const { onClose, onOpen, isOpen } = useDisclosure();
+    const { register, handleSubmit } = useForm();
+    const [reportUserAction] = useMutation(REPORT_USER_MUTATION);
+    const { authToken } = getAuthInfo();
+
+    const onReportSubmit = useCallback(
+        async (data: any) => {
+            const reason = Object.values(data).filter(item => item !== false).join(',') || "Spam";
+            await reportUserAction({
+                variables: {
+                    account_id: props.accountId,
+                    auth_token: authToken,
+                    receiver_id: props.currentAccountId,
+                    reason: reason,
+                    related_post_id: ""
+                }
+            })
+
+            onClose()
+        }, []
+    );
+
+    return (
+        <>
+            <Box boxSize="20px" marginRight="10px"
+                onClick={onOpen}>
+                <Image src={flagIcon} boxSize="100%" />
+            </Box>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Report User</ModalHeader>
+                    <ModalCloseButton />
+                    <form onSubmit={handleSubmit(onReportSubmit)}>
+                        <ModalBody>
+                            <Stack direction="column">
+                                <Checkbox name="spam" value="Spam information" ref={register}>Spam information.</Checkbox>
+                                <Checkbox name="sex" value="Sex, 18+, FWB ..." ref={register}>Sex, 18+, FWB ...</Checkbox>
+                                <Checkbox name="uncensored" value="False and uncensored information." ref={register}>False and uncensored information.</Checkbox>
+                            </Stack>
+                        </ModalBody>
+
+                        <ModalFooter>
+                            <Button colorScheme="blue" mr={3} onClick={onClose}>
+                                Close
+                        </Button>
+                            <Button
+                                border="none"
+                                variant="ghost"
+                                type="submit"
+                            >Submit</Button>
+                        </ModalFooter>
+                    </form>
+                </ModalContent>
+            </Modal>
+        </>
+    )
+}
 
 interface IFConnectionProps {
     currentAccountId: string;
@@ -111,10 +177,7 @@ const FConnection = (props: IFConnectionProps) => {
                         </Box>
 
                     ) : (
-                            <Box boxSize="20px" marginRight="10px"
-                                onClick={() => alert("Report this user")}>
-                                <Image src={flagIcon} boxSize="100%" />
-                            </Box>
+                            <ReportPopupFC accountId={accountId} currentAccountId={props.currentAccountId} />
                         )
                 }
 
