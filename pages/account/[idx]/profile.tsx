@@ -59,7 +59,7 @@ const MasterDetailCnt = (props: { val: string, cnt: string }) => {
 };
 
 interface IReportPopupProp {
-    accountId: string;
+    accountId: string | null;
     currentAccountId: string;
 }
 
