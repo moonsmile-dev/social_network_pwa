@@ -27,7 +27,7 @@ interface IBasicSettingFCProps {
     title: string;
     status?: string;
     status_color?: string;
-    hide_bar_tab?: boolean;
+    hide_bar_tab: boolean | string;
     onClick?: () => any;
 }
 
@@ -41,7 +41,7 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
                 margin="20px">
                 <Image boxSize="100%" src={props.icon_src} />
             </Box>
-            <Box className="Info" w="70%" lineHeight={!props.hide_bar_tab ? "60px" : "80px"}>
+            <Box className="Info" w="70%" lineHeight={props.hide_bar_tab !== true ? "60px" : "80px"}>
                 <Box display="flex">
                     <Box w="80%">
                         <Text fontSize="25px" marginRight="10px">{props.title}</Text>
@@ -54,7 +54,7 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
                         )
                     }
                 </Box>
-                {!props.hide_bar_tab && (
+                {props.hide_bar_tab !== true && (
                     <Box w="100%" h="2px" bg="#B5B5B5" />
                 )}
             </Box>
@@ -120,7 +120,7 @@ const VerifyAccountFC = (props: IVerifyAccountProp) => {
 
 
     return (
-        <BasicSettingFC title="Verify Account" {...statusStyle} icon_src={verifyAccountIcon} {...props} />
+        <BasicSettingFC title="Verify Account" hide_bar_tab={false} {...statusStyle} icon_src={verifyAccountIcon} {...props} />
     )
 }
 
@@ -192,17 +192,17 @@ const AccountSettings: NextPage<any, any> = (props: any) => {
                     bg="#B5B5B5"
                     padding="10px 0px"
                 >
-                    <BasicSettingFC title="Update profile" icon_src={updateProfileIcon} onClick={() => handleRouteToUpdateProfilePage()} />
+                    <BasicSettingFC hide_bar_tab={false} title="Update profile" icon_src={updateProfileIcon} onClick={() => handleRouteToUpdateProfilePage()} />
                     <VerifyAccountFC onClick={() => handleRouteToAccountVerifiesPage()} />
-                    <BasicSettingFC title="Change password" icon_src={changePasswordIcon} onClick={() => handleRouteToChangePasswordPage()} />
+                    <BasicSettingFC hide_bar_tab={false} title="Change password" icon_src={changePasswordIcon} onClick={() => handleRouteToChangePasswordPage()} />
                 </Box>
                 <Box w="100%"
                     padding="10px 0px"
                     bg="#B5B5B5">
-                    <BasicSettingFC title="Languages" icon_src={translateIcon} />
-                    <BasicSettingFC title="Themes" icon_src={themeIcon} />
-                    <BasicSettingFC title="Notifications" icon_src={notificationIcon} />
-                    <BasicSettingFC title="Devices" icon_src={devicesIcon} />
+                    <BasicSettingFC title="Languages" hide_bar_tab={false} icon_src={translateIcon} />
+                    <BasicSettingFC title="Themes" hide_bar_tab={false} icon_src={themeIcon} />
+                    <BasicSettingFC title="Notifications" hide_bar_tab={false} icon_src={notificationIcon} />
+                    <BasicSettingFC title="Devices" hide_bar_tab={false} icon_src={devicesIcon} />
                 </Box>
                 <Box w="100%"
                     padding="10px 0px"
