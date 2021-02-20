@@ -2,6 +2,10 @@ import followerIcon from "@Assets/images/profile.jpeg";
 import { useRouter } from "next/router";
 import { FormatString } from "src/Commons/Strings/utils";
 import { PROFILE_PAGE_ROUTE } from "src/Routes/contants";
+import { useCallback, useState as useStateReact } from "react";
+import { useMutation } from "@apollo/client";
+import { USER_FOLLOW_ACCOUNT_MUTATION } from "@Libs/Mutations/userFollowAccountMutation";
+import { getAuthInfo } from "src/Commons/Auths/utils";
 
 const absoluteCenter = {
     top: "50%",
@@ -45,9 +49,26 @@ interface IFollowerHome {
 
 export const FollowerHome = (props: IFollowerHome) => {
     const router = useRouter();
+    const { accountId, authToken } = getAuthInfo();
+    const [followed, setFollowed] = useStateReact(false);
+    const [followUserAction] = useMutation(USER_FOLLOW_ACCOUNT_MUTATION);
+
     const handleRouteToParnerProfile = async () => {
         await router.push(FormatString(PROFILE_PAGE_ROUTE, `${props.id}`))
     }
+
+    const handleFollowUserAccountAction = useCallback(
+        async () => {
+            await followUserAction({
+                variables: {
+                    account_id: accountId,
+                    auth_token: authToken,
+                    target_id: props.id
+                }
+            });
+            setFollowed(!followed)
+        }, [followed]
+    )
 
     return (
         <div style={containerStyle}>
@@ -60,11 +81,13 @@ export const FollowerHome = (props: IFollowerHome) => {
                             <img alt="X" style={{ width: "100%", height: "100%" }} src={props.srcImg ? props.srcImg : followerIcon} />
                         </div>
                     </div>
-                    <div style={{ textAlign: "center" }}><p style={{ margin: "7px 0px" }}>{props.name ? props.name : "XXX"}</p></div>
+                    <div style={{ textAlign: "center" }}><p style={{ margin: "7px 0px" }}>{props.name ? props.name.slice(0, 10) : "XXX"}</p></div>
                 </div>
-                <button style={buttonStyle}>
-                    <p style={{ color: "white" }}>Follow</p>
-                </button>
+                {
+                    <button style={{ ...buttonStyle, opacity: followed ? "0.7" : "1" }} onClick={handleFollowUserAccountAction}>
+                        <p style={{ color: "white" }}>{!followed ? "Follow" : "Following"}</p>
+                    </button>
+                }
             </div>
         </div >
     );
