@@ -527,7 +527,7 @@ const MediaGalleryFC = (props: IMediaGalleryProp) => {
     useEffect(
         () => {
             if (data) {
-                const fetchedMedias: Array<IAccountMedia> = data.accountMedias;
+                const fetchedMedias: Array<IAccountMedia> = data.accountMedias || [];
 
                 setMedias(fetchedMedias.filter(_m => _m.type === "PHOTO").map(_m => _m.url))
             }
