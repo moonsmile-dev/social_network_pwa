@@ -13,8 +13,8 @@ import { getAuthInfo } from "src/Commons/Auths/utils";
 import { IArticlePost } from "@Libs/Dtos/articlePost.interface";
 import { GET_ACCOUNT_PROFILE_QUERY } from "@Libs/Queries/getAccountProfileQuery";
 import { IAccountProfile } from "@Libs/Dtos/accountProfile.interface";
-import { Box, Button, Center, Checkbox, CheckboxGroup, Container, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, Textarea, useDisclosure } from "@chakra-ui/react";
-import { useState as useStateReact } from 'react';
+import { Box, Button, Center, Checkbox, CheckboxGroup, Container, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState as useStateReact } from 'react';
 import { useState } from "@hookstate/core";
 import { useCallback } from "react";
 import React from "react";
@@ -29,6 +29,11 @@ import { CREATE_POST_MUTATION } from "@Libs/Mutations/createPostMutation";
 import { CREATE_ROOM_MUTATION } from "@Libs/Mutations/createRoomMutation";
 import { FormatString } from "src/Commons/Strings/utils";
 import { REPORT_USER_MUTATION } from "@Libs/Mutations/reportUserMutation";
+import removeIcon from "@Assets/images/close_red.png";
+import addIcon from "@Assets/images/add_white.png";
+import { GET_ACCOUNT_MEDIAS_QUERY } from "@Libs/Queries/getAccountMediasQuery";
+import { IAccountMedia } from "@Libs/Dtos/accountMedia.interface";
+import { UPDATE_MEDIAS_MUTATION } from "@Libs/Mutations/updateMediasMutation";
 
 const chatStyle = {
     width: "134px",
@@ -402,21 +407,161 @@ const AccountPostCreateFC = (props: any) => {
             </form>
         </Container>
     )
-}
-
-const scrollTabStyle = {
-    height: "40px",
-    width: "100%",
-    backgroundColor: "#FAFAFA",
-    display: "inline-grid",
-    gridTemplateColumns: "auto auto"
 };
-interface IAccountProfileProp {
-    cover: string;
-    avtImg: string;
+
+interface IMediaFrameProp {
+    index: number;
+    img_src: string | null;
+    handleCaptureImage: (target: any) => any;
+    handleRemoveOrAddImageAction: () => any;
+    is_own: boolean;
+}
+const MediaFrameFC = (props: IMediaFrameProp) => {
+    const isEmpty = !props.img_src;
+
+    return (
+        <Box
+            minHeight="150px"
+            position="relative"
+
+        >
+            <Box boxSize="100%" bg="#e0e4e9" borderRadius="8px" overflow="hidden">
+                <Image boxSize="100%" src={props.img_src || ""} />
+            </Box>
+            <input type="file" accept="image/*" id={`image-uploader-id-${props.index}`} onChange={(event) => props.handleCaptureImage(event.target)} hidden />
+            <Box boxSize="15px" borderRadius="full"
+                position="absolute"
+                right="-7px"
+                bottom="-7px"
+                bg={isEmpty ? "red" : "white"}
+                padding="2px"
+                onClick={() => props.handleRemoveOrAddImageAction()}
+                hidden={props.is_own === false}>
+                <Image boxSize="100%" src={isEmpty ? addIcon : removeIcon} />
+            </Box>
+        </Box >
+    );
 }
 
-const AccountProfile: NextPage<any, any> = (props: any) => {
+interface IMediaGalleryProp {
+    currentAccountId: string;
+}
+
+const MediaGalleryFC = (props: IMediaGalleryProp) => {
+    const { authToken, accountId } = getAuthInfo();
+    const isOwn = accountId === props.currentAccountId;
+    const [medias, setMedias] = useStateReact<Array<string>>([]);
+    const [startIdx, setStartIdx] = useStateReact(0);
+    const [updateMediasAction] = useMutation(UPDATE_MEDIAS_MUTATION);
+
+
+    const handleRemoveOrAddImageEvent = useCallback(
+        async (idx: number) => {
+            console.log(`Remove or add item at ${idx}`);
+
+            if (idx <= medias.length - 1) {
+                const crtMedias = medias;
+                crtMedias.splice(idx, 1)
+                setMedias(crtMedias)
+                setStartIdx(startIdx + 9)
+
+                await updateMediasAction(
+                    {
+                        variables: {
+                            account_id: props.currentAccountId,
+                            auth_token: authToken,
+                            medias: crtMedias.map(
+                                _m => {
+                                    return {
+                                        url: _m,
+                                        type: "PHOTO"
+                                    }
+                                }
+                            )
+                        }
+                    }
+                )
+
+            } else {
+                document.getElementById(`image-uploader-id-${idx}`)?.click();
+            }
+        }, [medias, startIdx]);
+
+    const captureAndUploadImg = async (target: any) => {
+        if (target.files && target.files.length !== 0) {
+            const file = target.files[0];
+
+            const { error, data } = await useStorage("abc", `accont/medias/photos/${uuidV4()}.png`, file);
+
+            if (data) {
+                const upCommingMedias: Array<string> = [...medias, data["publicUrl"]]
+                setMedias(upCommingMedias)
+                await updateMediasAction({
+                    variables: {
+                        auth_token: authToken,
+                        account_id: props.currentAccountId,
+                        medias: upCommingMedias.map(
+                            _m => {
+                                return {
+                                    url: _m,
+                                    type: "PHOTO"
+                                }
+                            }
+                        )
+                    }
+                })
+            }
+            if (error) {
+                console.log(`Can't upload image: ${error.message}`)
+            }
+        }
+    }
+
+    const { error, loading, data } = useQuery(GET_ACCOUNT_MEDIAS_QUERY, {
+        variables: {
+            account_id: props.currentAccountId,
+            auth_token: authToken
+        }
+    });
+
+    useEffect(
+        () => {
+            if (data) {
+                const fetchedMedias: Array<IAccountMedia> = data.accountMedias;
+
+                setMedias(fetchedMedias.filter(_m => _m.type === "PHOTO").map(_m => _m.url))
+            }
+        }, [data]
+    )
+
+    if (error) {
+        return <div>Error when loading medias.</div>
+    }
+    if (loading) {
+        return null;
+    }
+
+
+    return (
+        <>
+            <SimpleGrid minChildWidth="80px" columns={3} spacing="10px">
+                {
+                    [...Array(9)].map((item, idx) => {
+                        return (
+                            <MediaFrameFC key={idx + startIdx} index={idx} img_src={medias[idx]} handleRemoveOrAddImageAction={() => handleRemoveOrAddImageEvent(idx)} handleCaptureImage={captureAndUploadImg} is_own={isOwn} />
+                        )
+                    })
+                }
+            </SimpleGrid>
+        </>
+    )
+};
+
+interface IAccountProfileProp {
+    accountId: string;
+}
+
+const AccountProfile: NextPage<any, any> = (props: IAccountProfileProp) => {
     const router = useRouter();
 
     const currentAccountId: string = props.accountId;
@@ -462,23 +607,27 @@ const AccountProfile: NextPage<any, any> = (props: any) => {
                 </div>
             </div>
             <div style={{ overflow: "hidden" }}>
-                <div style={scrollTabStyle}>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                        <h5 style={{ lineHeight: "40px", color: "#8987FF" }}>Timeline</h5>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                        <h5 style={{ lineHeight: "40px", color: "#CFCFCF" }}>Photos</h5>
-                    </div>
-                </div>
-
-                <div>
-                    {
-                        isOwn.value && (
-                            <AccountPostCreateFC w="100%" bg="#F8F8F8" />
-                        )
-                    }
-                    <AccountTimeLine accountId={currentAccountId} />
-                </div>
+                <Tabs isFitted colorScheme="purple">
+                    <TabList focusBorderColor="none" border="none" outline="none">
+                        <Tab>Timeline</Tab>
+                        <Tab>Photos</Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel padding="0px">
+                            <>
+                                {
+                                    isOwn.value && (
+                                        <AccountPostCreateFC w="100%" bg="#F8F8F8" />
+                                    )
+                                }
+                                <AccountTimeLine accountId={currentAccountId} />
+                            </>
+                        </TabPanel>
+                        <TabPanel>
+                            <MediaGalleryFC currentAccountId={currentAccountId} />
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
             </div>
         </div >
     )

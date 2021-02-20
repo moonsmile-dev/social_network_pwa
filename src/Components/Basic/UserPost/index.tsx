@@ -81,7 +81,7 @@ const UserReactTabFC = (props: IUserReactTabFCProps) => {
             await router.push(FormatString(ACCOUNT_POST_COMMENT_PAGE_ROUTE, `${props.accountId}`, `${props.postId}`))
         }, [],
     )
-    
+
 
     return (
         <>
@@ -133,10 +133,6 @@ const UserReactTabFC = (props: IUserReactTabFCProps) => {
 export const UserPost = (props: IUserPostProp) => {
     const router = useRouter();
 
-    // setUp state
-    const accountName = useState("");
-    const accountAvatar = useState("");
-
     const handleRouteToParnerProfile = useCallback(
         async () => {
             await router.push(FormatString(PROFILE_PAGE_ROUTE, `${props.accountId}`))
@@ -168,8 +164,8 @@ export const UserPost = (props: IUserPostProp) => {
 
     const accountInfo: IAccountInfo = data.accountProfile
 
-    accountName.set(`${accountInfo.firstName} ${accountInfo.lastName}`)
-    accountAvatar.set(accountInfo.avatarUrl)
+    const accountName: string = `${accountInfo.firstName} ${accountInfo.lastName}`
+    const accountAvatar: string = accountInfo.avatarUrl;
 
 
 
@@ -179,10 +175,10 @@ export const UserPost = (props: IUserPostProp) => {
             <div className="header_post" style={{ height: "60px", position: "relative" }}>
                 <div style={boundContainer} onClick={() => { handleRouteToParnerProfile() }}>
                     <div style={{ width: "54px", height: "54px", borderRadius: "50%", overflow: "hidden" }}>
-                        <img style={{ height: "100%", width: "100%" }} alt="X" src={accountAvatar ? accountAvatar.value : avatarIcon} />
+                        <img style={{ height: "100%", width: "100%" }} alt="X" src={accountAvatar || avatarIcon} />
                     </div>
                     <div style={{ marginLeft: "10px" }}>
-                        <p style={{ margin: "4px 0px", fontWeight: "bold" }}>{accountName.value}</p>
+                        <p style={{ margin: "4px 0px", fontWeight: "bold" }}>{accountName}</p>
                         <p style={{ margin: "0px", fontSize: "12px", color: "#9597A1" }}>4 mins ago</p>
                     </div>
                 </div>
@@ -227,7 +223,7 @@ export const UserPost = (props: IUserPostProp) => {
                 className="action"
                 w="100%"
                 display="flex">
-                <UserReactTabFC postId={props.id || "1"} accountId={props.accountId || "1"}/>
+                <UserReactTabFC postId={props.id || "1"} accountId={props.accountId || "1"} />
             </Box>
         </div>
     )

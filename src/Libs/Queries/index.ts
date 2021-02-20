@@ -7,3 +7,4 @@ import { GET_MESSAGES_IN_ROOM_QUERY } from "./getMessagesInRoomQuery";
 import { GET_MATCHER_LIST_QUERY } from "./getMatcherListQuery";
 import { GET_MATCHER_INFO_QUERY } from "./getMatcherInfoQuery";
 import { GET_ACCOUNT_INFO_DATA_QUERY } from "./getAccountInfoDataQuery";
+import { GET_ACCOUNT_MEDIAS_QUERY } from "./getAccountMediasQuery";
