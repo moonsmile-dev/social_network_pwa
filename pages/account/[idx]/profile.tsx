@@ -31,9 +31,11 @@ import { FormatString } from "src/Commons/Strings/utils";
 import { REPORT_USER_MUTATION } from "@Libs/Mutations/reportUserMutation";
 import removeIcon from "@Assets/images/close_red.png";
 import addIcon from "@Assets/images/add_white.png";
+import avatarUploadIcon from "@Assets/images/cloud-computing.png";
 import { GET_ACCOUNT_MEDIAS_QUERY } from "@Libs/Queries/getAccountMediasQuery";
 import { IAccountMedia } from "@Libs/Dtos/accountMedia.interface";
 import { UPDATE_MEDIAS_MUTATION } from "@Libs/Mutations/updateMediasMutation";
+import { UPDATE_AVATAR_MUTATION } from "@Libs/Mutations/updateAvatarMutation";
 
 const chatStyle = {
     width: "134px",
@@ -557,6 +559,118 @@ const MediaGalleryFC = (props: IMediaGalleryProp) => {
     )
 };
 
+
+interface IAvatarFCProp {
+    avatarUrl: string;
+    currentAccountId: string;
+}
+
+const AvatarFC = (props: IAvatarFCProp) => {
+    const router = useRouter();
+    const { onClose, onOpen, isOpen } = useDisclosure();
+    const { accountId, authToken } = getAuthInfo();
+    const isOwn = accountId === props.currentAccountId;
+    const { register, handleSubmit } = useForm();
+    const [updateAvatarAction] = useMutation(UPDATE_AVATAR_MUTATION);
+    const [preAvt, setPreAvt] = useStateReact<string | ArrayBuffer | null>("");
+
+
+    const handleUploadAvatarAction = useCallback(
+        async (_dat: any) => {
+            const avatarFile = _dat.avatar[0]
+
+            const { data, error } = await useStorage("abc", `accounts/${props.currentAccountId}/avatars/${uuidV4()}.png`, avatarFile)
+
+            if (data) {
+                await updateAvatarAction({
+                    variables: {
+                        account_id: props.currentAccountId,
+                        auth_token: authToken,
+                        data: {
+                            mediaUrl: data["publicUrl"],
+                            type: "PHOTO"
+                        }
+                    }
+                });
+            }
+
+            // Clear data and close popup
+            setPreAvt("");
+            onClose();
+            // Reload page
+            router.reload();
+        }, [preAvt]
+    );
+
+    const handleShowUpPreviewAvatar = useCallback(
+        (target: any) => {
+            if (target.files && target.files.length > 0) {
+                const _file = target.files[0];
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    setPreAvt(reader.result)
+                }
+                reader.readAsDataURL(_file);
+            }
+        }, [preAvt]
+    );
+
+    const handleOnClocsePopup = useCallback(
+        () => {
+            setPreAvt("");
+            onClose();
+        }, [preAvt]
+    );
+
+    const onAvatarClick = useCallback(
+        () => {
+            if (isOwn) {
+                onOpen();
+            }
+        }, []
+    )
+
+
+
+    return (
+        <>
+            <Box boxSize="80px" overflow="hidden" borderRadius="full"
+                onClick={onAvatarClick}>
+                <Image alt="Profile" boxSize="100%" src={props.avatarUrl} />
+            </Box>
+            <Modal isOpen={isOpen} onClose={handleOnClocsePopup} isCentered={true}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Upload Avatar</ModalHeader>
+                    <ModalCloseButton />
+                    <form onSubmit={handleSubmit(handleUploadAvatarAction)}>
+                        <ModalBody>
+                            <Center>
+                                {preAvt === "" ? (
+                                    <Box boxSize="50px" onClick={() => document.getElementById("avatar-upload-id")?.click()}>
+                                        <Image boxSize="100%" src={avatarUploadIcon} />
+                                    </Box>
+                                ) : (
+                                        <Box boxSize="200px">
+                                            <Image boxSize="100%" src={preAvt as string} />
+                                        </Box>
+                                    )}
+                            </Center>
+                            <input ref={register} name="avatar" type="file" id="avatar-upload-id" onChange={(event) => handleShowUpPreviewAvatar(event.target)} hidden />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Center w="100%">
+                                <Button type="submit">Update</Button>
+                            </Center>
+                        </ModalFooter>
+                    </form>
+                </ModalContent>
+            </Modal>
+        </>
+    )
+}
+
 interface IAccountProfileProp {
     accountId: string;
 }
@@ -597,9 +711,7 @@ const AccountProfile: NextPage<any, any> = (props: IAccountProfileProp) => {
                         <FConnection isOwn={isOwn.value} currentAccountId={currentAccountId} />
                     </div>
                     <div style={{ marginLeft: "15px", marginTop: "15px" }}>
-                        <div style={{ height: "80px", width: "80px", overflow: "hidden", borderRadius: "50%" }}>
-                            <img alt="Profile" height="100%" width="100%" src={accountProfile.avatarUrl ? accountProfile.avatarUrl : profileImage} />
-                        </div>
+                        <AvatarFC avatarUrl={accountProfile.avatarUrl ? accountProfile.avatarUrl : profileImage} currentAccountId={currentAccountId} />
                         <ProfileInformation
                             bio={accountProfile.bio}
                             name={`${accountProfile.firstName} ${accountProfile.lastName}`} job={accountProfile.school} />
