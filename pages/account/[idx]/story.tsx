@@ -30,7 +30,7 @@ const SlicingItemComponent = (props: ISlicingItem) => {
         backgroundColor: "white",
     }
     // eslint-disable-next-line react/destructuring-assignment
-    const slicingVisibleStyling = props.isVisible ? { transition: "width 5s", width: "100%", } : {}
+    const slicingVisibleStyling = props.isVisible ? { transition: "width 8s", width: "100%", } : {}
     // eslint-disable-next-line react/react-in-jsx-scope
     return (
         <div style={{ position: "relative", width: "100%" }}>
@@ -82,7 +82,6 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
 
     const handleClickControlStory = useCallback(
         (type: string, noLoop: boolean = true) => {
-            console.log(`User click ${type}`)
             switch (type) {
                 case "LEFT":
                     currentPos.set(Math.max(0, currentPos.value - 1))
@@ -96,9 +95,8 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
 
             if (noLoop) {
                 const _t = setTimeout(() => {
-                    console.log('This will run after 7 second!')
                     handleClickControlStory("RIGHT", false)
-                }, 7000);
+                }, 10000);
                 timers.push(_t)
             }
 
