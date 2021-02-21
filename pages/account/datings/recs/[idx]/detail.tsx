@@ -148,7 +148,7 @@ const AccountDatingRecsPartnerDetail: NextPage<any, any> = () => {
 
                             </Container>
                             <Container className="detail-info" padding="0px 20px">
-                                <InfoField icon={ageIcon} headertxt="Age" detail={matcher.age} />
+                                <InfoField icon={ageIcon} headertxt="Age" detail={`${matcher.age}`} />
                                 <InfoField icon={genderIcon} headertxt="Gender" detail={matcher.gender === 0 ? "Male" : "Female"} />
                                 <InfoField
                                     icon={locationIcon}
