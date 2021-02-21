@@ -11,17 +11,18 @@ const container = {
     paddingTop: "5px",
 }
 interface IStoryHome {
+    accountId: string;
     name?: string;
     imgSrc?: string
 }
 
 
 export const StoryHome = (props: IStoryHome) => {
+    const currentAccountId: string = props.accountId;
     const router = useRouter();
-
     const handleRouteToUserStoryView = useCallback(
         async () => {
-            await router.push(FormatString(ACCOUNT_STORY_PAGE_ROUTE, "1"))
+            await router.push(FormatString(ACCOUNT_STORY_PAGE_ROUTE, currentAccountId))
         },
         [],
     )

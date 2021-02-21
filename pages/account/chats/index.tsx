@@ -109,7 +109,7 @@ const UserStoriesSliding = (props: any) => {
             </Box>
             {
                 userStories.map((user, idx) =>
-                    < StoryHome key={idx} name={user.name} imgSrc={user?.mediaDatas[0]?.mediaUrl || ""} />
+                    < StoryHome key={idx} name={user.name} imgSrc={user?.mediaDatas[0]?.mediaUrl || ""} accountId={user.id} />
                 )
             }
         </div>

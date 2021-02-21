@@ -6,8 +6,12 @@ import avatarIcon from "@Assets/images/profile.jpeg";
 import closeIcon from "@Assets/images/close.png";
 import { Box, Image } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState as useStateReact } from "react";
 import { useState } from "@hookstate/core";
+import { getAuthInfo } from "src/Commons/Auths/utils";
+import { useQuery } from "@apollo/client";
+import { GET_USER_STORY_QUERY } from "@Libs/Queries/getUserStoryQuery";
+import { UserStoryDto } from "@Libs/Dtos/userStory.interface";
 interface ISlicingItem {
     isVisible?: boolean;
 }
@@ -50,10 +54,15 @@ const sendMessageStyle = {
 }
 
 
+const IMAGE_TESTS = ["http://localhost:1338/file_streams/abc/account/post/synced_image_1592417944256.jpeg", "http://localhost:1338/file_streams/abc/account/post/synced_image_1592935202753.jpeg"]
+
 const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
     const router = useRouter();
-    const images = useState(["http://localhost:1338/file_streams/abc/account/post/synced_image_1592417944256.jpeg", "http://localhost:1338/file_streams/abc/account/post/synced_image_1592935202753.jpeg"]);
-    const currentPos = useState(-1);
+    const [images, setImages] = useStateReact<string[]>([]);
+    const currentAccountId: string = router.query.idx as string || "";
+    const { accountId, authToken } = getAuthInfo();
+
+    const [currentPos, setCurrentPos] = useStateReact(0);
     const timers: Array<any> = [];
 
 
@@ -78,16 +87,16 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
             // Clear runner
             clearTimeout(runner)
         }
-    }, [])
+    }, [images, currentPos])
 
     const handleClickControlStory = useCallback(
         (type: string, noLoop: boolean = true) => {
             switch (type) {
                 case "LEFT":
-                    currentPos.set(Math.max(0, currentPos.value - 1))
+                    setCurrentPos(Math.max(0, currentPos - 1))
                     break;
                 case "RIGHT":
-                    currentPos.set(Math.min(images.value.length - 1, currentPos.value + 1))
+                    setCurrentPos(Math.min(images.length - 1, currentPos + 1))
                     break;
                 default:
                     break;
@@ -100,8 +109,33 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
                 timers.push(_t)
             }
 
-        }, []
+        }, [images, currentPos]
     )
+
+    // Query data
+    const { error, loading, data } = useQuery(GET_USER_STORY_QUERY, {
+        variables: {
+            account_id: accountId,
+            auth_token: authToken,
+            partner_id: currentAccountId
+        }
+    });
+
+    useEffect(
+        () => {
+            if (data) {
+                const userStory: UserStoryDto = data.userStory;
+                setImages(userStory.mediaDatas.map((item) => item.mediaUrl));
+            }
+
+        }, [data]
+    );
+    if (error) {
+        return <div>Error when loading story</div>;
+    }
+    if (loading) {
+        return null;
+    }
 
     return (
         <div style={{ position: "relative", height: '100vh' }}>
@@ -117,8 +151,8 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
             }}>
                 <div style={{ display: "flex", margin: "0px 5px" }}>
                     {
-                        [...Array(images.value.length)].map((value, idx) =>
-                            <SlicingItemComponent key={idx} isVisible={idx == currentPos.value ? true : false} />
+                        [...Array(images.length)].map((value, idx) =>
+                            <SlicingItemComponent key={idx} isVisible={idx == currentPos ? true : false} />
                         )
                     }
                 </div>
@@ -137,7 +171,7 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
                 <Box w="50%" h="100%" bg="transparent" position="absolute" top="0px" right="0px" onClick={() => handleClickControlStory("RIGHT")} />
             </div>
             <div className="Bg_viewer" style={{ width: "100%", height: "100%", zIndex: 0 }}>
-                <Image boxSize="100%" src={images.value[currentPos.value]} />
+                <Image boxSize="100%" src={images[currentPos]} />
             </div>
             <div className="chat_footer" style={{
                 zIndex: 1, position: "absolute",
