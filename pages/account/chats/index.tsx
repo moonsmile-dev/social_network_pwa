@@ -7,13 +7,16 @@ import { StoryHome } from "@Components/Basic";
 import NavFooter, { NavPageType } from "@Components/NavFooter";
 import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
 import { useRouter } from "next/router";
-import { ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE } from "src/Routes/contants";
+import { ACCOUNT_ROOM_MESSAGE_PAGE_ROUTE, ACCOUNT_STORY_CREATE_PAGE_ROUTE } from "src/Routes/contants";
 import { FormatString } from "src/Commons/Strings/utils";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { useQuery } from "@apollo/client";
 import { GET_USER_STORY_LIST_QUERY } from "@Libs/Queries/getUserStoryListQuery";
 import { GET_ROOM_CHAT_LIST_QUERY } from "@Libs/Queries/getRoomChatListQuery";
 import { IRoomChat } from "@Libs/Dtos/roomChat.interface";
+import { Box, Center, Image, Text } from "@chakra-ui/react";
+import createStoryIcon from "@Assets/images/video-camera.png";
+import { useCallback } from "react";
 
 const absoluteCenter = {
     top: "50%",
@@ -56,6 +59,12 @@ const styles = {
 
 const UserStoriesSliding = (props: any) => {
     const { accountId, authToken } = getAuthInfo();
+    const router = useRouter();
+    const handleRouteToStoryCreatePage = useCallback(
+        async () => {
+            await router.push(ACCOUNT_STORY_CREATE_PAGE_ROUTE)
+        }, []
+    );
 
     const { loading, error, data } = useQuery(GET_USER_STORY_LIST_QUERY, {
         variables: {
@@ -81,6 +90,23 @@ const UserStoriesSliding = (props: any) => {
             whiteSpace: "nowrap",
             height: "100px"
         }}>
+            <Box w="70px"
+                h="90px"
+                paddingTop="5px"
+            >
+                <Box boxSize="60px"
+                    borderRadius="full"
+                    border="solid 2px #bababa"
+                    overflow="hidden"
+                    bg="#e6e6e6"
+                    padding="15px"
+                    onClick={() => handleRouteToStoryCreatePage()}
+                >
+                    <Image boxSize="100%" src={createStoryIcon} />
+                </Box>
+                <Text fontWeight="bold">Create</Text>
+
+            </Box>
             {
                 userStories.map((user, idx) =>
                     < StoryHome key={idx} name={user.name} imgSrc={user?.mediaDatas[0]?.mediaUrl || ""} />

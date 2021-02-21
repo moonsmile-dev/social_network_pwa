@@ -20,3 +20,4 @@ export const ACCOUNT_POST_REACTION_PAGE_ROUTE = "/account/{0}/posts/{1}/reaction
 export const ACCOUNT_POST_COMMENT_PAGE_ROUTE = "/account/{0}/posts/{1}/comments";
 export const ACCOUNT_CHANGE_PASSWORD_PAGE_ROUTE = "/account/passwords/change";
 export const ACCOUNT_VERIFIES_PAGE_ROUTE = "/account/verifies";
+export const ACCOUNT_STORY_CREATE_PAGE_ROUTE = "/account/stories/create";
