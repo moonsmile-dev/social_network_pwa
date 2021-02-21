@@ -41,7 +41,7 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
                 margin="20px">
                 <Image boxSize="100%" src={props.icon_src} />
             </Box>
-            <Box className="Info" w="70%" lineHeight={props.hide_bar_tab !== true ? "60px" : "80px"}>
+            <Box className="Info" w="70%" lineHeight={props.hide_bar_tab ? "80px" : "60px"}>
                 <Box display="flex">
                     <Box w="80%">
                         <Text fontSize="25px" marginRight="10px">{props.title}</Text>
@@ -54,7 +54,7 @@ const BasicSettingFC = (props: IBasicSettingFCProps) => {
                         )
                     }
                 </Box>
-                {props.hide_bar_tab !== true && (
+                {!props.hide_bar_tab && (
                     <Box w="100%" h="2px" bg="#B5B5B5" />
                 )}
             </Box>
