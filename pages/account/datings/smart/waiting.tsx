@@ -30,11 +30,21 @@ const styles = {
     },
 };
 
-const WaiterLoadingFC = (props: any) => {
+interface IWaiterLoadingProps {
+    onWaitingTimeout: () => {}
+}
+
+const WaiterLoadingFC = (props: IWaiterLoadingProps) => {
     const [timer, setTimer] = useStateReact(0);
     useEffect(() => {
         const runner = setTimeout(() => {
             setTimer(timer + 1);
+
+            if (timer === 5 * 60 + 1) {
+                clearTimeout(runner);
+
+                props.onWaitingTimeout();
+            }
         }, 1000)
         return () => {
             clearTimeout(runner)

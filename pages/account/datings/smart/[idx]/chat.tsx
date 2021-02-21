@@ -110,6 +110,36 @@ const ReportUserSmartChatFC = (props: IReportUserSmartChatProp) => {
     )
 }
 
+interface IWaiterLoadingProps {
+    onWaitingTimeout: () => {}
+}
+
+const WaiterLoadingFC = (props: IWaiterLoadingProps) => {
+    const [timer, setTimer] = useStateReact(10);
+    useEffect(() => {
+        const runner = setTimeout(() => {
+            if (timer === 0) {
+                clearTimeout(runner)
+
+                props.onWaitingTimeout();
+
+            }
+
+            setTimer(Math.max(timer - 1, 0));
+        }, 1000)
+        return () => {
+            clearTimeout(runner);
+        }
+    }, [timer])
+
+    return (
+        <Flex>
+            <ClapSpinner size={20} frontColor="white" />
+            <Text marginLeft="10px" color="#D049FF" fontWeight="bold">{`${timer}s`}</Text>
+        </Flex>
+    )
+};
+
 interface IMessageData {
     senderId: string;
     content: string;
@@ -203,7 +233,13 @@ const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
                 await handleGoOutSmartRoom();
             }
         }, [socket]
-    )
+    );
+
+    const handleTimeoutSmartChatEvent = useCallback(
+        async () => {
+            await handleGoOutSmartRoom();
+        }, [socket]
+    );
 
     return (
         <PageContainer>
@@ -215,10 +251,7 @@ const AccountDatingMatchedSmartChat: NextPage<any, any> = () => {
                         </Box>
                         <Box boxSize="60px" >
                             <Center boxSize="100%">
-                                <Flex>
-                                    <ClapSpinner size={20} frontColor="white" />
-                                    <Text marginLeft="10px" color="#D049FF" fontWeight="bold">10s</Text>
-                                </Flex>
+                                <WaiterLoadingFC onWaitingTimeout={handleTimeoutSmartChatEvent} />
                             </Center>
                         </Box>
                         <ReportUserSmartChatFC reportCallback={(reason) => handleReportSmartRoomAction(reason)} />
