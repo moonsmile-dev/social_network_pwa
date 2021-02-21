@@ -11,8 +11,14 @@ import genderWomanIcon from "@Assets/images/gender_woman.png";
 import AuthenticatePageRequired from "@Components/Auths/AuthenticatePageRequired";
 import { useRouter } from "next/router";
 import { DATING_RECS_PAGE_ROUTE, DATING_SMART_WAITING_PAGE_ROUTE } from "src/Routes/contants";
-import React from "react";
+import React, { useCallback, useEffect, useState as useStateReact } from "react";
 import { useState } from "@hookstate/core";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_MATCH_SETTING_QUERY } from "@Libs/Queries/getMatchSettingQuery";
+import { getAuthInfo } from "src/Commons/Auths/utils";
+import { IMatchSetting } from "@Libs/Dtos/matchSetting.interface";
+import { useForm } from "react-hook-form";
+import { UPDATE_MATCH_SETTING_MUTATION } from "@Libs/Mutations/updateMatchSettingMutation";
 
 const styles = {
     container: {
@@ -147,13 +153,60 @@ const UserDating = (props: IUserDatingProps) => {
 }
 
 const UserDatingSetupFC = (props: any) => {
+    const { accountId, authToken } = getAuthInfo();
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const minAge = useState(18);
-    const maxAge = useState(21);
-    const maxDistance = useState(1);
+    const [minAge, setMinAge] = useStateReact(18);
+    const [maxAge, setMaxAge] = useStateReact(21);
+    const [gender, setGender] = useStateReact("UN_KNOWN");
+    const [maxDistance, setMaxDistance] = useStateReact(1);
+    const { register, handleSubmit } = useForm();
+    const [updateMatchSettingAction] = useMutation(UPDATE_MATCH_SETTING_MUTATION);
 
-    const initialRef = React.useRef()
-    const finalRef = React.useRef()
+    const handleUpdateMatchSettingAction = useCallback(
+        async (data) => {
+            await updateMatchSettingAction(
+                {
+                    variables: {
+                        account_id: accountId,
+                        auth_token: authToken,
+
+                        min_age: parseInt(data.min_age),
+                        max_age: parseInt(data.max_age),
+                        max_distance: parseInt(data.max_distance),
+                        target_gender: data.gender
+                    }
+                }
+            );
+
+            onClose();
+        }, []
+    );
+
+    const { data, error, loading, refetch } = useQuery(GET_MATCH_SETTING_QUERY, {
+        variables: {
+            account_id: accountId,
+            auth_token: authToken
+        }
+    });
+
+    useEffect(
+        () => {
+            if (data) {
+                const matchSetting: IMatchSetting = data.userMatchSetting;
+                setMinAge(matchSetting.minAge);
+                setMaxAge(matchSetting.maxAge);
+                setMaxDistance(matchSetting.maxDistance);
+                setGender(matchSetting.targetGender)
+            }
+        }, [data]
+    );
+
+    if (error) {
+        return <div>Error when get match setting.</div>
+    }
+    if (loading) {
+        return null;
+    }
 
     return (
         <>
@@ -167,69 +220,83 @@ const UserDatingSetupFC = (props: any) => {
                 <ModalContent>
                     <ModalHeader>Settings</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody pb={6}>
-                        <FormControl>
-                            <FormLabel>Min Age</FormLabel>
-                            <Box display="flex">
-                                <Slider aria-label="slider-ex-2" colorScheme="purple"
-                                    defaultValue={18} min={18} max={maxAge.value} onChange={(value) => minAge.set(value)}>
-                                    <SliderTrack>
-                                        <SliderFilledTrack />
-                                    </SliderTrack>
-                                    <SliderThumb />
-                                </Slider>
-                                <Box margin="0px 5px">
-                                    <Text>{minAge.value}</Text>
-                                </Box>
-                            </Box>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Max Age</FormLabel>
-                            <Box display="flex">
-                                <Slider aria-label="slider-ex-2" colorScheme="purple"
-                                    defaultValue={21} min={minAge.value} max={100} onChange={(value) => maxAge.set(value)}>
-                                    <SliderTrack>
-                                        <SliderFilledTrack />
-                                    </SliderTrack>
-                                    <SliderThumb />
-                                </Slider>
-                                <Box margin="0px 5px">
-                                    <Text>{maxAge.value}</Text>
-                                </Box>
-                            </Box>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Gender</FormLabel>
-                            <Select>
-                                <option value={0}>Male</option>
-                                <option value={1}>Female</option>
-                                <option value={2}>Unknown</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Max distance (km)</FormLabel>
+                    <form onSubmit={handleSubmit(handleUpdateMatchSettingAction)}>
+                        <ModalBody pb={6}>
                             <FormControl>
+                                <FormLabel>Min Age</FormLabel>
                                 <Box display="flex">
-                                    <Slider aria-label="slider-ex-1" defaultValue={30} max={1000} min={1} onChange={(value) => maxDistance.set(value)}>
+                                    <Slider aria-label="slider-ex-2"
+                                        ref={register}
+                                        name="min_age"
+                                        colorScheme="purple"
+                                        defaultValue={minAge} min={18} max={maxAge} onChange={(value) => setMinAge(value)}>
                                         <SliderTrack>
                                             <SliderFilledTrack />
                                         </SliderTrack>
                                         <SliderThumb />
                                     </Slider>
                                     <Box margin="0px 5px">
-                                        <Text>{maxDistance.value}</Text>
+                                        <Text>{minAge}</Text>
                                     </Box>
                                 </Box>
                             </FormControl>
+                            <FormControl>
+                                <FormLabel>Max Age</FormLabel>
+                                <Box display="flex">
+                                    <Slider aria-label="slider-ex-2"
+                                        ref={register}
+                                        name="max_age"
+                                        colorScheme="purple"
+                                        defaultValue={maxAge} min={minAge} max={100} onChange={(value) => setMaxAge(value)}>
+                                        <SliderTrack>
+                                            <SliderFilledTrack />
+                                        </SliderTrack>
+                                        <SliderThumb />
+                                    </Slider>
+                                    <Box margin="0px 5px">
+                                        <Text>{maxAge}</Text>
+                                    </Box>
+                                </Box>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Gender</FormLabel>
+                                <Select defaultValue={gender}
+                                    ref={register}
+                                    name="gender">
+                                    <option value="MALE">Male</option>
+                                    <option value="FEMALE">Female</option>
+                                    <option value="UN_KNOWN">Unknown</option>
+                                </Select>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Max distance (km)</FormLabel>
+                                <FormControl>
+                                    <Box display="flex">
+                                        <Slider aria-label="slider-ex-1"
+                                            ref={register}
+                                            name="max_distance"
+                                            defaultValue={maxDistance} max={1000} min={1}
+                                            onChange={(value) => setMaxDistance(value)}>
+                                            <SliderTrack>
+                                                <SliderFilledTrack />
+                                            </SliderTrack>
+                                            <SliderThumb />
+                                        </Slider>
+                                        <Box margin="0px 5px">
+                                            <Text>{maxDistance}</Text>
+                                        </Box>
+                                    </Box>
+                                </FormControl>
 
-                        </FormControl>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="purple" mr={3} onClick={onClose}>
-                            Save
+                            </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button colorScheme="purple" mr={3} type="submit">
+                                Save
                         </Button>
-                        <Button onClick={onClose}>Cancel</Button>
-                    </ModalFooter>
+                            <Button onClick={onClose}>Cancel</Button>
+                        </ModalFooter>
+                    </form>
                 </ModalContent>
             </Modal>
         </>

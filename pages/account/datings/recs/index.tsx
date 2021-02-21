@@ -26,9 +26,10 @@ import { FormatString } from "src/Commons/Strings/utils";
 import { DATING_RECS_DETAIL_PAGE_ROUTE } from "src/Routes/contants";
 import { useState } from "@hookstate/core";
 import { getAuthInfo } from "src/Commons/Auths/utils";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_MATCHER_LIST_QUERY } from "@Libs/Queries/getMatcherListQuery";
 import { initializeApollo } from "@Libs/apolloClient";
+import { CREATE_MATCH_USER_MUTATION } from "@Libs/Mutations/createMatchUserMutation";
 
 const styles = {
     container: {
@@ -99,7 +100,7 @@ const MatcherFC = (props: IMatcherProp) => {
     const router = useRouter();
     const matcherId: string = props.matcherId;
     const images = props.medias && props.medias.length > 0 && props.medias.filter(_m => _m.type === 0).map(_m => _m.url) || [demoImg, demo2Img, demo3Img];
-    const crtPos = useState(0)
+    const [crtPos, setCrtPos] = useStateReact(0)
 
     const handleRouteToMatchRecsDetail = async () => {
         await router.push(FormatString(DATING_RECS_DETAIL_PAGE_ROUTE, `${matcherId}`))
@@ -117,7 +118,7 @@ const MatcherFC = (props: IMatcherProp) => {
                 overflow="hidden"
                 border="solid #7000FF 1px"
             >
-                <Image boxSize="100%" src={images[crtPos.value]} fit="cover" />
+                <Image boxSize="100%" src={images[crtPos]} fit="cover" />
                 <Box className="leftArea"
                     position="absolute"
                     w="50%"
@@ -125,7 +126,7 @@ const MatcherFC = (props: IMatcherProp) => {
                     top="0px"
                     left="0px"
                     bg="transparent"
-                    onClick={() => crtPos.set(Math.max(0, crtPos.value - 1))} />
+                    onClick={() => setCrtPos(Math.max(0, crtPos - 1))} />
                 <Box className="rightArea"
                     position="absolute"
                     w="50%"
@@ -133,7 +134,7 @@ const MatcherFC = (props: IMatcherProp) => {
                     top="0px"
                     right="0px"
                     bg="transparent"
-                    onClick={() => crtPos.set(Math.min(images.length - 1, crtPos.value + 1))} />
+                    onClick={() => setCrtPos(Math.min(images.length - 1, crtPos + 1))} />
                 <Box
                     position="absolute"
                     top="10px"
@@ -149,7 +150,7 @@ const MatcherFC = (props: IMatcherProp) => {
                         {[...Array(images.length)].map((_, idx) => (
                             <GridItem key={idx} h="100%" padding="0px 2px">
                                 <Box
-                                    bg={crtPos.value === idx ? "white" : "#C4C4C4"}
+                                    bg={crtPos === idx ? "white" : "#C4C4C4"}
                                     boxSize="100%"
                                     borderRadius="2px"
                                 />
@@ -209,23 +210,43 @@ const MatcherFC = (props: IMatcherProp) => {
 
 const AccountDatingReacs: NextPage<any, any> = () => {
     const router = useRouter()
+    const [createMatchUser] = useMutation(CREATE_MATCH_USER_MUTATION);
     const [crtPos, setCrtPos] = useStateReact<number>(0);
     const { accountId, authToken } = getAuthInfo();
     let matchers: Array<IMatcherProp> = []
-    const handleReactMatcherAction = async (type: number) => {
-        if (crtPos === matchers.length - 1) {
-            router.reload()
-        } else {
-            setCrtPos(Math.min(crtPos + 1, matchers.length - 1));
-        }
-    }
 
-    const { error, loading, data } = useQuery(GET_MATCHER_LIST_QUERY, {
+    const { error, loading, data, refetch } = useQuery(GET_MATCHER_LIST_QUERY, {
         variables: {
             auth_token: authToken,
             account_id: accountId
         }
     });
+
+    const handleReactMatcherAction = useCallback(
+        async (type: number) => {
+            try {
+                await createMatchUser({
+                    variables: {
+                        account_id: accountId,
+                        auth_token: authToken,
+                        receiver_id: matchers[crtPos].matcherId,
+                        status: type
+                    }
+                })
+            } catch (error) {
+                console.log(error.message)
+            }
+            finally {
+                if (crtPos === matchers.length - 1) {
+                    setCrtPos(0);
+                    await refetch();
+                } else {
+                    setCrtPos(Math.min(crtPos + 1, matchers.length - 1));
+                }
+            }
+
+        }, [crtPos, matchers]
+    );
 
     if (error) {
         return <div>Error when loading list of matchers</div>
@@ -243,7 +264,9 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                 className="Main"
                 style={{ ...styles.main as React.CSSProperties, backgroundColor: "#E5E5E5" }}
             >
-                {matchers.length > 0 && (<MatcherFC matcherId={matchers[crtPos].matcherId} age={matchers[crtPos].age} name={matchers[crtPos].name} status={matchers[crtPos].status} medias={matchers[crtPos].medias} bio={matchers[crtPos].bio} />)}
+                {matchers.length > 0 && (
+                    <MatcherFC matcherId={matchers[crtPos].matcherId} age={matchers[crtPos].age} name={matchers[crtPos].name} status={matchers[crtPos].status} medias={matchers[crtPos].medias} bio={matchers[crtPos].bio} />
+                )}
 
                 <Box height="10%" width="100%">
                     <Center boxSize="100%">
@@ -255,7 +278,7 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                                     borderRadius="100%"
                                     overflow="hidden"
                                     padding="10px"
-                                    onClick={() => handleReactMatcherAction(-1)}
+                                    onClick={() => handleReactMatcherAction(0)}
                                 >
                                     <Image
                                         boxSize="100%"
@@ -269,7 +292,7 @@ const AccountDatingReacs: NextPage<any, any> = () => {
                                     bg="white"
                                     borderRadius="100%"
                                     padding="10px"
-                                    onClick={() => handleReactMatcherAction(0)}
+                                    onClick={() => handleReactMatcherAction(2)}
                                 >
                                     <Image
                                         boxSize="100%"

@@ -4,3 +4,4 @@ import { IMediaMessage, IMessageChat } from "./messageChat.interface";
 import { IMatcherInfo, IMatcherMedia } from "./matcherInfo.interface";
 import { IAccountInfo } from "./accountInfo.interface";
 import { IAccountMedia } from "./accountMedia.interface";
+import { IMatchSetting } from "./matchSetting.interface";
