@@ -163,7 +163,7 @@ const AccountDatingSmartWaiting: NextPage<any, any> = () => {
                             />
                         </Flex>
                         <Center>
-                            <WaiterLoadingFC />
+                            <WaiterLoadingFC onWaitingTimeout={handleBackPage} />
                         </Center>
                     </Box>
                 </Center>
