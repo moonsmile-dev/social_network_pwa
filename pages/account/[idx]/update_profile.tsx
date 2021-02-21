@@ -133,8 +133,6 @@ const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
 
     const OnHandleUpdateAccountProfile = useCallback(
         async (d: any) => {
-            console.log(d);
-
             await updateProfileAction({
                 variables: {
                     account_id: accountId,
@@ -177,7 +175,6 @@ const AccountIdxUpdateProfile: NextPage<any, any> = (props: any) => {
         return null;
     }
 
-    console.log(data)
     const accountProfile: IAccountProfile = data.accountProfile;
 
     return (
