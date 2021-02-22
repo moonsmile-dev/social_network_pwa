@@ -16,7 +16,11 @@ import io from 'socket.io-client';
 import { useCallback } from "react";
 import { useSocket } from "@Services";
 import { HELLO_EVENT, JOIN_ROOM_EVENT, NEW_MEM_JOINED_EVENT, NEW_MSG_EVENT, SEND_MSG_EVENT } from "@Services/Socket/contants";
-import { CHAT_PAGE_ROUTE } from "src/Routes/contants";
+import { CHAT_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
+import { GET_ROOM_INFO_QUERY } from "@Libs/Queries/getRoomInfoQuery";
+import { IRoomInfo } from "@Libs/Dtos/roomInfo.interface";
+import infoIcon from "@Assets/images/information.png";
+import { FormatString } from "src/Commons/Strings/utils";
 
 interface IMessage {
     isMe?: boolean;
@@ -111,10 +115,18 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
     const [messages, setMessages] = useStateReact<Array<any>>([]);
     const typingMsgContent = useState("")
     const socket = useSocket(process.env.NEXT_PUBLIC_SN_SOCKET_API || "");
+    const [partnerId, setPartnerId] = useStateReact<string>("");
+    const [partnerName, setPartnerName] = useStateReact<string>("");
 
     const router = useRouter();
     const roomId: any = router.query.chat_idx || "";
     const { accountId, authToken } = getAuthInfo();
+
+    const handleRouteToPartnerProfilePage = useCallback(
+        async () => {
+            await router.push(FormatString(PROFILE_PAGE_ROUTE, partnerId))
+        }, [partnerId]
+    )
 
     const registerSocketListenerEvents = useCallback(
         () => {
@@ -160,6 +172,33 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
         }
     }
 
+    const { data, error, loading } = useQuery(GET_ROOM_INFO_QUERY, {
+        variables: {
+            auth_token: authToken,
+            account_id: accountId,
+            room_id: roomId
+        }
+    });
+
+    useEffect(
+        () => {
+            if (data) {
+                const roomInfo: IRoomInfo = data.roomInfo;
+
+                setPartnerId(roomInfo.partnerId);
+                setPartnerName(roomInfo.partnerName);
+            }
+        }, [data]
+    )
+
+    if (error) {
+        return <div>Error when get room info</div>
+    }
+
+    if (loading) {
+        return null;
+    }
+
 
     return (
         <div style={{ position: "relative", height: '100vh', backgroundColor: "#e8e8e8" }}>
@@ -181,12 +220,12 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
                         <img alt="XXX" height="100%" width="100%" src={previousIcon} />
                     </div>
                     <div className="txtHeaderName" style={{ marginLeft: "10px" }}>
-                        <h4 style={{ lineHeight: "50px", color: "white" }}>Nguyen Minh Tuan</h4>
+                        <h4 style={{ lineHeight: "50px", color: "white" }}>{partnerName}</h4>
                     </div>
                 </div>
                 <div className="call_button" style={{ position: "absolute", top: "0%", right: "0%", height: "100%", ...centerDisplayStyle }}>
-                    <div style={{ height: "40px", width: "40px", margin: "7px" }}>
-                        <img src={voiceIcon} alt="XXX" width="100%" height="100%" />
+                    <div style={{ height: "40px", width: "40px", margin: "7px" }} onClick={() => handleRouteToPartnerProfilePage()}>
+                        <img src={infoIcon} alt="XXX" width="100%" height="100%" />
                     </div>
                 </div>
             </div>
