@@ -182,6 +182,7 @@ interface ArticlePost {
     medias: Array<IMediaPost>;
     userCommentCount: number;
     userReactCount: number;
+    reactStatus: string;
 }
 
 const UserPostList = (props: any) => {
@@ -207,7 +208,8 @@ const UserPostList = (props: any) => {
         <>
             {
                 articlePosts.map((post, idx) => (
-                    <UserPost key={idx} isDetail={false} cnt={post.content} accountId={post.accountId} medias={post.medias} num_reacts={post.userReactCount} num_comments={post.userCommentCount} id={post.id || ""} />
+                    <UserPost key={idx} isDetail={false} cnt={post.content} accountId={post.accountId} medias={post.medias} num_reacts={post.userReactCount} num_comments={post.userCommentCount} id={post.id || ""}
+                        react_status={post.reactStatus} />
                 ))
             }
         </>
