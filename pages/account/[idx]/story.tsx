@@ -76,7 +76,7 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
     useEffect(() => {
         const runner = setTimeout(() => {
             handleClickControlStory("RIGHT")
-        }, 1);
+        }, 10000);
 
         return () => {
             for (let idx = 0; idx < timers.length; idx++) {
