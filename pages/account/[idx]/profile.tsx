@@ -249,6 +249,7 @@ const AccountTimeLine = (props: any) => {
                         num_comments={post.userCommentCount}
                         num_reacts={post.userReactCount}
                         id={post.id || ""}
+                        react_status={post.reactStatus}
                     />
                 ))
             }

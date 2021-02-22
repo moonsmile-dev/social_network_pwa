@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import avatarIcon from "@Assets/images/profile.jpeg";
 import { GET_ACCOUNT_INFO_QUERY } from "@Libs/Queries/getAccountInfoQuery";
 import { useRouter } from "next/router";
@@ -7,7 +7,7 @@ import { useState } from "@hookstate/core";
 import { getAuthInfo } from "src/Commons/Auths/utils";
 import { FormatString } from "src/Commons/Strings/utils";
 import { ACCOUNT_POST_COMMENT_PAGE_ROUTE, ACCOUNT_POST_REACTION_PAGE_ROUTE, PROFILE_PAGE_ROUTE } from "src/Routes/contants";
-import { useCallback } from "react";
+import { useCallback, useState as useStateReact } from "react";
 import avatarReactionIcon from "@Assets/images/monster_1.png";
 import { Box, Container, Image, Text } from "@chakra-ui/react";
 import commentIcon from '@Assets/images/chat.png';
@@ -15,6 +15,7 @@ import laughingIcon from "@Assets/images/laughing.png";
 import laughingEmptyIcon from "@Assets/images/laughing-empty.png";
 import heartIcon from "@Assets/images/heart.png";
 import heartEmptyIcon from "@Assets/images/heart-empty.png";
+import { USER_REACT_POST_MUTATION } from "@Libs/Mutations/userReactPostMutation";
 
 interface IPhotoData {
     src: string;
@@ -59,27 +60,62 @@ interface IUserPostProp {
     num_reacts?: number;
     num_comments?: number;
     num_shared?: number;
+    react_status?: string;
 }
 
 enum ReactType {
-    NONE = 0,
+    NONE = -1,
+    LIKE = 0,
     LOVE = 1,
     HAHA = 2
+}
+
+const mapReactType = (str_value: string | null) => {
+    switch (str_value) {
+        case "HAHA":
+            return ReactType.HAHA
+        case "LIKE":
+            return ReactType.LIKE
+        case "LOVE":
+            return ReactType.LOVE
+        default:
+            return ReactType.NONE
+    }
 }
 
 interface IUserReactTabFCProps {
     accountId: string;
     postId: string;
+    reactStatus?: string;
 }
 
 const UserReactTabFC = (props: IUserReactTabFCProps) => {
-    const react = useState(ReactType.NONE);
     const router = useRouter();
+    const [react, setReact] = useStateReact(mapReactType(props.reactStatus || null));
+    const [userReactPostAction] = useMutation(USER_REACT_POST_MUTATION);
+
+    const { accountId, authToken } = getAuthInfo();
 
     const handleRouteToPostComment = useCallback(
         async () => {
             await router.push(FormatString(ACCOUNT_POST_COMMENT_PAGE_ROUTE, `${props.accountId}`, `${props.postId}`))
         }, [],
+    );
+
+    const handleReactUserPostEvent = useCallback(
+        async (reactType: ReactType) => {
+            await userReactPostAction({
+                variables: {
+                    account_id: accountId,
+                    auth_token: authToken,
+                    post_id: props.postId,
+                    type: ReactType[reactType]
+                }
+            });
+
+            // set state visible
+            setReact(reactType)
+        }, [react]
     )
 
 
@@ -87,28 +123,28 @@ const UserReactTabFC = (props: IUserReactTabFCProps) => {
         <>
             <Box w="50%" className="ReactArea">
                 <Container boxSize="100%" display="flex">
-                    {react.value !== ReactType.NONE ? (
-                        react.value === ReactType.LOVE ? (
-                            <Box onClick={() => react.set(ReactType.NONE)} display="flex">
+                    {react !== ReactType.NONE ? (
+                        react === ReactType.LOVE ? (
+                            <Box onClick={() => setReact(ReactType.NONE)} display="flex">
                                 <Box boxSize="25px" margin="5px">
                                     <Image src={heartIcon} boxSize="100%" />
                                 </Box>
                                 <Text lineHeight="35px" fontWeight="bold" color="#ff0000">Love</Text>
                             </Box>
                         ) : (
-                                <Box onClick={() => react.set(ReactType.NONE)} display="flex">
+                                <Box onClick={() => setReact(ReactType.NONE)} display="flex">
                                     <Box boxSize="25px" margin="5px">
                                         <Image src={laughingIcon} boxSize="100%" />
                                     </Box>
-                                    <Text lineHeight="35px" fontWeight="bold" color="#ffff00">Haha</Text>
+                                    <Text lineHeight="35px" fontWeight="bold" color="#c1bb04">Haha</Text>
                                 </Box>
                             )
                     ) : (
                             <>
-                                <Box boxSize="25px" margin="5px" onClick={() => react.set(ReactType.LOVE)}>
+                                <Box boxSize="25px" margin="5px" onClick={() => handleReactUserPostEvent(ReactType.LOVE)}>
                                     <Image src={heartEmptyIcon} boxSize="100%" />
                                 </Box>
-                                <Box boxSize="25px" margin="5px" onClick={() => react.set(ReactType.HAHA)}>
+                                <Box boxSize="25px" margin="5px" onClick={() => handleReactUserPostEvent(ReactType.HAHA)}>
                                     <Image src={laughingEmptyIcon} boxSize="100%" />
                                 </Box>
                                 <Text lineHeight="35px">React</Text>
@@ -223,7 +259,7 @@ export const UserPost = (props: IUserPostProp) => {
                 className="action"
                 w="100%"
                 display="flex">
-                <UserReactTabFC postId={props.id || "1"} accountId={props.accountId || "1"} />
+                <UserReactTabFC postId={props.id || "1"} accountId={props.accountId || "1"} reactStatus={props.react_status} />
             </Box>
         </div>
     )

@@ -10,4 +10,5 @@ export interface IArticlePost {
     medias: Array<IMediaPost>;
     userReactCount: number;
     userCommentCount: number;
+    reactStatus: string;
 }
