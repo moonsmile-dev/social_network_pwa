@@ -9,6 +9,7 @@ export const GET_ROOM_CHAT_LIST_QUERY = gql`
             latestMsg
             latestMsgTime
             numUnReadMsg
+            type
         }
     }
 `

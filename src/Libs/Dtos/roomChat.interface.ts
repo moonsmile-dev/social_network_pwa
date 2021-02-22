@@ -5,5 +5,5 @@ export interface IRoomChat {
     latestMsg: string;
     latestMsgTime: Date;
     numUnReadMsg: number;
-
+    type: number;
 }

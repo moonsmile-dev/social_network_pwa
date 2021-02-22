@@ -49,7 +49,7 @@ const MessageComponent = (props: IMessage) => {
     return (
         <div style={{ display: "block", ...posMsgStyle }}>
             <div style={{ margin: "8px" }}>
-                <div className="message_area" style={{ backgroundColor: "white", ...boundedMsgBlock, padding: "10px", maxWidth: "70%", display: "inline-block" }}>
+                <div className="message_area" style={{ backgroundColor: "white", ...boundedMsgBlock, padding: "10px", maxWidth: "70%", display: "inline-block", border: "solid 1px purple" }}>
                     <p style={{ margin: "0px", textAlign: "left", wordBreak: "break-all" }}>{props.msg ? props.msg : "Nguyen Minh Tuan"}</p>
                 </div>
             </div>
@@ -162,7 +162,7 @@ const AccountChatIdx: NextPage<any, any> = (props: any) => {
 
 
     return (
-        <div style={{ position: "relative", height: '100vh', backgroundColor: "#cfcfcf" }}>
+        <div style={{ position: "relative", height: '100vh', backgroundColor: "#e8e8e8" }}>
             <div className="chat_header" style={{
                 position: "absolute",
                 top: "0%",

@@ -17,6 +17,8 @@ import { IRoomChat } from "@Libs/Dtos/roomChat.interface";
 import { Box, Center, Image, Text } from "@chakra-ui/react";
 import createStoryIcon from "@Assets/images/video-camera.png";
 import { useCallback } from "react";
+import matchRoomIcon from "@Assets/images/zoosk-big-logo.png";
+import smartRoomIcon from "@Assets/images/relationship.png";
 
 const absoluteCenter = {
     top: "50%",
@@ -129,6 +131,11 @@ const timeCounterStyle = {
     backgroundColor: "white",
 } as React.CSSProperties;
 
+
+enum RoomType {
+    SMART = 1,
+    MATCH = 2
+}
 interface IMessagePreviewProps {
     id: string;
     numNewMsgs?: number;
@@ -136,6 +143,7 @@ interface IMessagePreviewProps {
     avatar?: string;
     msgPreview?: string;
     name?: string;
+    type: number;
 }
 
 const MessagePreviewComponent = (props: IMessagePreviewProps) => {
@@ -146,9 +154,28 @@ const MessagePreviewComponent = (props: IMessagePreviewProps) => {
 
     return (
         <div style={{ backgroundColor: "inherit", position: "relative", padding: "12px 15px", display: "flex" }} onClick={() => { handleRouteToRoomMessage() }} >
-            <div className="avatar_user" style={avatarContainerStyle}>
-                <img alt="XXX" height="100%" width="100%" src={props.avatar ? props.avatar : avatarIcon} />
-            </div>
+            <Box position="relative">
+                <div className="avatar_user" style={{ ...avatarContainerStyle, border: "solid 2px red" }}>
+                    <img alt="XXX" height="100%" width="100%" src={props.avatar ? props.avatar : avatarIcon} />
+                </div>
+
+                {
+                    [RoomType.MATCH, RoomType.SMART].includes(props.type) &&
+                    (
+                        <Box boxSize="20px"
+                            position="absolute"
+                            borderRadius="full"
+                            border="solid 1px purple"
+                            bg="white"
+                            padding="2px"
+                            top="0px"
+                            right="0px">
+                            <Image boxSize="100%" src={props.type === RoomType.SMART ? smartRoomIcon : matchRoomIcon} />
+                        </Box>
+                    )
+                }
+
+            </Box>
             <div className="main_content" style={{ marginLeft: "15px" }}>
                 <h5 style={{ marginBottom: "0px", color: "black" }}>{props.name ? props.name : "Nguyen Minh tuan"}</h5>
                 <p className="msgPreview" style={{ marginBottom: "0px", lineHeight: "25px", opacity: "20%" }}>{props.msgPreview ? props.msgPreview : "Yeah I know"}</p>
@@ -204,7 +231,8 @@ const UserRoomListFC = (props: any) => {
                         numNewMsgs={room.numUnReadMsg}
                         avatar={room.avtIconUrl}
                         msgPreview={room.latestMsg}
-                        name={room.name} />
+                        name={room.name}
+                        type={room.type} />
                 ))
             }
         </>
