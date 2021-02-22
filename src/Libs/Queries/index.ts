@@ -12,3 +12,4 @@ import { GET_USER_STORY_QUERY } from "./getUserStoryQuery";
 import { GET_MATCH_SETTING_QUERY } from "./getMatchSettingQuery";
 import { GET_POST_DETAIL_QUERY } from "./getPostDetailQuery";
 import { GET_ROOM_INFO_QUERY } from "./getRoomInfoQuery";
+import { GET_MATCHING_DATA_QUERY } from "./getMatchingDataQuery";

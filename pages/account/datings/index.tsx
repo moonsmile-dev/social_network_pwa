@@ -19,6 +19,10 @@ import { getAuthInfo } from "src/Commons/Auths/utils";
 import { IMatchSetting } from "@Libs/Dtos/matchSetting.interface";
 import { useForm } from "react-hook-form";
 import { UPDATE_MATCH_SETTING_MUTATION } from "@Libs/Mutations/updateMatchSettingMutation";
+import { GET_MATCHING_DATA_QUERY } from "@Libs/Queries/getMatchingDataQuery";
+import { IMatchingData } from "@Libs/Dtos/matchingData.interface";
+import { PageContainer } from "@Styled/Root";
+import { GET_ACCOUNT_INFO_QUERY, IAccountInfo } from "@Libs/Queries/getAccountInfoQuery";
 
 const styles = {
     container: {
@@ -113,11 +117,12 @@ const OptionDating = (props: IOptionDatingProp) => {
 
 
 enum Gender {
-    MALE,
+    MALE = 0,
     FEMALE,
 }
 
 interface IUserDatingProps {
+    id: string;
     name: string;
     gender: Gender;
     avt_src: string;
@@ -303,8 +308,46 @@ const UserDatingSetupFC = (props: any) => {
     )
 }
 
+const AccountDatingHeaderFC = (props: any) => {
+    const { accountId, authToken } = getAuthInfo();
+
+    const { error, data, loading } = useQuery(
+        GET_ACCOUNT_INFO_QUERY,
+        {
+            variables: {
+                auth_token: authToken,
+                account_id: accountId
+            }
+        }
+    );
+
+    if (error) {
+        return <div>Error when get account info</div>
+    }
+
+    if (loading) {
+        return null;
+    }
+    const accountInfo: IAccountInfo = data.accountProfile;
+
+
+    return (
+        <div className="Header" style={styles.header as React.CSSProperties}>
+            <div style={styles.avatarHeader as React.CSSProperties}>
+                <img style={styles.profileIcon as React.CSSProperties} src={accountInfo.avatarUrl || avatarIcon} alt="X" />
+            </div>
+            <div style={styles.txtHeader as React.CSSProperties}>
+                <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Let's start Dating</p>
+            </div>
+            <UserDatingSetupFC />
+        </div>
+    )
+}
+
 const AccountDatings: NextPage<any, any> = (props: any) => {
     const router = useRouter();
+    const { accountId, authToken } = getAuthInfo();
+    const [matchingData, setMatchingData] = useStateReact<IMatchingData>();
 
     const handleRouteToMatchRecs = async () => {
         await router.push(DATING_RECS_PAGE_ROUTE);
@@ -313,39 +356,56 @@ const AccountDatings: NextPage<any, any> = (props: any) => {
         await router.push(DATING_SMART_WAITING_PAGE_ROUTE)
     }
 
+    const { error, data, loading } = useQuery(GET_MATCHING_DATA_QUERY, {
+        variables: {
+            account_id: accountId,
+            auth_token: authToken
+        }
+    });
+
+    useEffect(
+        () => {
+            if (data) {
+                setMatchingData(data.matchingData);
+            }
+        }, [data]
+    );
+
+    if (error) {
+        return <div>Error when loading matching data</div>
+    }
+    if (loading) {
+        return null;
+    }
+
     return (
-        <AuthenticatePageRequired>
-            <div className="Header" style={styles.header as React.CSSProperties}>
-                <div style={styles.avatarHeader as React.CSSProperties}>
-                    <img style={styles.profileIcon as React.CSSProperties} src={avatarIcon} alt="X" />
-                </div>
-                <div style={styles.txtHeader as React.CSSProperties}>
-                    <p style={{ color: "#0066FF", fontWeight: "bold", fontSize: "24px" }}>Let's start Dating</p>
-                </div>
-                <UserDatingSetupFC />
-            </div>
-            <div className="Main" style={styles.main as React.CSSProperties}>
-                <div className="Dating Selection" style={{ width: "100%", border: "1px solid white" }}>
-                    <div style={{ display: "flex", margin: "0px 15px" }}>
-                        <OptionDating bg="#7000FF" icon_src={smartChatIcon} name="Smart Chat" d_txt="120 onlines" onClick={() => handleRouteToMatchSmartWaiting()} />
-                        <OptionDating bg="#FF0000" icon_src={datingTraditionIcon} name="Matching" d_txt="20 updated daily" onClick={() => handleRouteToMatchRecs()} />
+        <PageContainer>
+            <AuthenticatePageRequired>
+                <AccountDatingHeaderFC />
+                <div className="Main" style={styles.main as React.CSSProperties}>
+                    <div className="Dating Selection" style={{ width: "100%", border: "1px solid white" }}>
+                        <div style={{ display: "flex", margin: "0px 15px" }}>
+                            <OptionDating bg="#7000FF" icon_src={smartChatIcon} name="Smart Chat" d_txt={`${matchingData?.numSmartChatUsers} onlines`} onClick={() => handleRouteToMatchSmartWaiting()} />
+                            <OptionDating bg="#FF0000" icon_src={datingTraditionIcon} name="Matching" d_txt={`${matchingData?.numTraditionalMatchUsers} updated daily`} onClick={() => handleRouteToMatchRecs()} />
+                        </div>
+                    </div>
+                    <div className="User dating section">
+                        {matchingData?.nearlyUsers.map((user, i) =>
+                            <UserDating
+                                avt_src={user.avatar || avatarIcon}
+                                name={user.name}
+                                pre_txt={user.bio || "Toi muon ngam binh minh vao buoi toi.... abc =))"}
+                                age={user.age}
+                                key={i}
+                                id={user.id}
+                                gender={user.gender}
+                            />
+                        )}
                     </div>
                 </div>
-                <div className="User dating section">
-                    {[...Array(10)].map((x, i) =>
-                        <UserDating
-                            avt_src={avatarIcon}
-                            name="Nguyen Minh Tuan"
-                            pre_txt="Toi muon ngam binh minh vao buoi toi.... abc =))"
-                            age={21}
-                            key={i}
-                            gender={Gender.MALE}
-                        />
-                    )}
-                </div>
-            </div>
-            <NavFooter type={NavPageType.DATING} />
-        </AuthenticatePageRequired>
+                <NavFooter type={NavPageType.DATING} />
+            </AuthenticatePageRequired>
+        </PageContainer>
     )
 }
 

@@ -7,3 +7,4 @@ import { IAccountMedia } from "./accountMedia.interface";
 import { IMatchSetting } from "./matchSetting.interface";
 import { IPostDetail, IPostMedia, IUserComment, IUserReact } from "./postDetail.interface";
 import { IRoomInfo } from "./roomInfo.interface";
+import { IMatcherData, IMatchingData } from "./matchingData.interface";
