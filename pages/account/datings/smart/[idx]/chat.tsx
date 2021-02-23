@@ -115,7 +115,7 @@ interface IWaiterLoadingProps {
 }
 
 const WaiterLoadingFC = (props: IWaiterLoadingProps) => {
-    const [timer, setTimer] = useStateReact(10);
+    const [timer, setTimer] = useStateReact(180);
     useEffect(() => {
         const runner = setTimeout(() => {
             if (timer === 0) {
