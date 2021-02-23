@@ -72,6 +72,13 @@ interface RichStatus {
     status_color: string;
 }
 
+enum VerifyStatusType {
+    PENDING = 0,
+    VERIFED = 1,
+    REJECTED = -1,
+    UN_KNOWN = -2
+}
+
 const VerifyAccountFC = (props: IVerifyAccountProp) => {
     const { accountId, authToken } = getAuthInfo();
     const { data, loading, error } = useQuery(GET_ACCOUNT_INFO_DATA_QUERY, {
@@ -95,32 +102,34 @@ const VerifyAccountFC = (props: IVerifyAccountProp) => {
     }
 
     const accountInfo: IAccountInfo = data.accountInfo;
-    if (accountInfo.verifyStatus === 0) {
+    if (accountInfo.verifyStatus === VerifyStatusType.PENDING) {
         statusStyle = {
             status: "Pending",
             status_color: "#FF0000"
         }
-    } else if (accountInfo.verifyStatus === 1) {
+    } else if (accountInfo.verifyStatus === VerifyStatusType.VERIFED) {
         statusStyle = {
             status: "Verifed",
             status_color: "#27be00"
         }
-    } else if (accountInfo.verifyStatus === -1) {
+    } else if (accountInfo.verifyStatus === VerifyStatusType.REJECTED) {
         statusStyle = {
             status: "Rejected",
             status_color: "#ca0000"
         }
-    } else if (accountInfo.verifyStatus === -2) {
+    } else if (accountInfo.verifyStatus === VerifyStatusType.UN_KNOWN) {
         statusStyle = {
             status: "Unknown",
             status_color: "#c0c0c0"
         }
     }
 
+    const canUploadPassport: boolean = [VerifyStatusType.PENDING, VerifyStatusType.REJECTED, VerifyStatusType.UN_KNOWN].includes(accountInfo.verifyStatus)
+
 
 
     return (
-        <BasicSettingFC title="Verify Account" hide_bar_tab={false} {...statusStyle} icon_src={verifyAccountIcon} {...props} />
+        <BasicSettingFC title="Verify Account" hide_bar_tab={false} {...statusStyle} icon_src={verifyAccountIcon} onClick={() => canUploadPassport && props.onClick() || {}} />
     )
 }
 

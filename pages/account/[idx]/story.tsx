@@ -12,6 +12,7 @@ import { getAuthInfo } from "src/Commons/Auths/utils";
 import { useQuery } from "@apollo/client";
 import { GET_USER_STORY_QUERY } from "@Libs/Queries/getUserStoryQuery";
 import { UserStoryDto } from "@Libs/Dtos/userStory.interface";
+import { GET_ACCOUNT_INFO_QUERY, IAccountInfo } from "@Libs/Queries/getAccountInfoQuery";
 interface ISlicingItem {
     isVisible?: boolean;
 }
@@ -44,6 +45,44 @@ const SlicingItemComponent = (props: ISlicingItem) => {
     );
 };
 
+interface IAccountInfoProps {
+    accountId: string;
+    duration: number;
+}
+
+const AccountInfoFC = (props: IAccountInfoProps) => {
+    const { authToken } = getAuthInfo();
+    const { error, data, loading } = useQuery(GET_ACCOUNT_INFO_QUERY, {
+        variables: {
+            account_id: props.accountId,
+            auth_token: authToken
+        }
+    });
+
+    if (error) {
+        return <div>Error when get account info</div>
+    }
+
+    if (loading) {
+        return null;
+    }
+
+    const accountInfo: IAccountInfo = data.accountProfile;
+
+
+    return (
+        <div style={{ margin: "15px", display: "flex" }}>
+            <div style={{ height: "45px", width: "45px", borderRadius: "50%", backgroundColor: "white", overflow: "hidden" }}>
+                <img height="100%" width="100%" src={accountInfo.avatarUrl || avatarIcon} />
+            </div>
+            <div style={{ marginLeft: "10px" }}>
+                <h6 style={{ margin: "0px", color: "white" }}>{`${accountInfo.firstName} ${accountInfo.lastName}`}</h6>
+                <p style={{ margin: "0px", color: "#C7C7C7" }}>{`${props.duration} hours ago`}</p>
+            </div>
+        </div>
+    )
+}
+
 const sendMessageStyle = {
     outline: "none",
     height: "46px",
@@ -52,9 +91,6 @@ const sendMessageStyle = {
     backgroundColor: "black",
     color: "white",
 }
-
-
-const IMAGE_TESTS = ["http://localhost:1338/file_streams/abc/account/post/synced_image_1592417944256.jpeg", "http://localhost:1338/file_streams/abc/account/post/synced_image_1592935202753.jpeg"]
 
 const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
     const router = useRouter();
@@ -156,15 +192,7 @@ const AccountParnersIdxStory: NextPage<any, any> = (props: any) => {
                         )
                     }
                 </div>
-                <div style={{ margin: "15px", display: "flex" }}>
-                    <div style={{ height: "45px", width: "45px", borderRadius: "50%", backgroundColor: "white", overflow: "hidden" }}>
-                        <img height="100%" width="100%" src={avatarIcon} />
-                    </div>
-                    <div style={{ marginLeft: "10px" }}>
-                        <h6 style={{ margin: "0px", color: "white" }}>Nguyen Minh Tuan</h6>
-                        <p style={{ margin: "0px", color: "#C7C7C7" }}>12 hours ago</p>
-                    </div>
-                </div>
+                <AccountInfoFC accountId={currentAccountId} duration={10} />
             </div>
             <div className="area-click">
                 <Box w="50%" h="100%" bg="transparent" position="absolute" top="0px" left="0px" onClick={() => handleClickControlStory("LEFT")} />
